@@ -527,58 +527,20 @@
       "#erro-javascript"
     );
 
-  function mostrarErro(arquivo, erro) {
-    console.error(
-      `Erro em ${arquivo}:`,
-      erro
-    );
-
-    caixaErro.style.display = "block";
-
-    caixaErro.textContent =
-      `Erro no arquivo ${arquivo}: ${erro.message}`;
-  }
-
-  async function iniciarSistema() {
-    try {
-      await import(
-        "./js/supabase-client.js?v=11"
-      );
-    } catch (erro) {
-      mostrarErro(
-        "supabase-client.js",
+  import("./js/index.js?v=13")
+    .catch((erro) => {
+      console.error(
+        "Erro ao carregar o sistema:",
         erro
       );
 
-      return;
-    }
+      caixaErro.style.display =
+        "block";
 
-    try {
-      await import(
-        "./js/checkout.js?v=11"
-      );
-    } catch (erro) {
-      mostrarErro(
-        "checkout.js",
-        erro
-      );
-
-      return;
-    }
-
-    try {
-      await import(
-        "./js/index.js?v=12"
-      );
-    } catch (erro) {
-      mostrarErro(
-        "index.js",
-        erro
-      );
-    }
-  }
-
-  iniciarSistema();
+      caixaErro.textContent =
+        "Erro ao carregar o sistema da Atero: " +
+        erro.message;
+    });
 </script>
 
 </body>
