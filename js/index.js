@@ -1,6 +1,27 @@
 import { supabase } from "./supabase-client.js";
 
 
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+if (
+  parametros.get("conta") ===
+  "excluida"
+) {
+  alert(
+    "Sua Conta Atero foi excluída com sucesso."
+  );
+
+  window.history.replaceState(
+    {},
+    document.title,
+    "index.html"
+  );
+}
+
 const linkConta =
   document.querySelector("#link-conta");
 
