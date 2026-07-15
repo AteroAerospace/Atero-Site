@@ -669,6 +669,69 @@ async function sairDaConta() {
 }
 
 
+function atualizarAcoesPagamento(
+  plano,
+  status
+) {
+  const planoId =
+    plano?.id || "gratis";
+
+  const planoAtivo =
+    ["active", "trialing"].includes(
+      status
+    );
+
+
+  botaoAssinarPro.hidden = true;
+  botaoAssinarUltra.hidden = true;
+  mensagemPlanoPago.hidden = true;
+
+
+  /*
+    Somente uma conta gratuita pode abrir
+    um novo Checkout.
+
+    Usuários que já possuem assinatura serão
+    gerenciados posteriormente pelo portal Stripe.
+  */
+  if (
+    planoId === "gratis" &&
+    planoAtivo
+  ) {
+    botaoAssinarPro.hidden = false;
+    botaoAssinarUltra.hidden = false;
+
+    return;
+  }
+
+
+  mensagemPlanoPago.hidden = false;
+
+
+  if (status === "past_due") {
+    mensagemPlanoPago.textContent =
+      "Existe um pagamento pendente na sua assinatura.";
+
+    return;
+  }
+
+
+  if (
+    planoId === "pro" ||
+    planoId === "ultra"
+  ) {
+    mensagemPlanoPago.textContent =
+      `Seu Plano ${plano?.name || planoId} está ativo.`;
+
+    return;
+  }
+
+
+  mensagemPlanoPago.textContent =
+    "A assinatura não está disponível no momento.";
+}
+
+
 /*
   Inicialização do painel.
 */
@@ -687,6 +750,8 @@ async function iniciarPaginaConta() {
         usuario
       );
 
+
+    
     preencherConta(
       usuario,
       dados
@@ -703,6 +768,7 @@ async function iniciarPaginaConta() {
     );
   }
 }
+
 
 
 botaoSair.addEventListener(
