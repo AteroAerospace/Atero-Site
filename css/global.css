@@ -2269,6 +2269,51 @@ html {
   margin-bottom: 10px;
 }
 
+/* =========================================================
+   MENSAGENS DE AUTENTICAÇÃO
+   ========================================================= */
+
+.auth-mensagem {
+  width: 100%;
+  padding: 13px 15px;
+
+  background-color: #f7f7f7;
+  color: #555555;
+
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.auth-mensagem[hidden] {
+  display: none;
+}
+
+.auth-mensagem-sucesso {
+  background-color: #edf8f0;
+  color: #246b36;
+  border-color: #b9dfc2;
+}
+
+.auth-mensagem-erro {
+  background-color: #fff1f1;
+  color: #9f2929;
+  border-color: #efb8b8;
+}
+
+.auth-formulario .auth-mensagem {
+  margin-bottom: 18px;
+}
+
+.auth-botao:disabled,
+.selecao-salvar:disabled,
+.painel-sair:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 @media (max-width: 650px) {
   .legal-dados-empresa {
     grid-template-columns: 1fr;
