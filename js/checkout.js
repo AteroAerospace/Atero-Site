@@ -1,4 +1,4 @@
-import { supabase } from "./supabase-client.js";
+import { supabase } from "./supabase-client.js?v=13";
 
 
 let checkoutEmAndamento = false;
