@@ -50,14 +50,21 @@
   </header>
 
 
-  <main class="painel-main">
+  <main
+    class="painel-main"
+    id="painel-conta"
+    aria-busy="true"
+  >
 
     <section class="painel-cabecalho">
       <div>
-        <span class="painel-etiqueta">Conta Atero</span>
+        <span class="painel-etiqueta">
+          Conta Atero
+        </span>
 
         <h1>
-          Olá, Usuário<span>.</span>
+          Olá,
+          <span id="nome-usuario">Usuário</span><span>.</span>
         </h1>
 
         <p>
@@ -66,30 +73,81 @@
         </p>
       </div>
 
-      <div class="painel-avatar" aria-hidden="true">
+      <div
+        class="painel-avatar"
+        id="avatar-usuario"
+        aria-hidden="true"
+      >
         U
       </div>
     </section>
 
 
-    <section class="painel-resumo" aria-label="Resumo da conta">
+    <section
+      class="painel-resumo"
+      aria-label="Resumo da conta"
+    >
 
       <article class="resumo-item">
-        <span class="resumo-label">Plano atual</span>
-        <strong class="resumo-valor resumo-plano">Grátis</strong>
-        <span class="resumo-detalhe">Até 2 aplicativos</span>
+        <span class="resumo-label">
+          Plano atual
+        </span>
+
+        <strong
+          class="resumo-valor resumo-plano"
+          id="resumo-plano"
+        >
+          Carregando...
+        </strong>
+
+        <span
+          class="resumo-detalhe"
+          id="resumo-limite-plano"
+        >
+          Consultando assinatura
+        </span>
       </article>
 
-      <article class="resumo-item">
-        <span class="resumo-label">Aplicativos ativos</span>
-        <strong class="resumo-valor">2 de 2</strong>
-        <span class="resumo-detalhe">Limite do plano atingido</span>
-      </article>
 
       <article class="resumo-item">
-        <span class="resumo-label">Conta</span>
-        <strong class="resumo-valor">Ativa</strong>
-        <span class="resumo-detalhe">usuario@email.com</span>
+        <span class="resumo-label">
+          Aplicativos ativos
+        </span>
+
+        <strong
+          class="resumo-valor"
+          id="resumo-aplicativos"
+        >
+          —
+        </strong>
+
+        <span
+          class="resumo-detalhe"
+          id="resumo-aplicativos-detalhe"
+        >
+          Carregando aplicativos
+        </span>
+      </article>
+
+
+      <article class="resumo-item">
+        <span class="resumo-label">
+          Conta
+        </span>
+
+        <strong
+          class="resumo-valor"
+          id="resumo-status-conta"
+        >
+          Carregando...
+        </strong>
+
+        <span
+          class="resumo-detalhe"
+          id="email-usuario"
+        >
+          —
+        </span>
       </article>
 
     </section>
@@ -98,7 +156,10 @@
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">Aplicativos</span>
+          <span class="painel-subtitulo">
+            Aplicativos
+          </span>
+
           <h2>Seus apps</h2>
         </div>
 
@@ -112,63 +173,14 @@
       </div>
 
 
-      <div class="painel-apps">
-
-        <article class="painel-app">
-          <img
-            src="assets/logos/Calc.png"
-            alt="Ícone do Atero Calc"
-          >
-
-          <div class="painel-app-info">
-            <h3>Atero Calc</h3>
-
-            <p>
-              Calculadora científica, gráfica e algébrica.
-            </p>
-
-            <span class="painel-app-status">
-              Ativo
-            </span>
-          </div>
-
-          <a
-            class="painel-app-botao"
-            href="#"
-            aria-label="Abrir Atero Calc"
-          >
-            Abrir
-          </a>
-        </article>
-
-
-        <article class="painel-app">
-          <img
-            src="assets/logos/workspace.png"
-            alt="Ícone do Atero Workspace"
-          >
-
-          <div class="painel-app-info">
-            <h3>Atero Workspace</h3>
-
-            <p>
-              Notas, tarefas, calendário e gerenciamento de projetos.
-            </p>
-
-            <span class="painel-app-status">
-              Ativo
-            </span>
-          </div>
-
-          <a
-            class="painel-app-botao"
-            href="#"
-            aria-label="Abrir Atero Workspace"
-          >
-            Abrir
-          </a>
-        </article>
-
+      <div
+        class="painel-apps"
+        id="lista-aplicativos"
+        aria-live="polite"
+      >
+        <p id="mensagem-aplicativos">
+          Carregando seus aplicativos...
+        </p>
       </div>
     </section>
 
@@ -176,17 +188,25 @@
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">Assinatura</span>
+          <span class="painel-subtitulo">
+            Assinatura
+          </span>
+
           <h2>Seu plano</h2>
         </div>
       </div>
 
       <div class="painel-plano">
         <div>
-          <span class="painel-plano-nome">Plano Grátis</span>
+          <span
+            class="painel-plano-nome"
+            id="nome-plano"
+          >
+            Carregando plano...
+          </span>
 
-          <p>
-            Você pode escolher até dois aplicativos do Ecossistema Atero.
+          <p id="descricao-plano">
+            Consultando as informações da sua assinatura.
           </p>
         </div>
 
@@ -212,47 +232,77 @@
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">Configurações</span>
+          <span class="painel-subtitulo">
+            Configurações
+          </span>
+
           <h2>Conta e preferências</h2>
         </div>
       </div>
 
       <div class="painel-configuracoes">
 
-        <a class="configuracao-item" href="#">
+        <a
+          class="configuracao-item"
+          href="#"
+          aria-disabled="true"
+        >
           <div>
             <strong>Dados pessoais</strong>
-            <span>Nome, e-mail e informações da conta</span>
+
+            <span>
+              Nome, e-mail e informações da conta
+            </span>
           </div>
 
           <span aria-hidden="true">→</span>
         </a>
 
 
-        <a class="configuracao-item" href="#">
+        <a
+          class="configuracao-item"
+          href="#"
+          aria-disabled="true"
+        >
           <div>
             <strong>Senha e segurança</strong>
-            <span>Altere sua senha e proteja sua conta</span>
+
+            <span>
+              Altere sua senha e proteja sua conta
+            </span>
           </div>
 
           <span aria-hidden="true">→</span>
         </a>
 
 
-        <a class="configuracao-item" href="#">
+        <a
+          class="configuracao-item"
+          href="#"
+          aria-disabled="true"
+        >
           <div>
             <strong>Preferências</strong>
-            <span>Tema, idioma e notificações</span>
+
+            <span>
+              Tema, idioma e notificações
+            </span>
           </div>
 
           <span aria-hidden="true">→</span>
         </a>
 
 
-        <a class="configuracao-item" href="contato.html">
+        <a
+          class="configuracao-item"
+          href="contato.html"
+        >
           <div>
             <strong>Suporte</strong>
-            <span>Entre em contato com a Atero</span>
+
+            <span>
+              Entre em contato com a Atero
+            </span>
           </div>
 
           <span aria-hidden="true">→</span>
@@ -267,16 +317,18 @@
         <h2>Sair da conta</h2>
 
         <p>
-          Você precisará entrar novamente para acessar seus aplicativos.
+          Você precisará entrar novamente para acessar seus
+          aplicativos.
         </p>
       </div>
 
-      <a
+      <button
         class="painel-sair"
-        href="login.html"
+        id="botao-sair"
+        type="button"
       >
         Sair
-      </a>
+      </button>
     </section>
 
   </main>
@@ -293,6 +345,12 @@
       <a href="contato.html">Contato</a>
     </nav>
   </footer>
+
+
+  <script
+    type="module"
+    src="js/conta.js"
+  ></script>
 
 </body>
 </html>
