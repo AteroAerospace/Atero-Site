@@ -3036,6 +3036,32 @@ button.botao-plano:disabled {
   display: none !important;
 }
 
+/* =========================================================
+   REGRAS DE TROCA DE APLICATIVOS
+   ========================================================= */
+
+.selecao-app-card {
+  user-select: none;
+}
+
+.selecao-app-card[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.selecao-salvar:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.selecao-salvar[aria-busy="true"] {
+  cursor: wait;
+}
+
+.selecao-mensagem {
+  line-height: 1.5;
+}
+
 @media (max-width: 600px) {
   .aviso-checkout {
     top: 76px;
