@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Gerencie sua Conta Atero, plano e aplicativos."
+  >
+
+  <meta name="theme-color" content="#f5c518">
+
+  <title>Minha conta | Atero</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logos/favicon.png"
+  >
+
+  <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <a
+        href="index.html"
+        aria-label="Voltar para a página inicial"
+      >
+        <img
+          src="assets/logos/main-logo2.svg"
+          alt="Logo da Atero"
+        >
+      </a>
+    </div>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="conta.html" aria-current="page">Conta</a>
+    </nav>
+  </header>
+
+
+  <main class="painel-main">
+
+    <section class="painel-cabecalho">
+      <div>
+        <span class="painel-etiqueta">Conta Atero</span>
+
+        <h1>
+          Olá, Usuário<span>.</span>
+        </h1>
+
+        <p>
+          Gerencie seus aplicativos, assinatura e preferências
+          em um único lugar.
+        </p>
+      </div>
+
+      <div class="painel-avatar" aria-hidden="true">
+        U
+      </div>
+    </section>
+
+
+    <section class="painel-resumo" aria-label="Resumo da conta">
+
+      <article class="resumo-item">
+        <span class="resumo-label">Plano atual</span>
+        <strong class="resumo-valor resumo-plano">Grátis</strong>
+        <span class="resumo-detalhe">Até 2 aplicativos</span>
+      </article>
+
+      <article class="resumo-item">
+        <span class="resumo-label">Aplicativos ativos</span>
+        <strong class="resumo-valor">2 de 2</strong>
+        <span class="resumo-detalhe">Limite do plano atingido</span>
+      </article>
+
+      <article class="resumo-item">
+        <span class="resumo-label">Conta</span>
+        <strong class="resumo-valor">Ativa</strong>
+        <span class="resumo-detalhe">usuario@email.com</span>
+      </article>
+
+    </section>
+
+
+    <section class="painel-secao">
+      <div class="painel-secao-topo">
+        <div>
+          <span class="painel-subtitulo">Aplicativos</span>
+          <h2>Seus apps</h2>
+        </div>
+
+        <a
+          class="painel-link"
+          href="selecionar-apps.html"
+        >
+          Gerenciar aplicativos
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+
+      <div class="painel-apps">
+
+        <article class="painel-app">
+          <img
+            src="assets/logos/Calc.png"
+            alt="Ícone do Atero Calc"
+          >
+
+          <div class="painel-app-info">
+            <h3>Atero Calc</h3>
+
+            <p>
+              Calculadora científica, gráfica e algébrica.
+            </p>
+
+            <span class="painel-app-status">
+              Ativo
+            </span>
+          </div>
+
+          <a
+            class="painel-app-botao"
+            href="#"
+            aria-label="Abrir Atero Calc"
+          >
+            Abrir
+          </a>
+        </article>
+
+
+        <article class="painel-app">
+          <img
+            src="assets/logos/workspace.png"
+            alt="Ícone do Atero Workspace"
+          >
+
+          <div class="painel-app-info">
+            <h3>Atero Workspace</h3>
+
+            <p>
+              Notas, tarefas, calendário e gerenciamento de projetos.
+            </p>
+
+            <span class="painel-app-status">
+              Ativo
+            </span>
+          </div>
+
+          <a
+            class="painel-app-botao"
+            href="#"
+            aria-label="Abrir Atero Workspace"
+          >
+            Abrir
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+
+    <section class="painel-secao">
+      <div class="painel-secao-topo">
+        <div>
+          <span class="painel-subtitulo">Assinatura</span>
+          <h2>Seu plano</h2>
+        </div>
+      </div>
+
+      <div class="painel-plano">
+        <div>
+          <span class="painel-plano-nome">Plano Grátis</span>
+
+          <p>
+            Você pode escolher até dois aplicativos do Ecossistema Atero.
+          </p>
+        </div>
+
+        <div class="painel-plano-acoes">
+          <a
+            class="painel-botao-principal"
+            href="index.html#planos"
+          >
+            Alterar plano
+          </a>
+
+          <a
+            class="painel-botao-secundario"
+            href="selecionar-apps.html"
+          >
+            Trocar aplicativos
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="painel-secao">
+      <div class="painel-secao-topo">
+        <div>
+          <span class="painel-subtitulo">Configurações</span>
+          <h2>Conta e preferências</h2>
+        </div>
+      </div>
+
+      <div class="painel-configuracoes">
+
+        <a class="configuracao-item" href="#">
+          <div>
+            <strong>Dados pessoais</strong>
+            <span>Nome, e-mail e informações da conta</span>
+          </div>
+
+          <span aria-hidden="true">→</span>
+        </a>
+
+
+        <a class="configuracao-item" href="#">
+          <div>
+            <strong>Senha e segurança</strong>
+            <span>Altere sua senha e proteja sua conta</span>
+          </div>
+
+          <span aria-hidden="true">→</span>
+        </a>
+
+
+        <a class="configuracao-item" href="#">
+          <div>
+            <strong>Preferências</strong>
+            <span>Tema, idioma e notificações</span>
+          </div>
+
+          <span aria-hidden="true">→</span>
+        </a>
+
+
+        <a class="configuracao-item" href="contato.html">
+          <div>
+            <strong>Suporte</strong>
+            <span>Entre em contato com a Atero</span>
+          </div>
+
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </div>
+    </section>
+
+
+    <section class="painel-sessao">
+      <div>
+        <h2>Sair da conta</h2>
+
+        <p>
+          Você precisará entrar novamente para acessar seus aplicativos.
+        </p>
+      </div>
+
+      <a
+        class="painel-sair"
+        href="login.html"
+      >
+        Sair
+      </a>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>
+      © 2026 Atero. Todos os direitos reservados.
+    </p>
+
+    <nav aria-label="Links do rodapé">
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </footer>
+
+</body>
+</html>

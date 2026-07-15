@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Entre na sua Conta Atero para acessar seus aplicativos, arquivos e assinatura."
+  >
+
+  <meta name="theme-color" content="#f5c518">
+
+  <title>Entrar | Atero</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logos/favicon.png"
+  >
+
+  <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <a href="index.html" aria-label="Voltar para a página inicial">
+        <img
+          src="assets/logos/main-logo2.svg"
+          alt="Logo da Atero"
+        >
+      </a>
+    </div>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="cadastro.html">Criar conta</a>
+    </nav>
+  </header>
+
+
+  <main class="auth-main">
+
+    <section class="auth-apresentacao">
+      <span class="auth-etiqueta">Conta Atero</span>
+
+      <h1>
+        Bem-vindo de volta<span>.</span>
+      </h1>
+
+      <p>
+        Entre para acessar seus aplicativos, preferências,
+        arquivos e assinatura.
+      </p>
+    </section>
+
+
+    <section class="auth-area">
+      <form class="auth-formulario" action="#" method="post">
+
+        <div class="auth-campo">
+          <label for="email">E-mail</label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="seuemail@exemplo.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+
+        <div class="auth-campo">
+          <div class="auth-label-linha">
+            <label for="senha">Senha</label>
+
+            <a href="recuperar-senha.html">
+              Esqueci minha senha
+            </a>
+          </div>
+
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+            minlength="8"
+            required
+          >
+        </div>
+
+
+        <label class="auth-checkbox">
+          <input
+            type="checkbox"
+            name="manter_conectado"
+          >
+
+          <span>Manter minha conta conectada</span>
+        </label>
+
+
+        <button
+          class="auth-botao"
+          type="submit"
+        >
+          Entrar na Conta Atero
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </form>
+
+
+      <div class="auth-divisor">
+        <span>ou</span>
+      </div>
+
+
+      <div class="auth-alternativas">
+        <p>Ainda não possui uma Conta Atero?</p>
+
+        <a
+          class="auth-botao-secundario"
+          href="cadastro.html"
+        >
+          Criar uma conta gratuitamente
+        </a>
+      </div>
+
+
+      <p class="auth-termos">
+        Ao entrar, você concorda com os
+        <a href="termos.html">Termos de Uso</a>
+        e a
+        <a href="privacidade.html">Política de Privacidade</a>
+        da Atero.
+      </p>
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>
+      © 2026 Atero. Todos os direitos reservados.
+    </p>
+
+    <nav aria-label="Links do rodapé">
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </footer>
+
+</body>
+</html>
+
