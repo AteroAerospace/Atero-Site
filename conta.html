@@ -210,14 +210,36 @@
           </p>
         </div>
 
-        <div class="painel-plano-acoes">
-          <a
+        <div
+          class="painel-plano-acoes"
+          id="acoes-plano"
+        >
+          <button
             class="painel-botao-principal"
-            href="index.html#planos"
+            id="botao-assinar-pro"
+            data-checkout-plan="pro"
+            type="button"
+            hidden
           >
-            Alterar plano
-          </a>
-
+            Assinar Pro
+          </button>
+        
+          <button
+            class="painel-botao-principal"
+            id="botao-assinar-ultra"
+            data-checkout-plan="ultra"
+            type="button"
+            hidden
+          >
+            Assinar Ultra
+          </button>
+        
+          <span
+            class="painel-plano-status"
+            id="mensagem-plano-pago"
+            hidden
+          ></span>
+        
           <a
             class="painel-botao-secundario"
             href="selecionar-apps.html"
