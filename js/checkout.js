@@ -1,5 +1,8 @@
 import { supabase } from "./supabase-client.js?v=13";
 
+import {
+  abrirPortalAssinatura
+} from "./portal.js?v=14";
 
 let checkoutEmAndamento = false;
 
