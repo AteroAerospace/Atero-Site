@@ -1,5 +1,10 @@
 import { supabase } from "./supabase-client.js";
 
+import {
+  configurarBotoesCheckout,
+  mostrarAvisoCheckout
+} from "./checkout.js";
+
 
 const painelConta =
   document.querySelector("#painel-conta");
@@ -44,6 +49,20 @@ const descricaoPlano =
 const botaoSair =
   document.querySelector("#botao-sair");
 
+const botaoAssinarPro =
+  document.querySelector(
+    "#botao-assinar-pro"
+  );
+
+const botaoAssinarUltra =
+  document.querySelector(
+    "#botao-assinar-ultra"
+  );
+
+const mensagemPlanoPago =
+  document.querySelector(
+    "#mensagem-plano-pago"
+  );
 
 /*
   Algumas consultas do Supabase podem retornar
