@@ -50,7 +50,11 @@
   </header>
 
 
-  <main class="selecao-main">
+  <main
+    class="selecao-main"
+    id="pagina-selecao"
+    aria-busy="true"
+  >
 
     <section class="selecao-cabecalho">
       <div>
@@ -74,11 +78,11 @@
         </span>
 
         <strong id="nome-plano">
-          Grátis
+          Carregando...
         </strong>
 
         <span id="limite-plano">
-          Até 2 aplicativos
+          Consultando assinatura
         </span>
       </div>
     </section>
@@ -91,7 +95,7 @@
         </span>
 
         <strong id="contador-apps">
-          0 de 2
+          —
         </strong>
       </div>
 
@@ -109,188 +113,23 @@
 
     <section
       class="selecao-apps"
+      id="lista-aplicativos"
       aria-label="Aplicativos disponíveis"
+      aria-live="polite"
     >
-
-      <article
-        class="selecao-app-card"
-        data-app="calc"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/Calc.png"
-          alt="Ícone do Atero Calc"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Calc</h2>
-
-          <p>
-            Calculadora científica, gráfica e algébrica com
-            matrizes, fórmulas, unidades e números complexos.
-          </p>
-
-          <span>Matemática e ciência</span>
-        </div>
-      </article>
-
-
-      <article
-        class="selecao-app-card"
-        data-app="workspace"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/workspace.png"
-          alt="Ícone do Atero Workspace"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Workspace</h2>
-
-          <p>
-            Notas, tarefas, calendário, metas, hábitos e
-            gerenciamento de projetos.
-          </p>
-
-          <span>Organização e produtividade</span>
-        </div>
-      </article>
-
-
-      <article
-        class="selecao-app-card"
-        data-app="write"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/write.png"
-          alt="Ícone do Atero Write"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Write</h2>
-
-          <p>
-            Editor completo para textos, livros, roteiros,
-            artigos e trabalhos acadêmicos.
-          </p>
-
-          <span>Escrita e publicação</span>
-        </div>
-      </article>
-
-
-      <article
-        class="selecao-app-card"
-        data-app="study"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/study.png"
-          alt="Ícone do Atero Study"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Study</h2>
-
-          <p>
-            Planejamento de estudos, flashcards, revisões,
-            PDFs e acompanhamento de desempenho.
-          </p>
-
-          <span>Educação e estudo</span>
-        </div>
-      </article>
-
-
-      <article
-        class="selecao-app-card"
-        data-app="dev"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/dev.png"
-          alt="Ícone do Atero Dev"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Dev</h2>
-
-          <p>
-            Editor de código, Git, APIs, terminal, bancos de
-            dados e ferramentas para programação.
-          </p>
-
-          <span>Desenvolvimento</span>
-        </div>
-      </article>
-
-
-      <article
-        class="selecao-app-card"
-        data-app="files"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="selecao-app-check" aria-hidden="true">
-          ✓
-        </div>
-
-        <img
-          src="assets/logos/files.png"
-          alt="Ícone do Atero Files"
-        >
-
-        <div class="selecao-app-info">
-          <h2>Atero Files</h2>
-
-          <p>
-            Gerenciamento de arquivos, PDFs, scanner,
-            conversão, compactação e armazenamento.
-          </p>
-
-          <span>Arquivos e utilidades</span>
-        </div>
-      </article>
-
+      <p id="mensagem-carregamento">
+        Carregando aplicativos...
+      </p>
     </section>
 
 
     <section class="selecao-rodape">
-      <div class="selecao-mensagem" id="mensagem-selecao">
-        Escolha pelo menos um aplicativo para continuar.
+      <div
+        class="selecao-mensagem"
+        id="mensagem-selecao"
+        aria-live="polite"
+      >
+        Carregando sua assinatura...
       </div>
 
       <div class="selecao-acoes">
@@ -329,200 +168,10 @@
   </footer>
 
 
-  <script>
-    const configuracoesPlanos = {
-      gratis: {
-        nome: "Grátis",
-        limite: 2,
-        descricao: "Até 2 aplicativos"
-      },
-
-      pro: {
-        nome: "Pro",
-        limite: 4,
-        descricao: "Até 4 aplicativos"
-      },
-
-      ultra: {
-        nome: "Ultra",
-        limite: 6,
-        descricao: "Todos os aplicativos"
-      }
-    };
-
-    const parametros = new URLSearchParams(window.location.search);
-    const planoUrl = parametros.get("plano");
-
-    const planoAtual =
-      configuracoesPlanos[planoUrl]
-        ? planoUrl
-        : "gratis";
-
-    const configuracaoAtual =
-      configuracoesPlanos[planoAtual];
-
-    const cards =
-      document.querySelectorAll(".selecao-app-card");
-
-    const nomePlano =
-      document.querySelector("#nome-plano");
-
-    const limitePlano =
-      document.querySelector("#limite-plano");
-
-    const contadorApps =
-      document.querySelector("#contador-apps");
-
-    const barraProgresso =
-      document.querySelector("#barra-progresso");
-
-    const mensagemSelecao =
-      document.querySelector("#mensagem-selecao");
-
-    const botaoSalvar =
-      document.querySelector("#botao-salvar");
-
-    let aplicativosSelecionados = [];
-
-    nomePlano.textContent =
-      configuracaoAtual.nome;
-
-    limitePlano.textContent =
-      configuracaoAtual.descricao;
-
-
-    function atualizarInterface() {
-      const quantidade =
-        aplicativosSelecionados.length;
-
-      contadorApps.textContent =
-        `${quantidade} de ${configuracaoAtual.limite}`;
-
-      const porcentagem =
-        (quantidade / configuracaoAtual.limite) * 100;
-
-      barraProgresso.style.width =
-        `${Math.min(porcentagem, 100)}%`;
-
-      botaoSalvar.disabled =
-        quantidade === 0;
-
-      if (quantidade === 0) {
-        mensagemSelecao.textContent =
-          "Escolha pelo menos um aplicativo para continuar.";
-
-        mensagemSelecao.classList.remove(
-          "selecao-mensagem-alerta"
-        );
-
-        return;
-      }
-
-      if (quantidade === configuracaoAtual.limite) {
-        mensagemSelecao.textContent =
-          "Você atingiu o limite do seu plano.";
-
-        mensagemSelecao.classList.add(
-          "selecao-mensagem-alerta"
-        );
-
-        return;
-      }
-
-      const restantes =
-        configuracaoAtual.limite - quantidade;
-
-      mensagemSelecao.textContent =
-        `Você ainda pode escolher ${restantes} ${
-          restantes === 1
-            ? "aplicativo"
-            : "aplicativos"
-        }.`;
-
-      mensagemSelecao.classList.remove(
-        "selecao-mensagem-alerta"
-      );
-    }
-
-
-    function alternarAplicativo(card) {
-      const idApp = card.dataset.app;
-
-      const estaSelecionado =
-        aplicativosSelecionados.includes(idApp);
-
-      if (estaSelecionado) {
-        aplicativosSelecionados =
-          aplicativosSelecionados.filter(
-            app => app !== idApp
-          );
-
-        card.classList.remove("selecionado");
-        card.setAttribute("aria-checked", "false");
-
-        atualizarInterface();
-        return;
-      }
-
-      if (
-        aplicativosSelecionados.length >=
-        configuracaoAtual.limite
-      ) {
-        mensagemSelecao.textContent =
-          `O plano ${configuracaoAtual.nome} permite até ${
-            configuracaoAtual.limite
-          } aplicativos.`;
-
-        mensagemSelecao.classList.add(
-          "selecao-mensagem-alerta"
-        );
-
-        return;
-      }
-
-      aplicativosSelecionados.push(idApp);
-
-      card.classList.add("selecionado");
-      card.setAttribute("aria-checked", "true");
-
-      atualizarInterface();
-    }
-
-
-    cards.forEach(card => {
-      card.addEventListener("click", () => {
-        alternarAplicativo(card);
-      });
-
-      card.addEventListener("keydown", evento => {
-        if (
-          evento.key === "Enter" ||
-          evento.key === " "
-        ) {
-          evento.preventDefault();
-          alternarAplicativo(card);
-        }
-      });
-    });
-
-
-    botaoSalvar.addEventListener("click", () => {
-      localStorage.setItem(
-        "atero_plano",
-        planoAtual
-      );
-
-      localStorage.setItem(
-        "atero_apps",
-        JSON.stringify(aplicativosSelecionados)
-      );
-
-      window.location.href = "conta.html";
-    });
-
-
-    atualizarInterface();
-  </script>
+  <script
+    type="module"
+    src="js/selecionar-apps.js"
+  ></script>
 
 </body>
 </html>
