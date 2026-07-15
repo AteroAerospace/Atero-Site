@@ -1,32 +1,20 @@
 import { supabase } from "./supabase-client.js";
 
+import {
+  configurarBotoesCheckout
+} from "./checkout.js";
 
-const parametros =
-  new URLSearchParams(
-    window.location.search
-  );
-
-
-if (
-  parametros.get("conta") ===
-  "excluida"
-) {
-  alert(
-    "Sua Conta Atero foi excluída com sucesso."
-  );
-
-  window.history.replaceState(
-    {},
-    document.title,
-    "index.html"
-  );
-}
 
 const linkConta =
   document.querySelector("#link-conta");
 
 const secaoConta =
   document.querySelector("#conta");
+
+const botaoPlanoGratis =
+  document.querySelector(
+    "#botao-plano-gratis"
+  );
 
 
 async function verificarLogin() {
@@ -36,27 +24,26 @@ async function verificarLogin() {
   } = await supabase.auth.getUser();
 
 
-  if (error) {
-    console.error(
-      "Erro ao verificar sessão:",
-      error
-    );
+  if (
+    error ||
+    !data.user
+  ) {
+    if (error) {
+      console.error(
+        "Erro ao verificar sessão:",
+        error
+      );
+    }
+
 
     mostrarEstadoDesconectado();
     return;
   }
 
 
-  if (data.user) {
-    await mostrarEstadoConectado(
-      data.user
-    );
-
-    return;
-  }
-
-
-  mostrarEstadoDesconectado();
+  await mostrarEstadoConectado(
+    data.user
+  );
 }
 
 
@@ -64,8 +51,7 @@ async function mostrarEstadoConectado(
   usuario
 ) {
   /*
-    A seção com os cards de entrar e
-    criar conta deixa de ser necessária.
+    Esconde os cards de entrar e criar conta.
   */
   if (secaoConta) {
     secaoConta.hidden = true;
@@ -73,18 +59,30 @@ async function mostrarEstadoConectado(
 
 
   /*
-    O link do cabeçalho passa a levar
-    diretamente ao painel da conta.
+    O link Conta passa a abrir o painel.
   */
   if (linkConta) {
     linkConta.href = "conta.html";
-    linkConta.textContent = "Minha conta";
+    linkConta.textContent =
+      "Minha conta";
   }
 
 
   /*
-    Tenta carregar o nome para deixar
-    o cabeçalho mais pessoal.
+    Usuário conectado não precisa criar outra
+    conta para usar o plano gratuito.
+  */
+  if (botaoPlanoGratis) {
+    botaoPlanoGratis.href =
+      "selecionar-apps.html";
+
+    botaoPlanoGratis.textContent =
+      "Gerenciar aplicativos";
+  }
+
+
+  /*
+    Carrega o primeiro nome para o cabeçalho.
   */
   const {
     data: perfil,
@@ -106,6 +104,7 @@ async function mostrarEstadoConectado(
         .trim()
         .split(/\s+/)[0];
 
+
     if (primeiroNome) {
       linkConta.textContent =
         `Olá, ${primeiroNome}`;
@@ -119,26 +118,55 @@ function mostrarEstadoDesconectado() {
     secaoConta.hidden = false;
   }
 
+
   if (linkConta) {
     linkConta.href = "#conta";
     linkConta.textContent = "Conta";
+  }
+
+
+  if (botaoPlanoGratis) {
+    botaoPlanoGratis.href =
+      "cadastro.html?plano=gratis";
+
+    botaoPlanoGratis.textContent =
+      "Começar grátis";
   }
 }
 
 
 /*
-  Atualiza a página quando o usuário
-  entra ou sai em outra aba.
+  Liga os botões Pro e Ultra.
 */
-supabase.auth.onAuthStateChange(
-  evento => {
-    if (evento === "SIGNED_IN") {
-      verificarLogin();
-    }
+configurarBotoesCheckout();
 
-    if (evento === "SIGNED_OUT") {
-      mostrarEstadoDesconectado();
-    }
+
+supabase.auth.onAuthStateChange(
+  (evento, sessao) => {
+    /*
+      Evita executar consultas assíncronas
+      diretamente dentro do callback.
+    */
+    window.setTimeout(
+      () => {
+        if (
+          evento === "SIGNED_IN" &&
+          sessao?.user
+        ) {
+          mostrarEstadoConectado(
+            sessao.user
+          );
+
+          return;
+        }
+
+
+        if (evento === "SIGNED_OUT") {
+          mostrarEstadoDesconectado();
+        }
+      },
+      0
+    );
   }
 );
 
