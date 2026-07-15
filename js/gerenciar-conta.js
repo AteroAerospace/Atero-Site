@@ -1,144 +1,391 @@
-import { supabase } from "./supabase-client.js";
-
-
-const pagina =
-  document.querySelector(
-    "#pagina-gerenciar-conta"
-  );
-
-const formularioPerfil =
-  document.querySelector(
-    "#form-dados-pessoais"
-  );
-
-const campoNome =
-  document.querySelector("#nome");
-
-const campoEmail =
-  document.querySelector("#email");
-
-const avatarUsuario =
-  document.querySelector("#avatar-usuario");
-
-const statusConta =
-  document.querySelector("#status-conta");
-
-const dataCriacao =
-  document.querySelector("#data-criacao");
-
-const ultimoAcesso =
-  document.querySelector("#ultimo-acesso");
-
-const statusEmail =
-  document.querySelector("#status-email");
-
-const mensagemPerfil =
-  document.querySelector("#mensagem-perfil");
-
-const botaoSalvarPerfil =
-  document.querySelector(
-    "#botao-salvar-perfil"
-  );
-
-
-const modalExclusao =
-  document.querySelector("#modal-exclusao");
-
-const fundoModalExclusao =
-  document.querySelector(
-    "#fundo-modal-exclusao"
-  );
-
-const botaoAbrirExclusao =
-  document.querySelector(
-    "#botao-abrir-exclusao"
-  );
-
-const botaoCancelarExclusao =
-  document.querySelector(
-    "#botao-cancelar-exclusao"
-  );
-
-const botaoConfirmarExclusao =
-  document.querySelector(
-    "#botao-confirmar-exclusao"
-  );
-
-const campoConfirmacaoExclusao =
-  document.querySelector(
-    "#confirmacao-exclusao"
-  );
-
-const mensagemExclusao =
-  document.querySelector(
-    "#mensagem-exclusao"
-  );
+import {
+  supabase
+} from "./supabase-client.js?v=17";
 
 
 let usuarioAtual = null;
-let nomeOriginal = "";
-let excluindoConta = false;
+let exclusaoEmAndamento = false;
 
 
 /*
-  Redireciona usuários sem sessão.
-*/
-function redirecionarParaLogin() {
-  const destino =
-    encodeURIComponent(
-      "gerenciar-conta.html"
-    );
+  Procura o primeiro elemento que corresponda
+  a algum dos seletores fornecidos.
 
-  window.location.replace(
-    `login.html?next=${destino}`
-  );
+  Isso permite pequenas diferenças nos IDs
+  usados pelo HTML.
+*/
+function buscarElemento(seletores) {
+  for (const seletor of seletores) {
+    try {
+      const elemento =
+        document.querySelector(
+          seletor
+        );
+
+      if (elemento) {
+        return elemento;
+      }
+    } catch (erro) {
+      console.warn(
+        "Seletor inválido:",
+        seletor,
+        erro
+      );
+    }
+  }
+
+  return null;
 }
 
 
 /*
-  Exibe uma mensagem dentro de um elemento.
+  FORMULÁRIO DE DADOS
+*/
+const formularioDados =
+  buscarElemento([
+    "#form-dados",
+    "#form-dados-pessoais",
+    "#form-perfil",
+    "[data-form-dados]"
+  ]);
+
+const campoNome =
+  buscarElemento([
+    "#nome",
+    "#nome-completo",
+    "#display-name",
+    "#nome-conta",
+    'input[name="nome"]',
+    'input[name="display_name"]'
+  ]);
+
+const campoEmail =
+  buscarElemento([
+    "#email",
+    "#email-conta",
+    "#novo-email",
+    'input[name="email"]'
+  ]);
+
+const botaoSalvarDados =
+  buscarElemento([
+    "#botao-salvar-dados",
+    "#salvar-dados",
+    "#botao-atualizar-perfil",
+    '[data-acao="salvar-dados"]'
+  ]);
+
+const mensagemDados =
+  buscarElemento([
+    "#mensagem-dados",
+    "#mensagem-perfil",
+    "[data-mensagem-dados]"
+  ]);
+
+
+/*
+  FORMULÁRIO DE SENHA
+*/
+const formularioSenha =
+  buscarElemento([
+    "#form-senha",
+    "#form-alterar-senha",
+    "[data-form-senha]"
+  ]);
+
+const campoSenhaAtual =
+  buscarElemento([
+    "#senha-atual",
+    'input[name="senha_atual"]',
+    'input[autocomplete="current-password"]'
+  ]);
+
+const campoNovaSenha =
+  buscarElemento([
+    "#nova-senha",
+    "#senha-nova",
+    'input[name="nova_senha"]',
+    'input[autocomplete="new-password"]'
+  ]);
+
+const campoConfirmarSenha =
+  buscarElemento([
+    "#confirmar-nova-senha",
+    "#confirmar-senha",
+    "#confirmacao-senha",
+    'input[name="confirmar_senha"]'
+  ]);
+
+const botaoSalvarSenha =
+  buscarElemento([
+    "#botao-salvar-senha",
+    "#botao-alterar-senha",
+    '[data-acao="alterar-senha"]'
+  ]);
+
+const mensagemSenha =
+  buscarElemento([
+    "#mensagem-senha",
+    "[data-mensagem-senha]"
+  ]);
+
+
+/*
+  EXCLUSÃO DA CONTA
+*/
+const botaoAbrirExclusao =
+  buscarElemento([
+    "#botao-excluir-conta",
+    "#abrir-exclusao",
+    "#abrir-modal-exclusao",
+    '[data-acao="abrir-exclusao"]'
+  ]);
+
+const modalExclusao =
+  buscarElemento([
+    "#modal-exclusao",
+    "#modal-excluir-conta",
+    "[data-modal-exclusao]"
+  ]);
+
+const campoConfirmacaoExclusao =
+  buscarElemento([
+    "#confirmacao-exclusao",
+    "#texto-confirmacao-exclusao",
+    'input[name="confirmacao_exclusao"]'
+  ]);
+
+const botaoConfirmarExclusao =
+  buscarElemento([
+    "#botao-confirmar-exclusao",
+    "#confirmar-exclusao",
+    '[data-acao="confirmar-exclusao"]'
+  ]);
+
+const botaoCancelarExclusao =
+  buscarElemento([
+    "#botao-cancelar-exclusao",
+    "#cancelar-exclusao",
+    '[data-acao="cancelar-exclusao"]'
+  ]);
+
+const botaoFecharExclusao =
+  buscarElemento([
+    "#fechar-modal-exclusao",
+    ".modal-fechar",
+    '[data-acao="fechar-exclusao"]'
+  ]);
+
+const mensagemExclusao =
+  buscarElemento([
+    "#mensagem-exclusao",
+    "[data-mensagem-exclusao]"
+  ]);
+
+
+/*
+  OUTROS ELEMENTOS
+*/
+const botaoSair =
+  buscarElemento([
+    "#botao-sair",
+    ".painel-sair",
+    '[data-acao="sair"]'
+  ]);
+
+const emailAtualTexto =
+  buscarElemento([
+    "#email-atual",
+    "[data-email-atual]"
+  ]);
+
+const nomeAtualTexto =
+  buscarElemento([
+    "#nome-atual",
+    "[data-nome-atual]"
+  ]);
+
+const dataCriacaoTexto =
+  buscarElemento([
+    "#data-criacao",
+    "[data-data-criacao]"
+  ]);
+
+
+/*
+  Cria uma caixa de mensagem caso o HTML
+  ainda não possua uma.
+*/
+function criarCaixaMensagem(
+  elementoReferencia,
+  id
+) {
+  const caixa =
+    document.createElement("p");
+
+  caixa.id = id;
+  caixa.className =
+    "gerenciar-mensagem";
+
+  caixa.hidden = true;
+
+  caixa.setAttribute(
+    "role",
+    "status"
+  );
+
+  caixa.setAttribute(
+    "aria-live",
+    "polite"
+  );
+
+  if (elementoReferencia) {
+    elementoReferencia
+      .insertAdjacentElement(
+        "afterend",
+        caixa
+      );
+  } else if (document.body) {
+    document.body.append(caixa);
+  }
+
+  return caixa;
+}
+
+
+const caixaDados =
+  mensagemDados ||
+  criarCaixaMensagem(
+    formularioDados,
+    "mensagem-dados-gerada"
+  );
+
+const caixaSenha =
+  mensagemSenha ||
+  criarCaixaMensagem(
+    formularioSenha,
+    "mensagem-senha-gerada"
+  );
+
+const caixaExclusao =
+  mensagemExclusao ||
+  criarCaixaMensagem(
+    botaoConfirmarExclusao,
+    "mensagem-exclusao-gerada"
+  );
+
+
+/*
+  Exibe mensagens de sucesso, erro
+  ou informação.
 */
 function mostrarMensagem(
-  elemento,
-  texto,
-  tipo = "sucesso"
+  caixa,
+  mensagem,
+  tipo = "informacao"
 ) {
-  elemento.hidden = false;
-  elemento.textContent = texto;
+  if (!caixa) {
+    if (tipo === "erro") {
+      console.error(mensagem);
+    } else {
+      console.log(mensagem);
+    }
 
-  elemento.classList.remove(
-    "auth-mensagem-sucesso",
-    "auth-mensagem-erro"
+    return;
+  }
+
+  caixa.hidden = false;
+  caixa.textContent = mensagem;
+
+  caixa.classList.remove(
+    "gerenciar-mensagem-sucesso",
+    "gerenciar-mensagem-erro",
+    "gerenciar-mensagem-informacao"
   );
 
-  elemento.classList.add(
-    tipo === "erro"
-      ? "auth-mensagem-erro"
-      : "auth-mensagem-sucesso"
+  caixa.classList.add(
+    `gerenciar-mensagem-${tipo}`
   );
 }
 
 
 /*
-  Esconde uma mensagem anterior.
+  Limpa uma mensagem existente.
 */
-function esconderMensagem(elemento) {
-  elemento.hidden = true;
-  elemento.textContent = "";
+function limparMensagem(caixa) {
+  if (!caixa) {
+    return;
+  }
 
-  elemento.classList.remove(
-    "auth-mensagem-sucesso",
-    "auth-mensagem-erro"
+  caixa.hidden = true;
+  caixa.textContent = "";
+
+  caixa.classList.remove(
+    "gerenciar-mensagem-sucesso",
+    "gerenciar-mensagem-erro",
+    "gerenciar-mensagem-informacao"
   );
 }
 
 
 /*
-  Formata datas retornadas pelo Supabase.
+  Controla o estado visual de um botão.
+*/
+function definirCarregamento(
+  botao,
+  carregando,
+  textoCarregando = "Salvando..."
+) {
+  if (!botao) {
+    return;
+  }
+
+  if (carregando) {
+    if (
+      !botao.dataset
+        .conteudoOriginal
+    ) {
+      botao.dataset
+        .conteudoOriginal =
+          botao.innerHTML;
+    }
+
+    botao.disabled = true;
+
+    botao.setAttribute(
+      "aria-busy",
+      "true"
+    );
+
+    botao.textContent =
+      textoCarregando;
+
+    return;
+  }
+
+  botao.disabled = false;
+
+  botao.removeAttribute(
+    "aria-busy"
+  );
+
+  if (
+    botao.dataset
+      .conteudoOriginal
+  ) {
+    botao.innerHTML =
+      botao.dataset
+        .conteudoOriginal;
+  }
+}
+
+
+/*
+  Formata uma data para exibição.
 */
 function formatarData(data) {
   if (!data) {
-    return "Não disponível";
+    return "";
   }
 
   const objetoData =
@@ -149,291 +396,512 @@ function formatarData(data) {
       objetoData.getTime()
     )
   ) {
-    return "Não disponível";
+    return "";
   }
 
-  return objetoData.toLocaleString(
+  return new Intl.DateTimeFormat(
     "pt-BR",
     {
-      dateStyle: "long",
-      timeStyle: "short"
+      dateStyle: "long"
     }
-  );
+  ).format(objetoData);
 }
 
 
 /*
-  Retorna a primeira letra do nome.
+  Obtém o usuário autenticado validando
+  sua sessão junto ao Supabase.
 */
-function obterInicial(nome) {
-  const nomeLimpo =
-    nome?.trim() || "";
+async function obterUsuarioAtual() {
+  const {
+    data,
+    error
+  } = await supabase.auth
+    .getUser();
 
-  if (!nomeLimpo) {
-    return "U";
+  if (error) {
+    console.error(
+      "Erro ao validar usuário:",
+      error
+    );
+
+    return null;
   }
 
-  return nomeLimpo
-    .charAt(0)
-    .toUpperCase();
+  return data.user || null;
 }
 
 
 /*
-  Controla o estado do botão de perfil.
+  Carrega os dados do usuário e
+  do perfil.
 */
-function atualizarBotaoPerfil() {
-  const nomeAtual =
-    campoNome.value.trim();
+async function carregarDadosConta() {
+  usuarioAtual =
+    await obterUsuarioAtual();
 
-  botaoSalvarPerfil.disabled =
-    nomeAtual.length < 2 ||
-    nomeAtual === nomeOriginal;
-}
+  if (!usuarioAtual) {
+    const destino =
+      encodeURIComponent(
+        "gerenciar-conta.html"
+      );
 
+    window.location.replace(
+      `login.html?next=${destino}`
+    );
 
-/*
-  Busca o usuário autenticado e o perfil.
-*/
-async function carregarConta() {
-  const {
-    data: dadosUsuario,
-    error: erroUsuario
-  } = await supabase.auth.getUser();
-
-
-  if (
-    erroUsuario ||
-    !dadosUsuario.user
-  ) {
-    redirecionarParaLogin();
     return;
   }
-
-
-  usuarioAtual =
-    dadosUsuario.user;
-
 
   const {
     data: perfil,
     error: erroPerfil
   } = await supabase
     .from("profiles")
-    .select(`
-      display_name,
-      created_at,
-      updated_at
-    `)
-    .eq("id", usuarioAtual.id)
-    .single();
-
+    .select(
+      "display_name, created_at, updated_at"
+    )
+    .eq(
+      "id",
+      usuarioAtual.id
+    )
+    .maybeSingle();
 
   if (erroPerfil) {
-    console.error(
-      "Erro ao carregar perfil:",
+    console.warn(
+      "Não foi possível carregar o perfil:",
       erroPerfil
     );
-
-    mostrarMensagem(
-      mensagemPerfil,
-      "Não foi possível carregar os dados da conta.",
-      "erro"
-    );
-
-    pagina.setAttribute(
-      "aria-busy",
-      "false"
-    );
-
-    return;
   }
 
+  const nome =
+    perfil?.display_name ||
+    usuarioAtual.user_metadata
+      ?.display_name ||
+    "";
 
-  nomeOriginal =
-    perfil.display_name?.trim() ||
-    usuarioAtual.email?.split("@")[0] ||
-    "Usuário";
-
-
-  campoNome.value =
-    nomeOriginal;
-
-  campoEmail.value =
+  const email =
     usuarioAtual.email || "";
 
-  avatarUsuario.textContent =
-    obterInicial(nomeOriginal);
+  if (campoNome) {
+    campoNome.value = nome;
+  }
 
-  statusConta.textContent =
-    "Ativa";
+  if (campoEmail) {
+    campoEmail.value = email;
+  }
 
-  dataCriacao.textContent =
-    formatarData(
-      usuarioAtual.created_at ||
-      perfil.created_at
-    );
+  if (nomeAtualTexto) {
+    nomeAtualTexto.textContent =
+      nome || "Usuário Atero";
+  }
 
-  ultimoAcesso.textContent =
-    formatarData(
-      usuarioAtual.last_sign_in_at
-    );
+  if (emailAtualTexto) {
+    emailAtualTexto.textContent =
+      email || "E-mail indisponível";
+  }
 
-  statusEmail.textContent =
-    usuarioAtual.email_confirmed_at
-      ? "Confirmado"
-      : "Aguardando confirmação";
+  if (dataCriacaoTexto) {
+    const dataCriacao =
+      perfil?.created_at ||
+      usuarioAtual.created_at;
 
-
-  pagina.setAttribute(
-    "aria-busy",
-    "false"
-  );
-
-  atualizarBotaoPerfil();
+    dataCriacaoTexto.textContent =
+      formatarData(dataCriacao);
+  }
 }
 
 
 /*
-  Salva o novo nome na tabela profiles
-  e também na metadata do Auth.
+  Salva nome e e-mail.
 */
-async function salvarPerfil(evento) {
-  evento.preventDefault();
+async function salvarDados(
+  evento
+) {
+  evento?.preventDefault();
 
-  esconderMensagem(
-    mensagemPerfil
+  limparMensagem(caixaDados);
+
+  if (!usuarioAtual) {
+    usuarioAtual =
+      await obterUsuarioAtual();
+  }
+
+  if (!usuarioAtual) {
+    window.location.replace(
+      "login.html"
+    );
+
+    return;
+  }
+
+  const nome =
+    String(
+      campoNome?.value || ""
+    ).trim();
+
+  const email =
+    String(
+      campoEmail?.value || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  if (nome.length < 2) {
+    mostrarMensagem(
+      caixaDados,
+      "Digite um nome válido.",
+      "erro"
+    );
+
+    campoNome?.focus();
+
+    return;
+  }
+
+  if (
+    !email ||
+    !email.includes("@")
+  ) {
+    mostrarMensagem(
+      caixaDados,
+      "Digite um endereço de e-mail válido.",
+      "erro"
+    );
+
+    campoEmail?.focus();
+
+    return;
+  }
+
+  definirCarregamento(
+    botaoSalvarDados,
+    true,
+    "Salvando dados..."
   );
 
+  try {
+    const emailAtual =
+      String(
+        usuarioAtual.email || ""
+      ).toLowerCase();
 
-  const novoNome =
-    campoNome.value.trim();
+    const dadosAtualizacao = {
+      data: {
+        display_name: nome
+      }
+    };
 
-
-  if (novoNome.length < 2) {
-    mostrarMensagem(
-      mensagemPerfil,
-      "O nome precisa ter pelo menos 2 caracteres.",
-      "erro"
-    );
-
-    campoNome.focus();
-    return;
-  }
-
-
-  if (novoNome.length > 80) {
-    mostrarMensagem(
-      mensagemPerfil,
-      "O nome não pode ultrapassar 80 caracteres.",
-      "erro"
-    );
-
-    campoNome.focus();
-    return;
-  }
-
-
-  botaoSalvarPerfil.disabled = true;
-  botaoSalvarPerfil.textContent =
-    "Salvando...";
-
-
-  const {
-    error: erroPerfil
-  } = await supabase
-    .from("profiles")
-    .update({
-      display_name: novoNome
-    })
-    .eq("id", usuarioAtual.id);
-
-
-  if (erroPerfil) {
-    console.error(
-      "Erro ao atualizar perfil:",
-      erroPerfil
-    );
-
-    mostrarMensagem(
-      mensagemPerfil,
-      "Não foi possível salvar o nome.",
-      "erro"
-    );
-
-    restaurarBotaoPerfil();
-    return;
-  }
-
-
-  /*
-    Atualiza também a metadata para manter
-    o nome consistente no Supabase Auth.
-  */
-  const {
-    error: erroMetadata
-  } = await supabase.auth.updateUser({
-    data: {
-      display_name: novoNome
+    if (email !== emailAtual) {
+      dadosAtualizacao.email =
+        email;
     }
-  });
 
-
-  if (erroMetadata) {
     /*
-      O perfil principal já foi salvo.
-      Não revertemos o nome apenas porque
-      a metadata secundária falhou.
+      Atualiza os metadados e, quando
+      necessário, solicita a troca de e-mail.
     */
-    console.warn(
-      "O perfil foi salvo, mas a metadata não:",
-      erroMetadata
+    const {
+      data: resultadoAuth,
+      error: erroAuth
+    } = await supabase.auth
+      .updateUser(
+        dadosAtualizacao
+      );
+
+    if (erroAuth) {
+      throw erroAuth;
+    }
+
+    /*
+      Atualiza o perfil público da conta.
+    */
+    const {
+      error: erroPerfil
+    } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: usuarioAtual.id,
+          display_name: nome,
+          updated_at:
+            new Date().toISOString()
+        },
+        {
+          onConflict: "id"
+        }
+      );
+
+    if (erroPerfil) {
+      throw erroPerfil;
+    }
+
+    usuarioAtual =
+      resultadoAuth.user ||
+      usuarioAtual;
+
+    if (nomeAtualTexto) {
+      nomeAtualTexto.textContent =
+        nome;
+    }
+
+    if (
+      email !== emailAtual
+    ) {
+      mostrarMensagem(
+        caixaDados,
+        (
+          "Nome atualizado. Enviamos uma confirmação " +
+          "para o novo endereço de e-mail."
+        ),
+        "sucesso"
+      );
+    } else {
+      mostrarMensagem(
+        caixaDados,
+        "Seus dados foram atualizados.",
+        "sucesso"
+      );
+    }
+  } catch (erro) {
+    console.error(
+      "Erro ao atualizar dados:",
+      erro
+    );
+
+    mostrarMensagem(
+      caixaDados,
+      erro?.message ||
+      "Não foi possível atualizar seus dados.",
+      "erro"
+    );
+  } finally {
+    definirCarregamento(
+      botaoSalvarDados,
+      false
     );
   }
-
-
-  nomeOriginal = novoNome;
-
-  avatarUsuario.textContent =
-    obterInicial(novoNome);
-
-
-  mostrarMensagem(
-    mensagemPerfil,
-    "Nome atualizado com sucesso."
-  );
-
-
-  restaurarBotaoPerfil();
 }
 
 
 /*
-  Restaura o conteúdo do botão de perfil.
-*/
-function restaurarBotaoPerfil() {
-  botaoSalvarPerfil.innerHTML = `
-    Salvar alterações
-    <span aria-hidden="true">→</span>
-  `;
+  Confirma a senha atual fazendo
+  uma nova autenticação.
 
-  atualizarBotaoPerfil();
+  Essa etapa só ocorre quando o HTML
+  possui o campo de senha atual.
+*/
+async function validarSenhaAtual(
+  senhaAtual
+) {
+  if (!campoSenhaAtual) {
+    return;
+  }
+
+  if (!senhaAtual) {
+    throw new Error(
+      "Digite sua senha atual."
+    );
+  }
+
+  if (!usuarioAtual?.email) {
+    throw new Error(
+      "Não foi possível identificar o e-mail da conta."
+    );
+  }
+
+  const {
+    error
+  } = await supabase.auth
+    .signInWithPassword({
+      email: usuarioAtual.email,
+      password: senhaAtual
+    });
+
+  if (error) {
+    throw new Error(
+      "A senha atual está incorreta."
+    );
+  }
+}
+
+
+/*
+  Altera a senha da conta.
+*/
+async function alterarSenha(
+  evento
+) {
+  evento?.preventDefault();
+
+  limparMensagem(caixaSenha);
+
+  const senhaAtual =
+    String(
+      campoSenhaAtual?.value || ""
+    );
+
+  const novaSenha =
+    String(
+      campoNovaSenha?.value || ""
+    );
+
+  const confirmacao =
+    String(
+      campoConfirmarSenha?.value ||
+      ""
+    );
+
+  if (novaSenha.length < 8) {
+    mostrarMensagem(
+      caixaSenha,
+      "A nova senha deve ter pelo menos 8 caracteres.",
+      "erro"
+    );
+
+    campoNovaSenha?.focus();
+
+    return;
+  }
+
+  if (
+    novaSenha !==
+    confirmacao
+  ) {
+    mostrarMensagem(
+      caixaSenha,
+      "As novas senhas não são iguais.",
+      "erro"
+    );
+
+    campoConfirmarSenha?.focus();
+
+    return;
+  }
+
+  if (
+    senhaAtual &&
+    senhaAtual === novaSenha
+  ) {
+    mostrarMensagem(
+      caixaSenha,
+      "A nova senha deve ser diferente da senha atual.",
+      "erro"
+    );
+
+    campoNovaSenha?.focus();
+
+    return;
+  }
+
+  definirCarregamento(
+    botaoSalvarSenha,
+    true,
+    "Alterando senha..."
+  );
+
+  try {
+    if (!usuarioAtual) {
+      usuarioAtual =
+        await obterUsuarioAtual();
+    }
+
+    if (!usuarioAtual) {
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+    await validarSenhaAtual(
+      senhaAtual
+    );
+
+    const {
+      error
+    } = await supabase.auth
+      .updateUser({
+        password: novaSenha
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (campoSenhaAtual) {
+      campoSenhaAtual.value = "";
+    }
+
+    if (campoNovaSenha) {
+      campoNovaSenha.value = "";
+    }
+
+    if (campoConfirmarSenha) {
+      campoConfirmarSenha.value =
+        "";
+    }
+
+    mostrarMensagem(
+      caixaSenha,
+      "Sua senha foi alterada com sucesso.",
+      "sucesso"
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao alterar senha:",
+      erro
+    );
+
+    mostrarMensagem(
+      caixaSenha,
+      erro?.message ||
+      "Não foi possível alterar sua senha.",
+      "erro"
+    );
+  } finally {
+    definirCarregamento(
+      botaoSalvarSenha,
+      false
+    );
+  }
 }
 
 
 /*
   Abre o modal de exclusão.
 */
-function abrirModalExclusao() {
-  esconderMensagem(
-    mensagemExclusao
+function abrirModalExclusao(
+  evento
+) {
+  evento?.preventDefault();
+
+  limparMensagem(
+    caixaExclusao
   );
 
-  campoConfirmacaoExclusao.value = "";
+  if (campoConfirmacaoExclusao) {
+    campoConfirmacaoExclusao.value =
+      "";
+  }
 
-  botaoConfirmarExclusao.disabled = true;
+  if (!modalExclusao) {
+    campoConfirmacaoExclusao
+      ?.focus();
+
+    return;
+  }
 
   modalExclusao.hidden = false;
+
+  modalExclusao.classList.add(
+    "modal-ativo"
+  );
+
+  modalExclusao.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
   document.body.classList.add(
     "modal-aberto"
@@ -441,230 +909,563 @@ function abrirModalExclusao() {
 
   window.setTimeout(
     () => {
-      campoConfirmacaoExclusao.focus();
+      campoConfirmacaoExclusao
+        ?.focus();
     },
-    50
+    0
   );
 }
 
 
 /*
-  Fecha o modal.
+  Fecha o modal de exclusão.
 */
-function fecharModalExclusao() {
-  if (excluindoConta) {
+function fecharModalExclusao(
+  evento
+) {
+  evento?.preventDefault();
+
+  if (
+    exclusaoEmAndamento
+  ) {
+    return;
+  }
+
+  limparMensagem(
+    caixaExclusao
+  );
+
+  if (campoConfirmacaoExclusao) {
+    campoConfirmacaoExclusao.value =
+      "";
+  }
+
+  if (!modalExclusao) {
     return;
   }
 
   modalExclusao.hidden = true;
 
+  modalExclusao.classList.remove(
+    "modal-ativo"
+  );
+
+  modalExclusao.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
   document.body.classList.remove(
     "modal-aberto"
   );
 
-  campoConfirmacaoExclusao.value = "";
-
-  esconderMensagem(
-    mensagemExclusao
-  );
+  botaoAbrirExclusao
+    ?.focus();
 }
 
 
 /*
-  Verifica a palavra de confirmação.
+  Tenta extrair a mensagem JSON retornada
+  pela Edge Function.
 */
-function atualizarConfirmacaoExclusao() {
-  const confirmacao =
-    campoConfirmacaoExclusao
-      .value
-      .trim()
-      .toUpperCase();
+async function obterMensagemErroFuncao(
+  erro
+) {
+  let mensagem =
+    erro?.message ||
+    "Não foi possível excluir sua conta.";
 
-  botaoConfirmarExclusao.disabled =
-    confirmacao !== "EXCLUIR" ||
-    excluindoConta;
+  if (!erro?.context) {
+    return mensagem;
+  }
+
+  try {
+    const resposta =
+      typeof erro.context.clone ===
+        "function"
+        ? erro.context.clone()
+        : erro.context;
+
+    const corpo =
+      await resposta.json();
+
+    if (
+      typeof corpo?.error ===
+      "string"
+    ) {
+      mensagem = corpo.error;
+    }
+  } catch (erroLeitura) {
+    console.warn(
+      "Não foi possível ler o erro da função:",
+      erroLeitura
+    );
+  }
+
+  return mensagem;
 }
 
 
 /*
-  Solicita a exclusão à Edge Function.
+  Exclui a conta e cancela a assinatura
+  por meio da Edge Function.
 */
-async function excluirConta() {
-  if (excluindoConta) {
+async function excluirConta(
+  evento
+) {
+  evento?.preventDefault();
+
+  if (exclusaoEmAndamento) {
     return;
   }
 
+  limparMensagem(
+    caixaExclusao
+  );
 
   const confirmacao =
-    campoConfirmacaoExclusao
-      .value
+    String(
+      campoConfirmacaoExclusao
+        ?.value || ""
+    )
       .trim()
       .toUpperCase();
 
-
-  if (confirmacao !== "EXCLUIR") {
+  if (
+    confirmacao !==
+    "EXCLUIR"
+  ) {
     mostrarMensagem(
-      mensagemExclusao,
-      "Digite EXCLUIR para confirmar.",
+      caixaExclusao,
+      'Digite "EXCLUIR" para confirmar.',
       "erro"
     );
 
+    campoConfirmacaoExclusao
+      ?.focus();
+
     return;
   }
 
+  exclusaoEmAndamento = true;
 
-  excluindoConta = true;
+  definirCarregamento(
+    botaoConfirmarExclusao,
+    true,
+    "Encerrando assinatura e conta..."
+  );
 
-  botaoConfirmarExclusao.disabled = true;
-  botaoConfirmarExclusao.textContent =
-    "Excluindo conta...";
+  if (botaoCancelarExclusao) {
+    botaoCancelarExclusao.disabled =
+      true;
+  }
 
-  botaoCancelarExclusao.disabled = true;
-  campoConfirmacaoExclusao.disabled = true;
+  if (botaoFecharExclusao) {
+    botaoFecharExclusao.disabled =
+      true;
+  }
+
+  try {
+    /*
+      Obtém a sessão e o token usados
+      para autenticar a Edge Function.
+    */
+    let {
+      data: dadosSessao,
+      error: erroSessao
+    } = await supabase.auth
+      .getSession();
+
+    if (
+      erroSessao ||
+      !dadosSessao.session
+        ?.access_token
+    ) {
+      const {
+        data: dadosAtualizados,
+        error: erroAtualizacao
+      } = await supabase.auth
+        .refreshSession();
+
+      if (erroAtualizacao) {
+        throw erroAtualizacao;
+      }
+
+      dadosSessao =
+        dadosAtualizados;
+    }
+
+    const accessToken =
+      dadosSessao.session
+        ?.access_token;
+
+    if (!accessToken) {
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+    const {
+      data,
+      error
+    } = await supabase.functions
+      .invoke(
+        "delete-account",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${accessToken}`
+          },
+
+          body: {
+            confirmacao: "EXCLUIR"
+          }
+        }
+      );
+
+    if (error) {
+      const mensagem =
+        await obterMensagemErroFuncao(
+          error
+        );
+
+      throw new Error(mensagem);
+    }
+
+    if (!data?.success) {
+      throw new Error(
+        data?.error ||
+        "Não foi possível excluir sua conta."
+      );
+    }
+
+    /*
+      O usuário já foi removido no servidor.
+      Limpamos apenas a sessão armazenada
+      neste navegador.
+    */
+    try {
+      await supabase.auth
+        .signOut({
+          scope: "local"
+        });
+    } catch (erroLogout) {
+      console.warn(
+        "A sessão local já estava inválida:",
+        erroLogout
+      );
+    }
+
+    try {
+      localStorage.removeItem(
+        "atero_plano"
+      );
+
+      localStorage.removeItem(
+        "atero_apps"
+      );
+
+      sessionStorage.clear();
+    } catch (erroStorage) {
+      console.warn(
+        "Não foi possível limpar todo o armazenamento:",
+        erroStorage
+      );
+    }
+
+    window.location.replace(
+      "index.html?conta=excluida"
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao excluir conta:",
+      erro
+    );
+
+    mostrarMensagem(
+      caixaExclusao,
+      erro?.message ||
+      "Não foi possível excluir sua conta.",
+      "erro"
+    );
+
+    exclusaoEmAndamento =
+      false;
+
+    definirCarregamento(
+      botaoConfirmarExclusao,
+      false
+    );
+
+    if (botaoCancelarExclusao) {
+      botaoCancelarExclusao.disabled =
+        false;
+    }
+
+    if (botaoFecharExclusao) {
+      botaoFecharExclusao.disabled =
+        false;
+    }
+  }
+}
 
 
-  const {
-    data,
-    error
-  } = await supabase.functions.invoke(
-    "delete-account",
-    {
-      body: {
-        confirmation: "EXCLUIR"
+/*
+  Encerra a sessão sem excluir a conta.
+*/
+async function sairDaConta(
+  evento
+) {
+  evento?.preventDefault();
+
+  definirCarregamento(
+    botaoSair,
+    true,
+    "Saindo..."
+  );
+
+  try {
+    const {
+      error
+    } = await supabase.auth
+      .signOut();
+
+    if (error) {
+      throw error;
+    }
+
+    window.location.replace(
+      "login.html"
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao sair:",
+      erro
+    );
+
+    definirCarregamento(
+      botaoSair,
+      false
+    );
+  }
+}
+
+
+/*
+  Configuração dos eventos.
+*/
+formularioDados
+  ?.addEventListener(
+    "submit",
+    salvarDados
+  );
+
+if (
+  !formularioDados &&
+  botaoSalvarDados
+) {
+  botaoSalvarDados
+    .addEventListener(
+      "click",
+      salvarDados
+    );
+}
+
+
+formularioSenha
+  ?.addEventListener(
+    "submit",
+    alterarSenha
+  );
+
+if (
+  !formularioSenha &&
+  botaoSalvarSenha
+) {
+  botaoSalvarSenha
+    .addEventListener(
+      "click",
+      alterarSenha
+    );
+}
+
+
+botaoAbrirExclusao
+  ?.addEventListener(
+    "click",
+    abrirModalExclusao
+  );
+
+
+botaoCancelarExclusao
+  ?.addEventListener(
+    "click",
+    fecharModalExclusao
+  );
+
+
+botaoFecharExclusao
+  ?.addEventListener(
+    "click",
+    fecharModalExclusao
+  );
+
+
+botaoConfirmarExclusao
+  ?.addEventListener(
+    "click",
+    excluirConta
+  );
+
+
+campoConfirmacaoExclusao
+  ?.addEventListener(
+    "input",
+    () => {
+      limparMensagem(
+        caixaExclusao
+      );
+
+      if (
+        botaoConfirmarExclusao
+      ) {
+        const confirmado =
+          campoConfirmacaoExclusao
+            .value
+            .trim()
+            .toUpperCase() ===
+          "EXCLUIR";
+
+        botaoConfirmarExclusao
+          .disabled =
+            !confirmado;
       }
     }
   );
 
 
-  if (error) {
-    console.error(
-      "Erro ao excluir conta:",
-      error
-    );
+campoConfirmacaoExclusao
+  ?.addEventListener(
+    "keydown",
+    (evento) => {
+      if (
+        evento.key === "Enter"
+      ) {
+        evento.preventDefault();
 
-    mostrarMensagem(
-      mensagemExclusao,
-      "Não foi possível excluir a conta. Tente novamente.",
-      "erro"
-    );
-
-    restaurarExclusao();
-    return;
-  }
-
-
-  if (!data?.success) {
-    mostrarMensagem(
-      mensagemExclusao,
-      data?.error ||
-      "A exclusão da conta não foi concluída.",
-      "erro"
-    );
-
-    restaurarExclusao();
-    return;
-  }
-
-
-  /*
-    A conta já não existe mais no servidor.
-    Limpamos a sessão local.
-  */
-  await supabase.auth.signOut({
-    scope: "local"
-  });
-
-
-  window.location.replace(
-    "index.html?conta=excluida"
+        excluirConta(
+          evento
+        );
+      }
+    }
   );
+
+
+botaoSair
+  ?.addEventListener(
+    "click",
+    sairDaConta
+  );
+
+
+/*
+  Fecha o modal com Escape.
+*/
+document.addEventListener(
+  "keydown",
+  (evento) => {
+    if (
+      evento.key === "Escape" &&
+      modalExclusao &&
+      !modalExclusao.hidden
+    ) {
+      fecharModalExclusao(
+        evento
+      );
+    }
+  }
+);
+
+
+/*
+  Fecha ao clicar no fundo do modal,
+  mas não ao clicar em seu conteúdo.
+*/
+modalExclusao
+  ?.addEventListener(
+    "click",
+    (evento) => {
+      if (
+        evento.target ===
+        modalExclusao
+      ) {
+        fecharModalExclusao(
+          evento
+        );
+      }
+    }
+  );
+
+
+/*
+  Redireciona caso o usuário saia
+  por outra aba do navegador.
+*/
+supabase.auth.onAuthStateChange(
+  (evento, sessao) => {
+    if (
+      evento === "SIGNED_OUT" &&
+      !exclusaoEmAndamento
+    ) {
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
+    if (
+      evento === "SIGNED_IN" &&
+      sessao?.user
+    ) {
+      usuarioAtual =
+        sessao.user;
+    }
+  }
+);
+
+
+/*
+  Estado inicial do botão de exclusão.
+*/
+if (
+  botaoConfirmarExclusao &&
+  campoConfirmacaoExclusao
+) {
+  botaoConfirmarExclusao.disabled =
+    campoConfirmacaoExclusao
+      .value
+      .trim()
+      .toUpperCase() !==
+    "EXCLUIR";
 }
 
 
 /*
-  Restaura o formulário após uma falha.
+  Carrega a página.
 */
-function restaurarExclusao() {
-  excluindoConta = false;
-
-  botaoConfirmarExclusao.textContent =
-    "Excluir definitivamente";
-
-  botaoCancelarExclusao.disabled = false;
-  campoConfirmacaoExclusao.disabled = false;
-
-  atualizarConfirmacaoExclusao();
-}
-
-
-formularioPerfil.addEventListener(
-  "submit",
-  salvarPerfil
-);
-
-
-campoNome.addEventListener(
-  "input",
-  () => {
-    esconderMensagem(
-      mensagemPerfil
+carregarDadosConta()
+  .catch((erro) => {
+    console.error(
+      "Erro ao iniciar gerenciamento da conta:",
+      erro
     );
 
-    atualizarBotaoPerfil();
-  }
-);
-
-
-botaoAbrirExclusao.addEventListener(
-  "click",
-  abrirModalExclusao
-);
-
-
-botaoCancelarExclusao.addEventListener(
-  "click",
-  fecharModalExclusao
-);
-
-
-fundoModalExclusao.addEventListener(
-  "click",
-  fecharModalExclusao
-);
-
-
-campoConfirmacaoExclusao.addEventListener(
-  "input",
-  atualizarConfirmacaoExclusao
-);
-
-
-botaoConfirmarExclusao.addEventListener(
-  "click",
-  excluirConta
-);
-
-
-document.addEventListener(
-  "keydown",
-  evento => {
-    if (
-      evento.key === "Escape" &&
-      !modalExclusao.hidden
-    ) {
-      fecharModalExclusao();
-    }
-  }
-);
-
-
-supabase.auth.onAuthStateChange(
-  evento => {
-    if (evento === "SIGNED_OUT") {
-      redirecionarParaLogin();
-    }
-  }
-);
-
-
-carregarConta();
+    mostrarMensagem(
+      caixaDados,
+      "Não foi possível carregar os dados da conta.",
+      "erro"
+    );
+  });
