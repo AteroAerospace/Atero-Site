@@ -2916,6 +2916,84 @@ html {
   background-color: var(--cinza-claro);
 }
 
+/* =========================================================
+   CHECKOUT E PAGAMENTOS
+   ========================================================= */
+
+[hidden] {
+  display: none !important;
+}
+
+button.painel-botao-principal {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.checkout-carregando {
+  pointer-events: none;
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.painel-plano-status {
+  color: #666666;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.aviso-checkout {
+  position: fixed;
+  top: 88px;
+  right: 24px;
+  z-index: 2000;
+
+  width: min(420px, calc(100% - 48px));
+  padding: 16px 18px;
+
+  background-color: #ffffff;
+  color: #333333;
+
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+
+  box-shadow:
+    0 18px 55px
+    rgba(0, 0, 0, 0.18);
+
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.aviso-checkout-sucesso {
+  background-color: #edf8f0;
+  color: #246b36;
+  border-color: #b9dfc2;
+}
+
+.aviso-checkout-erro {
+  background-color: #fff1f1;
+  color: #9f2929;
+  border-color: #efb8b8;
+}
+
+.aviso-checkout-informacao {
+  background-color: #fff9df;
+  color: #6b5514;
+  border-color: #ead685;
+}
+
+
+@media (max-width: 600px) {
+  .aviso-checkout {
+    top: 76px;
+    right: 16px;
+
+    width: calc(100% - 32px);
+  }
+}
 
 @media (max-width: 800px) {
   .gerenciar-conta-grade {
