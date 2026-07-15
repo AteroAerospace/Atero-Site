@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Defina uma nova senha para sua Conta Atero."
+  >
+
+  <meta name="theme-color" content="#f5c518">
+
+  <title>Alterar senha | Atero</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logos/favicon.png"
+  >
+
+  <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <a
+        href="index.html"
+        aria-label="Voltar para a página inicial"
+      >
+        <img
+          src="assets/logos/main-logo2.svg"
+          alt="Logo da Atero"
+        >
+      </a>
+    </div>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="conta.html">Conta</a>
+    </nav>
+  </header>
+
+
+  <main class="auth-main">
+
+    <section class="auth-apresentacao">
+      <span class="auth-etiqueta">
+        Segurança
+      </span>
+
+      <h1>
+        Crie uma nova senha<span>.</span>
+      </h1>
+
+      <p>
+        Escolha uma senha forte e diferente das que você utiliza
+        em outros serviços.
+      </p>
+
+      <div class="cadastro-beneficios">
+        <div class="cadastro-beneficio">
+          <span aria-hidden="true">✓</span>
+          <p>Use pelo menos 8 caracteres.</p>
+        </div>
+
+        <div class="cadastro-beneficio">
+          <span aria-hidden="true">✓</span>
+          <p>Evite nomes, datas e palavras muito comuns.</p>
+        </div>
+
+        <div class="cadastro-beneficio">
+          <span aria-hidden="true">✓</span>
+          <p>Não reutilize a senha do seu e-mail.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="auth-area">
+
+      <div
+        class="auth-mensagem"
+        id="mensagem-sessao"
+        role="status"
+        aria-live="polite"
+      >
+        Verificando o link de recuperação...
+      </div>
+
+
+      <form
+        class="auth-formulario"
+        id="form-alterar-senha"
+        hidden
+        novalidate
+      >
+
+        <div class="auth-campo">
+          <label for="nova-senha">
+            Nova senha
+          </label>
+
+          <input
+            type="password"
+            id="nova-senha"
+            name="nova_senha"
+            placeholder="Digite sua nova senha"
+            autocomplete="new-password"
+            minlength="8"
+            required
+            aria-describedby="requisitos-nova-senha"
+          >
+
+          <p
+            class="auth-ajuda"
+            id="requisitos-nova-senha"
+          >
+            Use pelo menos 8 caracteres.
+          </p>
+        </div>
+
+
+        <div class="auth-campo">
+          <label for="confirmar-nova-senha">
+            Confirmar nova senha
+          </label>
+
+          <input
+            type="password"
+            id="confirmar-nova-senha"
+            name="confirmar_nova_senha"
+            placeholder="Digite a senha novamente"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          >
+        </div>
+
+
+        <div
+          class="auth-mensagem"
+          id="mensagem-alteracao"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+
+        <button
+          class="auth-botao"
+          id="botao-alterar-senha"
+          type="submit"
+        >
+          Salvar nova senha
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </form>
+
+
+      <div
+        class="auth-alternativas"
+        id="acoes-link-invalido"
+        hidden
+      >
+        <p>
+          O link pode ter expirado ou já ter sido utilizado.
+        </p>
+
+        <a
+          class="auth-botao-secundario"
+          href="recuperar-senha.html"
+        >
+          Solicitar outro link
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>
+      © 2026 Atero. Todos os direitos reservados.
+    </p>
+
+    <nav aria-label="Links do rodapé">
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </footer>
+
+
+  <script
+    type="module"
+    src="js/alterar-senha.js"
+  ></script>
+
+</body>
+</html>
