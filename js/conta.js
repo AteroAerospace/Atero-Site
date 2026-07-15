@@ -1,157 +1,380 @@
-import { supabase } from "./supabase-client.js";
+import { supabase } from "./supabase-client.js?v=15";
 
 import {
   configurarBotoesCheckout,
   mostrarAvisoCheckout
-} from "./checkout.js";
+} from "./checkout.js?v=15";
+
+import {
+  abrirPortalAssinatura
+} from "./portal.js?v=15";
 
 
-const painelConta =
-  document.querySelector("#painel-conta");
-
-const nomeUsuario =
-  document.querySelector("#nome-usuario");
+const tituloUsuario =
+  document.querySelector(
+    ".painel-cabecalho h1"
+  );
 
 const avatarUsuario =
-  document.querySelector("#avatar-usuario");
-
-const emailUsuario =
-  document.querySelector("#email-usuario");
-
-const resumoPlano =
-  document.querySelector("#resumo-plano");
-
-const resumoLimitePlano =
-  document.querySelector("#resumo-limite-plano");
-
-const resumoAplicativos =
-  document.querySelector("#resumo-aplicativos");
-
-const resumoAplicativosDetalhe =
   document.querySelector(
-    "#resumo-aplicativos-detalhe"
+    ".painel-avatar"
   );
 
-const resumoStatusConta =
+
+const resumoPlanoValor =
   document.querySelector(
-    "#resumo-status-conta"
+    ".painel-resumo .resumo-item:nth-child(1) .resumo-valor"
   );
+
+const resumoPlanoDetalhe =
+  document.querySelector(
+    ".painel-resumo .resumo-item:nth-child(1) .resumo-detalhe"
+  );
+
+const resumoAppsValor =
+  document.querySelector(
+    ".painel-resumo .resumo-item:nth-child(2) .resumo-valor"
+  );
+
+const resumoAppsDetalhe =
+  document.querySelector(
+    ".painel-resumo .resumo-item:nth-child(2) .resumo-detalhe"
+  );
+
+const resumoContaValor =
+  document.querySelector(
+    ".painel-resumo .resumo-item:nth-child(3) .resumo-valor"
+  );
+
+const resumoContaDetalhe =
+  document.querySelector(
+    ".painel-resumo .resumo-item:nth-child(3) .resumo-detalhe"
+  );
+
 
 const listaAplicativos =
-  document.querySelector("#lista-aplicativos");
+  document.querySelector(
+    ".painel-apps"
+  );
 
 const nomePlano =
-  document.querySelector("#nome-plano");
+  document.querySelector(
+    ".painel-plano-nome"
+  );
 
 const descricaoPlano =
-  document.querySelector("#descricao-plano");
+  document.querySelector(
+    ".painel-plano > div:first-child p"
+  );
+
+const acoesPlano =
+  document.querySelector(
+    "#acoes-plano, .painel-plano-acoes"
+  );
 
 const botaoSair =
-  document.querySelector("#botao-sair");
-
-const botaoAssinarPro =
   document.querySelector(
-    "#botao-assinar-pro"
+    "#botao-sair, .painel-sair"
   );
 
-const botaoAssinarUltra =
-  document.querySelector(
-    "#botao-assinar-ultra"
-  );
 
-const mensagemPlanoPago =
-  document.querySelector(
-    "#mensagem-plano-pago"
-  );
+let usuarioAtual = null;
+
+let carregamentoContaEmAndamento =
+  false;
+
+
+const PLANOS_PADRAO = {
+  gratis: {
+    id: "gratis",
+    name: "Grátis",
+    app_limit: 2,
+    price_cents: 0
+  },
+
+  pro: {
+    id: "pro",
+    name: "Pro",
+    app_limit: 4,
+    price_cents: 399
+  },
+
+  ultra: {
+    id: "ultra",
+    name: "Ultra",
+    app_limit: null,
+    price_cents: 699
+  }
+};
 
 
 /*
-  Algumas relações do Supabase podem ser
-  retornadas como objeto ou como array.
+  Cria um botão de ação do plano.
 */
-function normalizarRelacao(relacao) {
-  if (Array.isArray(relacao)) {
-    return relacao[0] ?? null;
+function criarBotaoPlano({
+  id,
+  texto,
+  checkoutPlan = null
+}) {
+  const botao =
+    document.createElement(
+      "button"
+    );
+
+  botao.id = id;
+
+  botao.className =
+    "painel-botao-principal";
+
+  botao.type = "button";
+  botao.textContent = texto;
+  botao.hidden = true;
+
+
+  if (checkoutPlan) {
+    botao.dataset.checkoutPlan =
+      checkoutPlan;
   }
 
-  return relacao ?? null;
+
+  return botao;
 }
 
 
 /*
-  Retorna a primeira letra útil do nome.
+  Garante que os controles de pagamento
+  existam, mesmo que ainda não tenham sido
+  colocados manualmente no conta.html.
 */
-function obterInicial(nome) {
-  const nomeLimpo =
-    typeof nome === "string"
-      ? nome.trim()
-      : "";
-
-  if (!nomeLimpo) {
-    return "U";
+function garantirControlesPlano() {
+  if (!acoesPlano) {
+    return {
+      botaoAssinarPro: null,
+      botaoAssinarUltra: null,
+      botaoGerenciarAssinatura: null,
+      mensagemPlanoPago: null
+    };
   }
 
-  return nomeLimpo
-    .charAt(0)
-    .toUpperCase();
-}
+
+  const linkAntigoAlterarPlano =
+    acoesPlano.querySelector(
+      'a.painel-botao-principal[href*="#planos"]'
+    );
 
 
-/*
-  Converte o status interno da assinatura
-  em um texto amigável.
-*/
-function obterStatusAssinatura(status) {
-  const statusDisponiveis = {
-    active: {
-      nome: "Ativa",
-      permiteAcesso: true
-    },
+  if (linkAntigoAlterarPlano) {
+    linkAntigoAlterarPlano.hidden =
+      true;
+  }
 
-    trialing: {
-      nome: "Período de teste",
-      permiteAcesso: true
-    },
 
-    past_due: {
-      nome: "Pagamento pendente",
-      permiteAcesso: false
-    },
+  let botaoAssinarPro =
+    document.querySelector(
+      "#botao-assinar-pro"
+    );
 
-    canceled: {
-      nome: "Cancelada",
-      permiteAcesso: false
-    },
 
-    incomplete: {
-      nome: "Pagamento incompleto",
-      permiteAcesso: false
-    },
+  if (!botaoAssinarPro) {
+    botaoAssinarPro =
+      criarBotaoPlano({
+        id: "botao-assinar-pro",
+        texto: "Assinar Pro",
+        checkoutPlan: "pro"
+      });
 
-    unpaid: {
-      nome: "Não paga",
-      permiteAcesso: false
-    },
 
-    paused: {
-      nome: "Pausada",
-      permiteAcesso: false
-    }
+    acoesPlano.prepend(
+      botaoAssinarPro
+    );
+  }
+
+
+  let botaoAssinarUltra =
+    document.querySelector(
+      "#botao-assinar-ultra"
+    );
+
+
+  if (!botaoAssinarUltra) {
+    botaoAssinarUltra =
+      criarBotaoPlano({
+        id: "botao-assinar-ultra",
+        texto: "Assinar Ultra",
+        checkoutPlan: "ultra"
+      });
+
+
+    botaoAssinarPro
+      .insertAdjacentElement(
+        "afterend",
+        botaoAssinarUltra
+      );
+  }
+
+
+  let botaoGerenciarAssinatura =
+    document.querySelector(
+      "#botao-gerenciar-assinatura"
+    );
+
+
+  if (!botaoGerenciarAssinatura) {
+    botaoGerenciarAssinatura =
+      criarBotaoPlano({
+        id:
+          "botao-gerenciar-assinatura",
+
+        texto:
+          "Gerenciar assinatura"
+      });
+
+
+    botaoAssinarUltra
+      .insertAdjacentElement(
+        "afterend",
+        botaoGerenciarAssinatura
+      );
+  }
+
+
+  let mensagemPlanoPago =
+    document.querySelector(
+      "#mensagem-plano-pago"
+    );
+
+
+  if (!mensagemPlanoPago) {
+    mensagemPlanoPago =
+      document.createElement(
+        "span"
+      );
+
+    mensagemPlanoPago.id =
+      "mensagem-plano-pago";
+
+    mensagemPlanoPago.className =
+      "painel-plano-status";
+
+    mensagemPlanoPago.hidden =
+      true;
+
+
+    botaoGerenciarAssinatura
+      .insertAdjacentElement(
+        "afterend",
+        mensagemPlanoPago
+      );
+  }
+
+
+  return {
+    botaoAssinarPro,
+    botaoAssinarUltra,
+    botaoGerenciarAssinatura,
+    mensagemPlanoPago
   };
+}
 
-  return (
-    statusDisponiveis[status] ?? {
-      nome: "Indisponível",
-      permiteAcesso: false
+
+const {
+  botaoAssinarPro,
+  botaoAssinarUltra,
+  botaoGerenciarAssinatura,
+  mensagemPlanoPago
+} = garantirControlesPlano();
+
+
+/*
+  Algumas relações do Supabase podem
+  chegar como objeto ou como array.
+*/
+function normalizarRelacao(valor) {
+  if (Array.isArray(valor)) {
+    return valor[0] || null;
+  }
+
+  return valor || null;
+}
+
+
+/*
+  Retorna somente o primeiro nome.
+*/
+function obterPrimeiroNome(
+  nomeCompleto
+) {
+  const nome =
+    String(nomeCompleto || "")
+      .trim();
+
+
+  if (!nome) {
+    return "Usuário";
+  }
+
+
+  return nome.split(/\s+/)[0];
+}
+
+
+/*
+  Retorna a inicial usada no avatar.
+*/
+function obterInicial(
+  nomeCompleto,
+  email
+) {
+  const base =
+    String(
+      nomeCompleto ||
+      email ||
+      "U"
+    )
+      .trim()
+      .charAt(0)
+      .toUpperCase();
+
+
+  return base || "U";
+}
+
+
+/*
+  Converte o valor armazenado em centavos
+  para reais.
+*/
+function formatarPrecoPlano(plano) {
+  const centavos =
+    Number(
+      plano?.price_cents || 0
+    );
+
+
+  if (centavos <= 0) {
+    return "Grátis";
+  }
+
+
+  return new Intl.NumberFormat(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL"
     }
+  ).format(
+    centavos / 100
   );
 }
 
 
 /*
-  Produz a descrição do limite do plano.
+  Retorna o limite de aplicativos
+  em formato legível.
 */
-function obterDescricaoLimite(limite) {
+function obterDescricaoLimite(
+  limite
+) {
   if (
     limite === null ||
     limite === undefined
@@ -159,76 +382,157 @@ function obterDescricaoLimite(limite) {
     return "Todos os aplicativos";
   }
 
-  if (limite === 1) {
+
+  const numero = Number(limite);
+
+
+  if (numero === 1) {
     return "Até 1 aplicativo";
   }
 
-  return `Até ${limite} aplicativos`;
+
+  return `Até ${numero} aplicativos`;
 }
 
 
 /*
-  Produz a descrição principal do plano.
+  Traduz o status da assinatura.
+*/
+function obterStatusAssinatura(
+  status
+) {
+  const estados = {
+    active: "Ativa",
+    trialing: "Período de teste",
+    past_due: "Pagamento pendente",
+    incomplete:
+      "Pagamento incompleto",
+    incomplete_expired:
+      "Pagamento expirado",
+    paused: "Pausada",
+    canceled: "Cancelada",
+    unpaid: "Não paga"
+  };
+
+
+  return estados[status] || "Ativa";
+}
+
+
+/*
+  Monta a descrição do plano atual.
 */
 function obterDescricaoPlano(
-  nome,
-  limite
+  plano,
+  assinatura
 ) {
+  const limite =
+    obterDescricaoLimite(
+      plano?.app_limit
+    );
+
+
   if (
-    limite === null ||
-    limite === undefined
+    assinatura?.cancel_at_period_end
   ) {
     return (
-      `O Plano ${nome} oferece acesso a todos os ` +
-      "aplicativos disponíveis no Ecossistema Atero."
+      `${limite}. ` +
+      "A assinatura será encerrada ao fim do período atual."
     );
   }
 
-  const palavra =
-    limite === 1
-      ? "aplicativo"
-      : "aplicativos";
+
+  if (
+    assinatura?.status ===
+    "past_due"
+  ) {
+    return (
+      `${limite}. ` +
+      "Existe um pagamento pendente na assinatura."
+    );
+  }
+
+
+  if (
+    assinatura?.status ===
+    "trialing"
+  ) {
+    return (
+      `${limite}. ` +
+      "Seu período de teste está ativo."
+    );
+  }
+
+
+  if (plano?.id === "ultra") {
+    return (
+      "Acesso a todos os aplicativos " +
+      "e recursos premium do Ecossistema Atero."
+    );
+  }
+
+
+  if (plano?.id === "pro") {
+    return (
+      "Você pode escolher até quatro aplicativos " +
+      "e usar os recursos completos do Ecossistema Atero."
+    );
+  }
+
 
   return (
-    `O Plano ${nome} permite escolher até ` +
-    `${limite} ${palavra} do Ecossistema Atero.`
+    "Você pode escolher até dois aplicativos " +
+    "do Ecossistema Atero."
   );
 }
 
 
 /*
-  Cria um card de aplicativo usando
-  os dados retornados pelo banco.
+  Cria o card de um aplicativo.
 */
-function criarCardAplicativo(aplicativo) {
-  const card =
-    document.createElement("article");
+function criarCardAplicativo(
+  aplicativo
+) {
+  const artigo =
+    document.createElement(
+      "article"
+    );
 
-  card.className = "painel-app";
+  artigo.className =
+    "painel-app";
 
 
   const imagem =
-    document.createElement("img");
+    document.createElement(
+      "img"
+    );
 
   imagem.src =
     aplicativo.icon_path ||
     "assets/logos/favicon.png";
 
   imagem.alt =
-    `Ícone do ${aplicativo.name}`;
+    `Ícone do ${
+      aplicativo.name ||
+      "aplicativo"
+    }`;
 
   imagem.loading = "lazy";
 
 
-  const areaInformacoes =
-    document.createElement("div");
+  const informacoes =
+    document.createElement(
+      "div"
+    );
 
-  areaInformacoes.className =
+  informacoes.className =
     "painel-app-info";
 
 
   const titulo =
-    document.createElement("h3");
+    document.createElement(
+      "h3"
+    );
 
   titulo.textContent =
     aplicativo.name ||
@@ -236,310 +540,553 @@ function criarCardAplicativo(aplicativo) {
 
 
   const descricao =
-    document.createElement("p");
+    document.createElement(
+      "p"
+    );
 
   descricao.textContent =
     aplicativo.description ||
-    "Aplicativo do Ecossistema Atero.";
+    "Aplicativo conectado ao Ecossistema Atero.";
 
 
   const status =
-    document.createElement("span");
+    document.createElement(
+      "span"
+    );
 
   status.className =
     "painel-app-status";
 
-  status.textContent = "Ativo";
+  status.textContent =
+    aplicativo.active === false
+      ? "Indisponível"
+      : "Ativo";
 
 
-  const botaoAbrir =
-    document.createElement("a");
-
-  botaoAbrir.className =
-    "painel-app-botao";
-
-  botaoAbrir.textContent = "Abrir";
-
-  botaoAbrir.setAttribute(
-    "aria-label",
-    `Abrir ${aplicativo.name}`
-  );
-
-
-  if (aplicativo.launch_url) {
-    botaoAbrir.href =
-      aplicativo.launch_url;
-  } else {
-    botaoAbrir.href = "#";
-
-    botaoAbrir.setAttribute(
-      "aria-disabled",
-      "true"
-    );
-
-    botaoAbrir.title =
-      "Este aplicativo ainda não está disponível.";
-
-    botaoAbrir.addEventListener(
-      "click",
-      evento => {
-        evento.preventDefault();
-
-        mostrarAvisoCheckout(
-          "Este aplicativo ainda não está disponível.",
-          "informacao"
-        );
-      }
-    );
-  }
-
-
-  areaInformacoes.append(
+  informacoes.append(
     titulo,
     descricao,
     status
   );
 
-  card.append(
-    imagem,
-    areaInformacoes,
-    botaoAbrir
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+  link.className =
+    "painel-app-botao";
+
+  link.textContent =
+    aplicativo.active === false
+      ? "Indisponível"
+      : "Abrir";
+
+  link.setAttribute(
+    "aria-label",
+    `Abrir ${
+      aplicativo.name ||
+      "aplicativo"
+    }`
   );
 
-  return card;
+
+  if (
+    aplicativo.active === false ||
+    !aplicativo.launch_url
+  ) {
+    link.href = "#";
+
+    link.setAttribute(
+      "aria-disabled",
+      "true"
+    );
+
+
+    link.addEventListener(
+      "click",
+      (evento) => {
+        evento.preventDefault();
+      }
+    );
+  } else {
+    link.href =
+      aplicativo.launch_url;
+  }
+
+
+  artigo.append(
+    imagem,
+    informacoes,
+    link
+  );
+
+
+  return artigo;
 }
 
 
 /*
-  Mostra os aplicativos vinculados à conta.
+  Exibe os aplicativos selecionados
+  pelo usuário.
 */
 function renderizarAplicativos(
-  linhasAplicativos
+  aplicativos
 ) {
-  listaAplicativos.replaceChildren();
-
-  const aplicativos =
-    linhasAplicativos
-      .map(linha =>
-        normalizarRelacao(linha.app)
-      )
-      .filter(Boolean);
+  if (!listaAplicativos) {
+    return;
+  }
 
 
-  if (aplicativos.length === 0) {
-    const mensagem =
-      document.createElement("p");
+  listaAplicativos
+    .replaceChildren();
 
-    mensagem.textContent =
-      "Você ainda não selecionou nenhum aplicativo.";
 
-    listaAplicativos.append(mensagem);
+  if (!aplicativos.length) {
+    const vazio =
+      document.createElement(
+        "div"
+      );
+
+    vazio.className =
+      "painel-vazio";
+
+
+    const titulo =
+      document.createElement(
+        "h3"
+      );
+
+    titulo.textContent =
+      "Nenhum aplicativo selecionado";
+
+
+    const texto =
+      document.createElement(
+        "p"
+      );
+
+    texto.textContent =
+      "Escolha seus aplicativos para começar a usar o Ecossistema Atero.";
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+    link.className =
+      "painel-botao-principal";
+
+    link.href =
+      "selecionar-apps.html";
+
+    link.textContent =
+      "Escolher aplicativos";
+
+
+    vazio.append(
+      titulo,
+      texto,
+      link
+    );
+
+    listaAplicativos.append(
+      vazio
+    );
+
 
     return;
   }
 
 
-  aplicativos.forEach(aplicativo => {
-    const card =
-      criarCardAplicativo(aplicativo);
+  const fragmento =
+    document
+      .createDocumentFragment();
 
-    listaAplicativos.append(card);
-  });
+
+  aplicativos.forEach(
+    (aplicativo) => {
+      fragmento.append(
+        criarCardAplicativo(
+          aplicativo
+        )
+      );
+    }
+  );
+
+
+  listaAplicativos.append(
+    fragmento
+  );
 }
 
 
 /*
-  Atualiza os números e textos relacionados
-  ao plano e aos aplicativos.
+  Atualiza os cards de resumo da conta
+  e a seção do plano.
 */
-function atualizarResumoPlano({
+function atualizarResumoPlano(
   plano,
-  status,
-  quantidadeAplicativos
-}) {
+  assinatura,
+  quantidadeApps
+) {
   const nome =
-    plano?.name || "Grátis";
+    plano?.name ||
+    "Grátis";
 
   const limite =
-    plano?.app_limit ?? null;
+    plano?.app_limit;
 
-  const statusFormatado =
-    obterStatusAssinatura(status);
-
-
-  resumoPlano.textContent = nome;
-
-  resumoLimitePlano.textContent =
-    obterDescricaoLimite(limite);
-
-  nomePlano.textContent =
-    `Plano ${nome}`;
-
-  descricaoPlano.textContent =
-    obterDescricaoPlano(
-      nome,
-      limite
-    );
-
-  resumoStatusConta.textContent =
-    statusFormatado.nome;
-
-
-  if (
-    limite === null ||
-    limite === undefined
-  ) {
-    resumoAplicativos.textContent =
-      `${quantidadeAplicativos}`;
-
-    resumoAplicativosDetalhe.textContent =
-      quantidadeAplicativos === 1
-        ? "1 aplicativo ativo"
-        : `${quantidadeAplicativos} aplicativos ativos`;
-
-    return;
-  }
-
-
-  resumoAplicativos.textContent =
-    `${quantidadeAplicativos} de ${limite}`;
-
-  const restantes =
-    Math.max(
-      limite - quantidadeAplicativos,
-      0
+  const preco =
+    formatarPrecoPlano(
+      plano
     );
 
 
-  if (
-    quantidadeAplicativos >= limite
-  ) {
-    resumoAplicativosDetalhe.textContent =
-      "Limite do plano atingido";
-
-    return;
+  if (resumoPlanoValor) {
+    resumoPlanoValor.textContent =
+      nome;
   }
 
 
-  if (restantes === 1) {
-    resumoAplicativosDetalhe.textContent =
-      "Você ainda pode escolher 1 aplicativo";
-
-    return;
+  if (resumoPlanoDetalhe) {
+    resumoPlanoDetalhe.textContent =
+      preco === "Grátis"
+        ? obterDescricaoLimite(
+            limite
+          )
+        : (
+            `${preco}/mês · ` +
+            obterDescricaoLimite(
+              limite
+            )
+          );
   }
 
 
-  resumoAplicativosDetalhe.textContent =
-    `Você ainda pode escolher ${restantes} aplicativos`;
+  if (resumoAppsValor) {
+    resumoAppsValor.textContent =
+      limite === null ||
+      limite === undefined
+        ? String(
+            quantidadeApps
+          )
+        : (
+            `${quantidadeApps} ` +
+            `de ${limite}`
+          );
+  }
+
+
+  if (resumoAppsDetalhe) {
+    if (
+      limite === null ||
+      limite === undefined
+    ) {
+      resumoAppsDetalhe.textContent =
+        "Sem limite de aplicativos";
+    } else if (
+      quantidadeApps >=
+      Number(limite)
+    ) {
+      resumoAppsDetalhe.textContent =
+        "Limite do plano atingido";
+    } else {
+      const restantes =
+        Math.max(
+          Number(limite) -
+          quantidadeApps,
+          0
+        );
+
+
+      resumoAppsDetalhe.textContent =
+        restantes === 1
+          ? (
+              "Você ainda pode escolher " +
+              "1 aplicativo"
+            )
+          : (
+              "Você ainda pode escolher " +
+              `${restantes} aplicativos`
+            );
+    }
+  }
+
+
+  if (nomePlano) {
+    nomePlano.textContent =
+      `Plano ${nome}`;
+  }
+
+
+  if (descricaoPlano) {
+    descricaoPlano.textContent =
+      obterDescricaoPlano(
+        plano,
+        assinatura
+      );
+  }
 }
 
 
 /*
-  Controla os botões de pagamento de acordo
-  com o plano atual do usuário.
+  Oculta todas as ações de pagamento
+  antes de escolher quais serão exibidas.
+*/
+function esconderAcoesPagamento() {
+  if (botaoAssinarPro) {
+    botaoAssinarPro.hidden =
+      true;
+  }
+
+
+  if (botaoAssinarUltra) {
+    botaoAssinarUltra.hidden =
+      true;
+  }
+
+
+  if (
+    botaoGerenciarAssinatura
+  ) {
+    botaoGerenciarAssinatura.hidden =
+      true;
+  }
+
+
+  if (mensagemPlanoPago) {
+    mensagemPlanoPago.hidden =
+      true;
+
+    mensagemPlanoPago.textContent =
+      "";
+  }
+}
+
+
+/*
+  Define quais botões serão mostrados.
+
+  Plano grátis:
+  - Assinar Pro
+  - Assinar Ultra
+
+  Plano pago:
+  - Gerenciar assinatura
 */
 function atualizarAcoesPagamento(
-  plano,
-  status
+  assinatura
 ) {
-  if (
-    !botaoAssinarPro ||
-    !botaoAssinarUltra ||
-    !mensagemPlanoPago
-  ) {
-    return;
-  }
+  esconderAcoesPagamento();
 
 
   const planoId =
-    plano?.id || "gratis";
+    String(
+      assinatura?.plan_id ||
+      "gratis"
+    ).toLowerCase();
 
-  const planoAtivo =
-    ["active", "trialing"].includes(
-      status
+
+  const status =
+    String(
+      assinatura?.status ||
+      "active"
+    ).toLowerCase();
+
+
+  const possuiClienteStripe =
+    Boolean(
+      assinatura
+        ?.stripe_customer_id
     );
 
 
-  botaoAssinarPro.hidden = true;
-  botaoAssinarUltra.hidden = true;
-  mensagemPlanoPago.hidden = true;
+  const assinaturaPaga =
+    planoId === "pro" ||
+    planoId === "ultra";
+
+
+  const statusGerenciavel = [
+    "active",
+    "trialing",
+    "past_due",
+    "incomplete",
+    "paused",
+    "unpaid"
+  ].includes(status);
 
 
   /*
-    Somente usuários do plano gratuito
-    podem abrir um novo checkout.
+    Usuário grátis pode iniciar
+    uma assinatura nova.
+  */
+  if (!assinaturaPaga) {
+    if (botaoAssinarPro) {
+      botaoAssinarPro.hidden =
+        false;
+    }
 
-    Usuários já assinantes usarão o
-    portal de gerenciamento da Stripe.
+
+    if (botaoAssinarUltra) {
+      botaoAssinarUltra.hidden =
+        false;
+    }
+
+
+    return;
+  }
+
+
+  /*
+    Usuário pago usa o portal da Stripe
+    para trocar de plano ou cancelar.
   */
   if (
-    planoId === "gratis" &&
-    planoAtivo
+    possuiClienteStripe &&
+    statusGerenciavel
   ) {
-    botaoAssinarPro.hidden = false;
-    botaoAssinarUltra.hidden = false;
+    if (
+      botaoGerenciarAssinatura
+    ) {
+      botaoGerenciarAssinatura.hidden =
+        false;
+    }
+
+
+    if (mensagemPlanoPago) {
+      mensagemPlanoPago.hidden =
+        false;
+
+
+      mensagemPlanoPago.textContent =
+        assinatura
+          ?.cancel_at_period_end
+          ? (
+              "Cancelamento agendado. " +
+              "Você ainda pode gerenciar a assinatura."
+            )
+          : (
+              "Troque de plano, atualize o cartão " +
+              "ou cancele pelo gerenciamento da assinatura."
+            );
+    }
+
 
     return;
   }
 
 
-  mensagemPlanoPago.hidden = false;
+  if (mensagemPlanoPago) {
+    mensagemPlanoPago.hidden =
+      false;
 
-
-  if (status === "past_due") {
     mensagemPlanoPago.textContent =
-      "Existe um pagamento pendente na sua assinatura.";
-
-    return;
+      "A assinatura está sendo atualizada. " +
+      "Recarregue a página em alguns instantes.";
   }
-
-
-  if (status === "incomplete") {
-    mensagemPlanoPago.textContent =
-      "Seu pagamento ainda não foi concluído.";
-
-    return;
-  }
-
-
-  if (
-    planoId === "pro" ||
-    planoId === "ultra"
-  ) {
-    mensagemPlanoPago.textContent =
-      `Seu Plano ${plano?.name || planoId} está ativo.`;
-
-    return;
-  }
-
-
-  mensagemPlanoPago.textContent =
-    "A assinatura não está disponível no momento.";
 }
 
 
 /*
-  Redireciona o usuário para o login.
+  Preenche visualmente a página.
 */
-function redirecionarParaLogin() {
-  const destino =
-    encodeURIComponent("conta.html");
+function preencherConta({
+  usuario,
+  perfil,
+  assinatura,
+  plano,
+  aplicativos
+}) {
+  const nomeCompleto =
+    perfil?.display_name ||
+    usuario.user_metadata
+      ?.display_name ||
+    usuario.email ||
+    "Usuário";
 
-  window.location.replace(
-    `login.html?next=${destino}`
+
+  const primeiroNome =
+    obterPrimeiroNome(
+      nomeCompleto
+    );
+
+
+  if (tituloUsuario) {
+    const ponto =
+      document.createElement(
+        "span"
+      );
+
+    ponto.textContent = ".";
+
+
+    tituloUsuario.replaceChildren(
+      document.createTextNode(
+        `Olá, ${primeiroNome}`
+      ),
+
+      ponto
+    );
+  }
+
+
+  if (avatarUsuario) {
+    avatarUsuario.textContent =
+      obterInicial(
+        nomeCompleto,
+        usuario.email
+      );
+  }
+
+
+  if (resumoContaValor) {
+    resumoContaValor.textContent =
+      obterStatusAssinatura(
+        assinatura?.status ||
+        "active"
+      );
+  }
+
+
+  if (resumoContaDetalhe) {
+    resumoContaDetalhe.textContent =
+      usuario.email ||
+      "Conta Atero";
+  }
+
+
+  renderizarAplicativos(
+    aplicativos
+  );
+
+
+  atualizarResumoPlano(
+    plano,
+    assinatura,
+    aplicativos.length
+  );
+
+
+  atualizarAcoesPagamento(
+    assinatura
   );
 }
 
 
 /*
-  Obtém o usuário autenticado diretamente
-  do servidor do Supabase.
+  Busca o usuário atual validando a sessão
+  no Supabase.
 */
 async function obterUsuarioAtual() {
   const {
     data,
     error
-  } = await supabase.auth.getUser();
+  } = await supabase.auth
+    .getUser();
+
 
   if (error) {
     console.error(
@@ -550,240 +1097,256 @@ async function obterUsuarioAtual() {
     return null;
   }
 
-  return data.user;
+
+  return data.user || null;
 }
 
 
 /*
-  Busca as informações necessárias para
-  preencher o painel.
+  Busca perfil, assinatura, plano
+  e aplicativos do usuário.
 */
-async function carregarDadosConta(usuario) {
+async function carregarDadosConta(
+  usuario
+) {
   const [
     resultadoPerfil,
     resultadoAssinatura,
-    resultadoAplicativos
+    resultadoApps
   ] = await Promise.all([
     supabase
       .from("profiles")
-      .select("display_name")
-      .eq("id", usuario.id)
-      .single(),
+      .select(
+        "display_name"
+      )
+      .eq(
+        "id",
+        usuario.id
+      )
+      .maybeSingle(),
 
     supabase
       .from("subscriptions")
       .select(`
-        status,
-        stripe_status,
         plan_id,
-        cancel_at_period_end,
+        status,
+        stripe_customer_id,
+        stripe_subscription_id,
         current_period_end,
-
-        plan:plans (
-          id,
-          name,
-          app_limit
-        )
+        cancel_at_period_end
       `)
-      .eq("user_id", usuario.id)
-      .single(),
+      .eq(
+        "user_id",
+        usuario.id
+      )
+      .maybeSingle(),
 
     supabase
       .from("user_apps")
       .select(`
         app_id,
-
-        app:apps (
+        apps (
           id,
           name,
           description,
           icon_path,
           launch_url,
-          sort_order
+          sort_order,
+          active
         )
       `)
-      .eq("user_id", usuario.id)
+      .eq(
+        "user_id",
+        usuario.id
+      )
   ]);
 
 
   if (resultadoPerfil.error) {
-    throw new Error(
-      "Não foi possível carregar o perfil."
+    console.warn(
+      "Não foi possível carregar o perfil:",
+      resultadoPerfil.error
     );
   }
 
 
-  if (resultadoAssinatura.error) {
-    throw new Error(
-      "Não foi possível carregar a assinatura."
+  if (
+    resultadoAssinatura.error
+  ) {
+    throw resultadoAssinatura.error;
+  }
+
+
+  if (resultadoApps.error) {
+    throw resultadoApps.error;
+  }
+
+
+  const assinatura =
+    resultadoAssinatura.data ||
+    {
+      plan_id: "gratis",
+      status: "active",
+      stripe_customer_id: null,
+      stripe_subscription_id: null,
+      current_period_end: null,
+      cancel_at_period_end: false
+    };
+
+
+  const planoId =
+    String(
+      assinatura.plan_id ||
+      "gratis"
+    ).toLowerCase();
+
+
+  const resultadoPlano =
+    await supabase
+      .from("plans")
+      .select(
+        "id, name, app_limit, price_cents"
+      )
+      .eq(
+        "id",
+        planoId
+      )
+      .maybeSingle();
+
+
+  if (resultadoPlano.error) {
+    console.warn(
+      "Não foi possível carregar o plano:",
+      resultadoPlano.error
     );
   }
 
 
-  if (resultadoAplicativos.error) {
-    throw new Error(
-      "Não foi possível carregar os aplicativos."
-    );
-  }
+  const plano =
+    resultadoPlano.data ||
+    PLANOS_PADRAO[planoId] ||
+    PLANOS_PADRAO.gratis;
+
+
+  const aplicativos =
+    (
+      resultadoApps.data ||
+      []
+    )
+      .map(
+        (item) =>
+          normalizarRelacao(
+            item.apps
+          )
+      )
+      .filter(Boolean)
+      .sort(
+        (a, b) => {
+          const ordemA =
+            Number(
+              a.sort_order ||
+              0
+            );
+
+          const ordemB =
+            Number(
+              b.sort_order ||
+              0
+            );
+
+
+          if (
+            ordemA !== ordemB
+          ) {
+            return (
+              ordemA -
+              ordemB
+            );
+          }
+
+
+          return String(
+            a.name || ""
+          ).localeCompare(
+            String(
+              b.name || ""
+            ),
+
+            "pt-BR"
+          );
+        }
+      );
 
 
   return {
+    usuario,
     perfil:
       resultadoPerfil.data,
-
-    assinatura:
-      resultadoAssinatura.data,
-
-    aplicativos:
-      resultadoAplicativos.data ?? []
+    assinatura,
+    plano,
+    aplicativos
   };
 }
 
 
 /*
-  Preenche visualmente a página.
+  Exibe erros de carregamento.
 */
-function preencherConta(
-  usuario,
-  dados
+function mostrarErro(
+  mensagem
 ) {
-  const nome =
-    dados.perfil?.display_name?.trim() ||
-    usuario.email?.split("@")[0] ||
-    "Usuário";
+  console.error(mensagem);
 
-  const assinatura =
-    dados.assinatura;
 
-  const plano =
-    normalizarRelacao(
-      assinatura.plan
+  mostrarAvisoCheckout(
+    typeof mensagem === "string"
+      ? mensagem
+      : (
+          "Não foi possível " +
+          "carregar sua conta."
+        ),
+
+    "erro"
+  );
+
+
+  if (listaAplicativos) {
+    listaAplicativos
+      .replaceChildren();
+
+
+    const erro =
+      document.createElement(
+        "p"
+      );
+
+    erro.className =
+      "painel-erro";
+
+    erro.textContent =
+      "Não foi possível carregar seus aplicativos. " +
+      "Recarregue a página.";
+
+
+    listaAplicativos.append(
+      erro
     );
-
-
-  nomeUsuario.textContent = nome;
-
-  avatarUsuario.textContent =
-    obterInicial(nome);
-
-  emailUsuario.textContent =
-    usuario.email ||
-    "E-mail indisponível";
-
-
-  const aplicativosOrdenados =
-    [...dados.aplicativos].sort(
-      (primeiro, segundo) => {
-        const primeiroApp =
-          normalizarRelacao(
-            primeiro.app
-          );
-
-        const segundoApp =
-          normalizarRelacao(
-            segundo.app
-          );
-
-        return (
-          (primeiroApp?.sort_order ?? 0) -
-          (segundoApp?.sort_order ?? 0)
-        );
-      }
-    );
-
-
-  atualizarResumoPlano({
-    plano,
-    status:
-      assinatura.status,
-    quantidadeAplicativos:
-      aplicativosOrdenados.length
-  });
-
-
-  atualizarAcoesPagamento(
-    plano,
-    assinatura.status
-  );
-
-
-  renderizarAplicativos(
-    aplicativosOrdenados
-  );
-
-
-  painelConta.setAttribute(
-    "aria-busy",
-    "false"
-  );
-}
-
-
-/*
-  Exibe um estado simples de erro no painel.
-*/
-function mostrarErro(mensagem) {
-  painelConta.setAttribute(
-    "aria-busy",
-    "false"
-  );
-
-  resumoPlano.textContent =
-    "Indisponível";
-
-  resumoLimitePlano.textContent =
-    "Não foi possível carregar o plano";
-
-  resumoAplicativos.textContent =
-    "—";
-
-  resumoAplicativosDetalhe.textContent =
-    "Não foi possível carregar os aplicativos";
-
-  resumoStatusConta.textContent =
-    "Erro";
-
-  nomePlano.textContent =
-    "Plano indisponível";
-
-  descricaoPlano.textContent =
-    mensagem;
-
-  listaAplicativos.replaceChildren();
-
-  const textoErro =
-    document.createElement("p");
-
-  textoErro.textContent = mensagem;
-
-  listaAplicativos.append(textoErro);
-
-
-  if (botaoAssinarPro) {
-    botaoAssinarPro.hidden = true;
-  }
-
-  if (botaoAssinarUltra) {
-    botaoAssinarUltra.hidden = true;
-  }
-
-  if (mensagemPlanoPago) {
-    mensagemPlanoPago.hidden = false;
-    mensagemPlanoPago.textContent =
-      "Não foi possível carregar sua assinatura.";
   }
 }
 
 
 /*
-  Espera um determinado tempo.
+  Espera o webhook da Stripe atualizar
+  o banco após o pagamento.
 */
-function esperar(tempo) {
+function esperar(
+  milissegundos
+) {
   return new Promise(
-    resolver => {
+    (resolver) => {
       window.setTimeout(
         resolver,
-        tempo
+        milissegundos
       );
     }
   );
@@ -792,7 +1355,7 @@ function esperar(tempo) {
 
 /*
   Remove os parâmetros de checkout
-  sem recarregar a página.
+  do endereço sem recarregar a página.
 */
 function limparParametrosCheckout() {
   const url =
@@ -810,183 +1373,154 @@ function limparParametrosCheckout() {
   );
 
 
-  const novoEndereco =
-    `${url.pathname}` +
-    `${url.search}` +
-    `${url.hash}`;
-
-
   window.history.replaceState(
     {},
     document.title,
-    novoEndereco
+    (
+      `${url.pathname}` +
+      `${url.search}` +
+      `${url.hash}`
+    )
   );
 }
 
 
 /*
-  Trata o retorno do Stripe Checkout.
-
-  O usuário pode retornar antes de o webhook
-  terminar de atualizar o banco. Por isso,
-  consultamos a assinatura algumas vezes.
+  Processa o retorno do Stripe Checkout.
 */
-async function tratarRetornoCheckout(
-  usuario,
-  assinaturaInicial
-) {
+async function tratarRetornoCheckout() {
   const parametros =
     new URLSearchParams(
       window.location.search
     );
 
-  const resultado =
-    parametros.get("checkout");
 
-
-  if (!resultado) {
-    return;
-  }
-
-
-  limparParametrosCheckout();
-
-
-  if (resultado === "cancelado") {
-    mostrarAvisoCheckout(
-      "Pagamento cancelado. Nenhuma cobrança foi realizada.",
-      "informacao"
+  const estadoCheckout =
+    parametros.get(
+      "checkout"
     );
-
-    return;
-  }
-
-
-  if (resultado !== "sucesso") {
-    return;
-  }
-
-
-  const planoInicial =
-    assinaturaInicial?.plan_id;
-
-  const statusInicial =
-    assinaturaInicial?.status;
 
 
   if (
-    ["pro", "ultra"].includes(
-      planoInicial
-    ) &&
-    ["active", "trialing"].includes(
-      statusInicial
-    )
+    estadoCheckout ===
+      "cancelado" ||
+    estadoCheckout ===
+      "canceled"
   ) {
     mostrarAvisoCheckout(
-      "Pagamento confirmado e plano ativado.",
-      "sucesso"
+      "Pagamento cancelado. Nenhuma cobrança foi feita."
     );
 
+
+    limparParametrosCheckout();
+
+    return;
+  }
+
+
+  if (
+    estadoCheckout !==
+      "sucesso" &&
+    estadoCheckout !==
+      "success"
+  ) {
     return;
   }
 
 
   mostrarAvisoCheckout(
-    "Pagamento concluído. Confirmando sua assinatura...",
-    "informacao"
+    "Pagamento aprovado. Atualizando seu plano...",
+    "sucesso"
   );
 
 
-  /*
-    Aguarda até aproximadamente 10 segundos
-    pela atualização do webhook.
-  */
   for (
     let tentativa = 0;
     tentativa < 8;
     tentativa += 1
   ) {
+    if (!usuarioAtual) {
+      break;
+    }
+
+
+    try {
+      const dados =
+        await carregarDadosConta(
+          usuarioAtual
+        );
+
+
+      preencherConta(
+        dados
+      );
+
+
+      if (
+        dados.assinatura
+          .plan_id !== "gratis"
+      ) {
+        mostrarAvisoCheckout(
+          (
+            `Seu plano ` +
+            `${dados.plano.name} ` +
+            "está ativo."
+          ),
+
+          "sucesso"
+        );
+
+
+        limparParametrosCheckout();
+
+        return;
+      }
+    } catch (erro) {
+      console.warn(
+        "Aguardando atualização do webhook:",
+        erro
+      );
+    }
+
+
     await esperar(1250);
-
-
-    const {
-      data: assinatura,
-      error
-    } = await supabase
-      .from("subscriptions")
-      .select(`
-        plan_id,
-        status
-      `)
-      .eq(
-        "user_id",
-        usuario.id
-      )
-      .single();
-
-
-    if (error) {
-      console.error(
-        "Erro ao confirmar assinatura:",
-        error
-      );
-
-      continue;
-    }
-
-
-    const planoFoiAtivado =
-      ["pro", "ultra"].includes(
-        assinatura.plan_id
-      ) &&
-      ["active", "trialing"].includes(
-        assinatura.status
-      );
-
-
-    if (!planoFoiAtivado) {
-      continue;
-    }
-
-
-    const novosDados =
-      await carregarDadosConta(
-        usuario
-      );
-
-
-    preencherConta(
-      usuario,
-      novosDados
-    );
-
-
-    mostrarAvisoCheckout(
-      "Pagamento confirmado. Seu novo plano já está ativo.",
-      "sucesso"
-    );
-
-    return;
   }
 
 
   mostrarAvisoCheckout(
-    "O pagamento foi concluído, mas o plano ainda está sendo confirmado. Atualize a página em alguns segundos.",
-    "informacao"
+    (
+      "O pagamento foi recebido, mas o plano " +
+      "ainda está sendo atualizado. Recarregue " +
+      "a página em alguns instantes."
+    )
   );
+
+
+  limparParametrosCheckout();
 }
 
 
 /*
-  Encerra a sessão atual.
+  Encerra a sessão do usuário.
 */
-async function sairDaConta() {
-  botaoSair.disabled = true;
-  botaoSair.textContent = "Saindo...";
+async function sairDaConta(
+  evento
+) {
+  evento?.preventDefault();
 
 
-  const { error } =
-    await supabase.auth.signOut();
+  if (botaoSair) {
+    botaoSair.setAttribute(
+      "aria-busy",
+      "true"
+    );
+  }
+
+
+  const {
+    error
+  } = await supabase.auth
+    .signOut();
 
 
   if (error) {
@@ -995,13 +1529,19 @@ async function sairDaConta() {
       error
     );
 
+
     mostrarAvisoCheckout(
-      "Não foi possível sair da conta. Tente novamente.",
+      "Não foi possível sair da conta.",
       "erro"
     );
 
-    botaoSair.disabled = false;
-    botaoSair.textContent = "Sair";
+
+    if (botaoSair) {
+      botaoSair.removeAttribute(
+        "aria-busy"
+      );
+    }
+
 
     return;
   }
@@ -1014,51 +1554,101 @@ async function sairDaConta() {
 
 
 /*
-  Inicialização do painel.
+  Inicia a página.
 */
 async function iniciarPaginaConta() {
+  if (
+    carregamentoContaEmAndamento
+  ) {
+    return;
+  }
+
+
+  carregamentoContaEmAndamento =
+    true;
+
+
   try {
-    const usuario =
+    usuarioAtual =
       await obterUsuarioAtual();
 
 
-    if (!usuario) {
-      redirecionarParaLogin();
+    if (!usuarioAtual) {
+      const destino =
+        encodeURIComponent(
+          "conta.html"
+        );
+
+
+      window.location.replace(
+        `login.html?next=${destino}`
+      );
+
       return;
     }
 
 
     const dados =
       await carregarDadosConta(
-        usuario
+        usuarioAtual
       );
 
 
     preencherConta(
-      usuario,
       dados
     );
 
 
-    await tratarRetornoCheckout(
-      usuario,
-      dados.assinatura
-    );
+    await tratarRetornoCheckout();
   } catch (erro) {
     console.error(
-      "Erro ao carregar a conta:",
+      "Erro ao iniciar a página da conta:",
       erro
     );
 
 
     mostrarErro(
-      erro.message ||
       "Não foi possível carregar sua conta."
     );
+  } finally {
+    carregamentoContaEmAndamento =
+      false;
   }
 }
 
 
+/*
+  Configura o botão do Stripe
+  Customer Portal.
+*/
+if (
+  botaoGerenciarAssinatura &&
+  botaoGerenciarAssinatura
+    .dataset
+    .portalConfigurado !==
+    "true"
+) {
+  botaoGerenciarAssinatura
+    .dataset
+    .portalConfigurado =
+      "true";
+
+
+  botaoGerenciarAssinatura
+    .addEventListener(
+      "click",
+      () => {
+        abrirPortalAssinatura(
+          botaoGerenciarAssinatura
+        );
+      }
+    );
+}
+
+
+/*
+  Configura o botão de sair.
+*/
 botaoSair?.addEventListener(
   "click",
   sairDaConta
@@ -1066,26 +1656,50 @@ botaoSair?.addEventListener(
 
 
 /*
-  Se a sessão for encerrada em outra aba,
-  esta página também volta ao login.
+  Configura os botões Pro e Ultra
+  criados nesta página.
+*/
+configurarBotoesCheckout(
+  document
+);
+
+
+/*
+  Observa mudanças na autenticação.
 */
 supabase.auth.onAuthStateChange(
-  evento => {
-    if (evento === "SIGNED_OUT") {
-      window.location.replace(
-        "login.html"
-      );
-    }
+  (evento, sessao) => {
+    window.setTimeout(
+      () => {
+        if (
+          evento ===
+          "SIGNED_OUT"
+        ) {
+          window.location.replace(
+            "login.html"
+          );
+
+          return;
+        }
+
+
+        if (
+          evento ===
+            "SIGNED_IN" &&
+          sessao?.user
+        ) {
+          usuarioAtual =
+            sessao.user;
+        }
+      },
+
+      0
+    );
   }
 );
 
 
 /*
-  Liga os botões que possuem:
-  data-checkout-plan="pro"
-  data-checkout-plan="ultra"
+  Executa a página.
 */
-configurarBotoesCheckout();
-
-
 iniciarPaginaConta();
