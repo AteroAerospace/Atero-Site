@@ -1,57 +1,32 @@
-import {
-  supabase
-} from "./supabase-client.js?v=9";
+import { supabase } from "./supabase-client.js?v=10";
+import { configurarBotoesCheckout } from "./checkout.js?v=10";
 
-import {
-  configurarBotoesCheckout
-} from "./checkout.js?v=9";
+console.log("Atero index.js carregado.");
 
+const linkConta = document.querySelector("#link-conta");
+const secaoConta = document.querySelector("#conta");
+const botaoPlanoGratis = document.querySelector(
+  "#botao-plano-gratis"
+);
 
-console.log(
-  "Atero index.js carregado."
+const cardsPlanos = Array.from(
+  document.querySelectorAll(
+    ".plano-card[data-plan-id]"
+  )
 );
 
 
-const linkConta =
-  document.querySelector(
-    "#link-conta"
-  );
-
-const secaoConta =
-  document.querySelector(
-    "#conta"
-  );
-
-const botaoPlanoGratis =
-  document.querySelector(
-    "#botao-plano-gratis"
-  );
-
-const cardsPlanos =
-  Array.from(
-    document.querySelectorAll(
-      ".plano-card[data-plan-id]"
-    )
-  );
-
-
 /*
-  Remove qualquer marcação de plano atual.
+  Remove a indicação visual de plano atual.
 */
 function limparPlanoAtual() {
-  cardsPlanos.forEach(card => {
-    card.classList.remove(
-      "plano-atual"
-    );
+  cardsPlanos.forEach((card) => {
+    card.classList.remove("plano-atual");
+    card.removeAttribute("aria-current");
 
-    card.removeAttribute(
-      "aria-current"
+    const selo = card.querySelector(
+      "[data-selo-plano-atual]"
     );
-
-    const selo =
-      card.querySelector(
-        "[data-selo-plano-atual]"
-      );
 
     if (selo) {
       selo.hidden = true;
@@ -61,26 +36,21 @@ function limparPlanoAtual() {
 
 
 /*
-  Marca o card correspondente ao plano
-  atualmente registrado na assinatura.
+  Marca visualmente o plano atual.
 */
 function marcarPlanoAtual(planoId) {
   limparPlanoAtual();
 
+  const planoNormalizado = String(
+    planoId || ""
+  )
+    .trim()
+    .toLowerCase();
 
-  const planoNormalizado =
-    String(planoId || "")
-      .trim()
-      .toLowerCase();
-
-
-  const cardAtual =
-    cardsPlanos.find(
-      card =>
-        card.dataset.planId ===
-        planoNormalizado
-    );
-
+  const cardAtual = cardsPlanos.find(
+    (card) =>
+      card.dataset.planId === planoNormalizado
+  );
 
   if (!cardAtual) {
     console.warn(
@@ -91,22 +61,16 @@ function marcarPlanoAtual(planoId) {
     return;
   }
 
-
-  cardAtual.classList.add(
-    "plano-atual"
-  );
+  cardAtual.classList.add("plano-atual");
 
   cardAtual.setAttribute(
     "aria-current",
     "true"
   );
 
-
-  const selo =
-    cardAtual.querySelector(
-      "[data-selo-plano-atual]"
-    );
-
+  const selo = cardAtual.querySelector(
+    "[data-selo-plano-atual]"
+  );
 
   if (selo) {
     selo.hidden = false;
@@ -115,23 +79,76 @@ function marcarPlanoAtual(planoId) {
 
 
 /*
-  Estado utilizado quando não existe
-  uma Conta Atero autenticada.
+  Restaura os botões dos planos pagos.
+*/
+function restaurarBotoesPagos() {
+  const botoes = document.querySelectorAll(
+    "[data-checkout-plan]"
+  );
+
+  botoes.forEach((botao) => {
+    const plano = botao.dataset.checkoutPlan;
+
+    botao.disabled = false;
+    botao.removeAttribute("aria-current");
+
+    if (plano === "pro") {
+      botao.textContent = "Assinar Pro";
+    }
+
+    if (plano === "ultra") {
+      botao.textContent = "Assinar Ultra";
+    }
+  });
+}
+
+
+/*
+  Ajusta os botões conforme o plano atual.
+*/
+function atualizarBotoesDoPlano(planoId) {
+  restaurarBotoesPagos();
+
+  const planoNormalizado = String(
+    planoId || "gratis"
+  )
+    .trim()
+    .toLowerCase();
+
+  const botaoPlanoAtual =
+    document.querySelector(
+      `[data-checkout-plan="${planoNormalizado}"]`
+    );
+
+  if (botaoPlanoAtual) {
+    botaoPlanoAtual.disabled = true;
+
+    botaoPlanoAtual.setAttribute(
+      "aria-current",
+      "true"
+    );
+
+    botaoPlanoAtual.textContent =
+      "Plano atual";
+  }
+}
+
+
+/*
+  Estado da página para usuários desconectados.
 */
 function mostrarEstadoDesconectado() {
   limparPlanoAtual();
-
+  restaurarBotoesPagos();
 
   if (secaoConta) {
     secaoConta.hidden = false;
   }
 
-
   if (linkConta) {
     linkConta.href = "#conta";
     linkConta.textContent = "Conta";
   }
-
 
   if (botaoPlanoGratis) {
     botaoPlanoGratis.href =
@@ -144,25 +161,18 @@ function mostrarEstadoDesconectado() {
 
 
 /*
-  Estado exibido quando o usuário está
-  autenticado.
+  Estado da página para usuários conectados.
 */
-async function mostrarEstadoConectado(
-  usuario
-) {
+async function mostrarEstadoConectado(usuario) {
   if (secaoConta) {
     secaoConta.hidden = true;
   }
 
-
   if (linkConta) {
-    linkConta.href =
-      "conta.html";
-
+    linkConta.href = "conta.html";
     linkConta.textContent =
       "Minha conta";
   }
-
 
   if (botaoPlanoGratis) {
     botaoPlanoGratis.href =
@@ -172,11 +182,7 @@ async function mostrarEstadoConectado(
       "Gerenciar aplicativos";
   }
 
-
-  const [
-    resultadoPerfil,
-    resultadoAssinatura
-  ] = await Promise.all([
+  const consultas = await Promise.all([
     supabase
       .from("profiles")
       .select("display_name")
@@ -185,112 +191,108 @@ async function mostrarEstadoConectado(
 
     supabase
       .from("subscriptions")
-      .select(`
-        plan_id,
-        status
-      `)
+      .select("plan_id, status")
       .eq("user_id", usuario.id)
       .maybeSingle()
   ]);
 
+  const resultadoPerfil =
+    consultas[0];
 
-  /*
-    Atualiza o link do cabeçalho com
-    o primeiro nome do usuário.
-  */
-  if (
-    !resultadoPerfil.error &&
-    resultadoPerfil.data
-      ?.display_name &&
-    linkConta
-  ) {
-    const primeiroNome =
-      resultadoPerfil.data
-        .display_name
-        .trim()
-        .split(/\s+/)[0];
+  const resultadoAssinatura =
+    consultas[1];
 
 
-    if (primeiroNome) {
-      linkConta.textContent =
-        `Olá, ${primeiroNome}`;
-    }
-  } else if (
-    resultadoPerfil.error
-  ) {
+  if (resultadoPerfil.error) {
     console.warn(
       "Não foi possível carregar o perfil:",
       resultadoPerfil.error
     );
+  } else {
+    const nomeCompleto =
+      resultadoPerfil.data?.display_name;
+
+    if (
+      typeof nomeCompleto === "string" &&
+      linkConta
+    ) {
+      const primeiroNome = nomeCompleto
+        .trim()
+        .split(/\s+/)[0];
+
+      if (primeiroNome) {
+        linkConta.textContent =
+          `Olá, ${primeiroNome}`;
+      }
+    }
   }
 
 
-  /*
-    Marca o plano atual apenas quando
-    existe um usuário conectado.
-  */
   if (resultadoAssinatura.error) {
     console.error(
-      "Erro ao carregar o plano atual:",
+      "Não foi possível carregar o plano:",
       resultadoAssinatura.error
     );
 
     limparPlanoAtual();
+    restaurarBotoesPagos();
 
     return;
   }
 
+  const planoId =
+    resultadoAssinatura.data?.plan_id ||
+    "gratis";
 
-  marcarPlanoAtual(
-    resultadoAssinatura.data
-      ?.plan_id ||
-    "gratis"
-  );
+  marcarPlanoAtual(planoId);
+  atualizarBotoesDoPlano(planoId);
 }
 
 
 /*
-  Verifica a autenticação diretamente
-  com o Supabase.
+  Verifica a autenticação atual.
 */
 async function verificarLogin() {
-  const {
-    data,
-    error
-  } = await supabase.auth.getUser();
+  try {
+    const { data, error } =
+      await supabase.auth.getUser();
 
-
-  if (
-    error ||
-    !data.user
-  ) {
     if (error) {
       console.error(
         "Erro ao verificar usuário:",
         error
       );
+
+      mostrarEstadoDesconectado();
+
+      return;
     }
 
+    if (!data.user) {
+      mostrarEstadoDesconectado();
+
+      return;
+    }
+
+    await mostrarEstadoConectado(
+      data.user
+    );
+  } catch (erro) {
+    console.error(
+      "Erro inesperado ao verificar login:",
+      erro
+    );
 
     mostrarEstadoDesconectado();
-
-    return;
   }
-
-
-  await mostrarEstadoConectado(
-    data.user
-  );
 }
 
 
 /*
-  Liga os botões Pro e Ultra ao
-  sistema de checkout.
+  Liga os botões Pro e Ultra ao checkout.
 */
 const quantidadeBotoes =
   configurarBotoesCheckout();
-
 
 console.log(
   "Botões de checkout encontrados:",
@@ -299,33 +301,27 @@ console.log(
 
 
 /*
-  Atualiza o estado da página quando
-  o login muda em outra aba ou janela.
+  Atualiza o site quando o estado de
+  autenticação mudar.
 */
 supabase.auth.onAuthStateChange(
   (evento, sessao) => {
-    window.setTimeout(
-      () => {
-        if (
-          evento === "SIGNED_IN" &&
-          sessao?.user
-        ) {
-          mostrarEstadoConectado(
-            sessao.user
-          );
+    window.setTimeout(() => {
+      if (
+        evento === "SIGNED_IN" &&
+        sessao?.user
+      ) {
+        mostrarEstadoConectado(
+          sessao.user
+        );
 
-          return;
-        }
+        return;
+      }
 
-
-        if (
-          evento === "SIGNED_OUT"
-        ) {
-          mostrarEstadoDesconectado();
-        }
-      },
-      0
-    );
+      if (evento === "SIGNED_OUT") {
+        mostrarEstadoDesconectado();
+      }
+    }, 0);
   }
 );
 
