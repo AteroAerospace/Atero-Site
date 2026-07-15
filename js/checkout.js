@@ -5,8 +5,7 @@ let checkoutEmAndamento = false;
 
 
 /*
-  Cria uma notificação visual que pode ser usada
-  tanto no index quanto na página da conta.
+  Exibe uma notificação visual.
 */
 export function mostrarAvisoCheckout(
   mensagem,
@@ -35,7 +34,7 @@ export function mostrarAvisoCheckout(
       "polite"
     );
 
-    document.body.append(aviso);
+    documentoSeguroAppend(aviso);
   }
 
 
@@ -50,14 +49,15 @@ export function mostrarAvisoCheckout(
     `aviso-checkout-${tipo}`
   );
 
-
   aviso.textContent = mensagem;
   aviso.hidden = false;
 
 
-  window.clearTimeout(
-    aviso.timeoutId
-  );
+  if (aviso.timeoutId) {
+    window.clearTimeout(
+      aviso.timeoutId
+    );
+  }
 
 
   aviso.timeoutId =
@@ -73,16 +73,36 @@ export function mostrarAvisoCheckout(
 
 
 /*
-  Lê a resposta JSON enviada por uma
-  Edge Function em caso de erro.
+  Adiciona o aviso ao body quando ele
+  estiver disponível.
 */
-async function obterMensagemErro(
-  erro
-) {
+function documentoSeguroAppend(elemento) {
+  if (document.body) {
+    document.body.append(elemento);
+    return;
+  }
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      document.body.append(elemento);
+    },
+    {
+      once: true
+    }
+  );
+}
+
+
+/*
+  Tenta ler a mensagem JSON retornada
+  pela Edge Function.
+*/
+async function obterMensagemErro(erro) {
   if (erro?.context) {
     try {
       const resposta =
-        await erro.context.json();
+        await erro.context.clone().json();
 
       if (
         typeof resposta?.error ===
@@ -92,7 +112,7 @@ async function obterMensagemErro(
       }
     } catch (erroLeitura) {
       console.warn(
-        "Não foi possível ler o erro da função:",
+        "Não foi possível ler a resposta da função:",
         erroLeitura
       );
     }
@@ -107,8 +127,7 @@ async function obterMensagemErro(
 
 
 /*
-  Guarda e restaura o conteúdo original
-  do botão ou link.
+  Controla o estado visual do botão.
 */
 function definirCarregamento(
   elemento,
@@ -121,9 +140,13 @@ function definirCarregamento(
 
 
   if (ativo) {
-    if (!elemento.dataset.conteudoOriginal) {
-      elemento.dataset.conteudoOriginal =
-        elemento.innerHTML;
+    if (
+      !elemento.dataset
+        .conteudoOriginal
+    ) {
+      elemento.dataset
+        .conteudoOriginal =
+          elemento.innerHTML;
     }
 
 
@@ -137,7 +160,15 @@ function definirCarregamento(
     );
 
 
-    elemento.innerHTML =
+    if (
+      elemento instanceof
+      HTMLButtonElement
+    ) {
+      elemento.disabled = true;
+    }
+
+
+    elemento.textContent =
       plano === "ultra"
         ? "Abrindo Ultra..."
         : "Abrindo Pro...";
@@ -156,39 +187,130 @@ function definirCarregamento(
 
 
   if (
-    elemento.dataset.conteudoOriginal
+    elemento instanceof
+    HTMLButtonElement
+  ) {
+    elemento.disabled = false;
+  }
+
+
+  if (
+    elemento.dataset
+      .conteudoOriginal
   ) {
     elemento.innerHTML =
-      elemento.dataset.conteudoOriginal;
+      elemento.dataset
+        .conteudoOriginal;
   }
 }
 
 
 /*
-  Retorna a página de cadastro associada
-  ao plano escolhido.
+  Valida o usuário junto ao servidor
+  do Supabase e depois obtém o token
+  da sessão local.
 */
-function obterDestinoCadastro(
-  elemento,
-  plano
-) {
-  if (
-    elemento instanceof
-    HTMLAnchorElement
-  ) {
-    return elemento.href;
+async function obterSessaoValida() {
+  const {
+    data: dadosUsuario,
+    error: erroUsuario
+  } = await supabase.auth.getUser();
+
+
+  if (erroUsuario) {
+    console.error(
+      "Erro ao validar usuário:",
+      erroUsuario
+    );
+
+    return null;
   }
 
 
-  return new URL(
-    `cadastro.html?plano=${plano}`,
-    window.location.href
-  ).href;
+  if (!dadosUsuario.user) {
+    return null;
+  }
+
+
+  let {
+    data: dadosSessao,
+    error: erroSessao
+  } = await supabase.auth.getSession();
+
+
+  if (erroSessao) {
+    console.error(
+      "Erro ao obter sessão:",
+      erroSessao
+    );
+
+    return null;
+  }
+
+
+  if (
+    dadosSessao.session
+      ?.access_token
+  ) {
+    return dadosSessao.session;
+  }
+
+
+  /*
+    Caso o usuário exista, mas o token local
+    precise ser renovado, tenta atualizar
+    a sessão uma única vez.
+  */
+  const {
+    data: dadosAtualizados,
+    error: erroAtualizacao
+  } = await supabase.auth
+    .refreshSession();
+
+
+  if (erroAtualizacao) {
+    console.error(
+      "Erro ao renovar sessão:",
+      erroAtualizacao
+    );
+
+    return null;
+  }
+
+
+  return (
+    dadosAtualizados.session ||
+    null
+  );
 }
 
 
 /*
-  Inicia uma sessão Stripe Checkout.
+  Monta o endereço do login preservando
+  a página atual.
+*/
+function obterEnderecoLogin(plano) {
+  const paginaAtual =
+    `${window.location.pathname}` +
+    `${window.location.search}` +
+    `${window.location.hash}`;
+
+
+  const parametros =
+    new URLSearchParams({
+      next: paginaAtual,
+      plano
+    });
+
+
+  return (
+    `login.html?${parametros.toString()}`
+  );
+}
+
+
+/*
+  Inicia o Stripe Checkout.
 */
 export async function iniciarCheckout(
   plano,
@@ -221,6 +343,7 @@ export async function iniciarCheckout(
 
   checkoutEmAndamento = true;
 
+
   definirCarregamento(
     elemento,
     true,
@@ -229,47 +352,37 @@ export async function iniciarCheckout(
 
 
   try {
-    const {
-      data: dadosSessao,
-      error: erroSessao
-    } = await supabase.auth
-      .getSession();
+    const sessao =
+      await obterSessaoValida();
 
 
-    if (
-      erroSessao ||
-      !dadosSessao.session
-    ) {
+    if (!sessao) {
       mostrarAvisoCheckout(
-        "Entre ou crie uma conta para assinar um plano.",
-        "informacao"
+        "Sua sessão não foi encontrada. Entre novamente para continuar.",
+        "erro"
       );
 
 
-      const destino =
-        obterDestinoCadastro(
-          elemento,
-          planoNormalizado
-        );
+      /*
+        Não envia para cadastro.
 
-
+        Caso realmente não exista sessão,
+        envia para login depois de um pequeno
+        intervalo.
+      */
       window.setTimeout(
         () => {
           window.location.assign(
-            destino
+            obterEnderecoLogin(
+              planoNormalizado
+            )
           );
         },
-        500
+        1200
       );
 
       return;
     }
-
-
-    const token =
-      dadosSessao
-        .session
-        .access_token;
 
 
     const {
@@ -281,7 +394,7 @@ export async function iniciarCheckout(
         {
           headers: {
             Authorization:
-              `Bearer ${token}`
+              `Bearer ${sessao.access_token}`
           },
 
           body: {
@@ -299,10 +412,6 @@ export async function iniciarCheckout(
         );
 
 
-      /*
-        A função retorna esta mensagem quando
-        o usuário já tem assinatura Stripe ativa.
-      */
       if (
         mensagem
           .toLowerCase()
@@ -311,7 +420,7 @@ export async function iniciarCheckout(
           )
       ) {
         mostrarAvisoCheckout(
-          "Você já possui uma assinatura ativa. Gerencie seu plano pela página da conta.",
+          "Você já possui uma assinatura. Gerencie seu plano pela página da conta.",
           "informacao"
         );
 
@@ -319,7 +428,9 @@ export async function iniciarCheckout(
       }
 
 
-      throw new Error(mensagem);
+      throw new Error(
+        mensagem
+      );
     }
 
 
@@ -339,8 +450,7 @@ export async function iniciarCheckout(
 
 
     if (
-      checkoutUrl.protocol !==
-      "https:"
+      checkoutUrl.protocol !== "https:"
     ) {
       throw new Error(
         "A URL de pagamento retornada é inválida."
@@ -348,10 +458,6 @@ export async function iniciarCheckout(
     }
 
 
-    /*
-      Sai do site e abre o checkout hospedado
-      pela Stripe.
-    */
     window.location.assign(
       checkoutUrl.href
     );
@@ -370,6 +476,7 @@ export async function iniciarCheckout(
   } finally {
     checkoutEmAndamento = false;
 
+
     definirCarregamento(
       elemento,
       false,
@@ -380,8 +487,8 @@ export async function iniciarCheckout(
 
 
 /*
-  Liga automaticamente todos os elementos
-  que possuem data-checkout-plan.
+  Liga todos os botões que possuem
+  data-checkout-plan.
 */
 export function configurarBotoesCheckout(
   raiz = document
@@ -394,25 +501,29 @@ export function configurarBotoesCheckout(
 
   botoes.forEach(botao => {
     if (
-      botao.dataset.checkoutConfigurado ===
+      botao.dataset
+        .checkoutConfigurado ===
       "true"
     ) {
       return;
     }
 
 
-    botao.dataset.checkoutConfigurado =
-      "true";
+    botao.dataset
+      .checkoutConfigurado =
+        "true";
 
 
     botao.addEventListener(
       "click",
       evento => {
         evento.preventDefault();
+        evento.stopPropagation();
 
 
         iniciarCheckout(
-          botao.dataset.checkoutPlan,
+          botao.dataset
+            .checkoutPlan,
           botao
         );
       }
