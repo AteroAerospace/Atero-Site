@@ -544,4 +544,4 @@ export function configurarBotoesCheckout(
 
   return botoes.length;
 }
-}
+
