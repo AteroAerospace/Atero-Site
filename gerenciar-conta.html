@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Gerencie os dados e a segurança da sua Conta Atero."
+  >
+
+  <meta name="theme-color" content="#f5c518">
+
+  <title>Gerenciar conta | Atero</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logos/favicon.png"
+  >
+
+  <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <a
+        href="index.html"
+        aria-label="Voltar para a página inicial"
+      >
+        <img
+          src="assets/logos/main-logo2.svg"
+          alt="Logo da Atero"
+        >
+      </a>
+    </div>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="conta.html">Conta</a>
+    </nav>
+  </header>
+
+
+  <main
+    class="gerenciar-conta-main"
+    id="pagina-gerenciar-conta"
+    aria-busy="true"
+  >
+
+    <section class="gerenciar-conta-cabecalho">
+      <span class="gerenciar-conta-etiqueta">
+        Conta Atero
+      </span>
+
+      <h1>
+        Dados e segurança<span>.</span>
+      </h1>
+
+      <p>
+        Gerencie suas informações pessoais, senha e opções
+        relacionadas à sua Conta Atero.
+      </p>
+    </section>
+
+
+    <section class="gerenciar-conta-grade">
+
+      <article class="gerenciar-conta-card">
+        <div class="gerenciar-conta-card-topo">
+          <div>
+            <span class="gerenciar-conta-subtitulo">
+              Perfil
+            </span>
+
+            <h2>Dados pessoais</h2>
+          </div>
+
+          <div
+            class="gerenciar-conta-avatar"
+            id="avatar-usuario"
+            aria-hidden="true"
+          >
+            U
+          </div>
+        </div>
+
+
+        <form
+          class="gerenciar-conta-formulario"
+          id="form-dados-pessoais"
+          novalidate
+        >
+
+          <div class="auth-campo">
+            <label for="nome">
+              Nome
+            </label>
+
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Seu nome"
+              autocomplete="name"
+              minlength="2"
+              maxlength="80"
+              required
+            >
+          </div>
+
+
+          <div class="auth-campo">
+            <label for="email">
+              E-mail
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              disabled
+              readonly
+            >
+
+            <p class="auth-ajuda">
+              A alteração de e-mail será disponibilizada
+              posteriormente.
+            </p>
+          </div>
+
+
+          <div
+            class="auth-mensagem"
+            id="mensagem-perfil"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></div>
+
+
+          <button
+            class="auth-botao"
+            id="botao-salvar-perfil"
+            type="submit"
+          >
+            Salvar alterações
+            <span aria-hidden="true">→</span>
+          </button>
+
+        </form>
+      </article>
+
+
+      <article class="gerenciar-conta-card">
+        <div class="gerenciar-conta-card-topo">
+          <div>
+            <span class="gerenciar-conta-subtitulo">
+              Informações
+            </span>
+
+            <h2>Detalhes da conta</h2>
+          </div>
+        </div>
+
+        <dl class="gerenciar-conta-detalhes">
+
+          <div>
+            <dt>Status</dt>
+
+            <dd id="status-conta">
+              Carregando...
+            </dd>
+          </div>
+
+
+          <div>
+            <dt>Conta criada em</dt>
+
+            <dd id="data-criacao">
+              —
+            </dd>
+          </div>
+
+
+          <div>
+            <dt>Último acesso</dt>
+
+            <dd id="ultimo-acesso">
+              —
+            </dd>
+          </div>
+
+
+          <div>
+            <dt>Confirmação de e-mail</dt>
+
+            <dd id="status-email">
+              —
+            </dd>
+          </div>
+
+        </dl>
+      </article>
+
+
+      <article class="gerenciar-conta-card">
+        <div class="gerenciar-conta-card-topo">
+          <div>
+            <span class="gerenciar-conta-subtitulo">
+              Segurança
+            </span>
+
+            <h2>Senha</h2>
+          </div>
+        </div>
+
+        <p class="gerenciar-conta-texto">
+          Altere sua senha periodicamente e evite utilizar
+          a mesma combinação em outros serviços.
+        </p>
+
+        <a
+          class="painel-botao-principal"
+          href="alterar-senha.html"
+        >
+          Alterar minha senha
+        </a>
+      </article>
+
+
+      <article
+        class="gerenciar-conta-card
+               gerenciar-conta-card-perigo"
+      >
+        <div class="gerenciar-conta-card-topo">
+          <div>
+            <span class="gerenciar-conta-subtitulo">
+              Zona de perigo
+            </span>
+
+            <h2>Excluir conta</h2>
+          </div>
+        </div>
+
+        <p class="gerenciar-conta-texto">
+          A exclusão remove permanentemente sua Conta Atero,
+          seleção de aplicativos, perfil e dados vinculados.
+          Essa ação não poderá ser desfeita.
+        </p>
+
+        <button
+          class="gerenciar-conta-botao-perigo"
+          id="botao-abrir-exclusao"
+          type="button"
+        >
+          Excluir minha conta
+        </button>
+      </article>
+
+    </section>
+
+
+    <section class="gerenciar-conta-voltar">
+      <a href="conta.html">
+        ← Voltar para minha conta
+      </a>
+    </section>
+
+  </main>
+
+
+  <div
+    class="modal-conta"
+    id="modal-exclusao"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal-exclusao"
+    hidden
+  >
+    <div
+      class="modal-conta-fundo"
+      id="fundo-modal-exclusao"
+    ></div>
+
+    <div class="modal-conta-conteudo">
+      <span class="modal-conta-etiqueta">
+        Exclusão definitiva
+      </span>
+
+      <h2 id="titulo-modal-exclusao">
+        Excluir sua Conta Atero?
+      </h2>
+
+      <p>
+        Esta ação excluirá permanentemente sua conta,
+        aplicativos selecionados e informações vinculadas.
+      </p>
+
+      <p>
+        Para confirmar, digite
+        <strong>EXCLUIR</strong>
+        no campo abaixo.
+      </p>
+
+      <div class="auth-campo">
+        <label for="confirmacao-exclusao">
+          Confirmação
+        </label>
+
+        <input
+          type="text"
+          id="confirmacao-exclusao"
+          name="confirmacao_exclusao"
+          placeholder="Digite EXCLUIR"
+          autocomplete="off"
+        >
+      </div>
+
+      <div
+        class="auth-mensagem"
+        id="mensagem-exclusao"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></div>
+
+      <div class="modal-conta-acoes">
+        <button
+          class="modal-conta-cancelar"
+          id="botao-cancelar-exclusao"
+          type="button"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="gerenciar-conta-botao-perigo"
+          id="botao-confirmar-exclusao"
+          type="button"
+          disabled
+        >
+          Excluir definitivamente
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <footer>
+    <p>
+      © 2026 Atero. Todos os direitos reservados.
+    </p>
+
+    <nav aria-label="Links do rodapé">
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </footer>
+
+
+  <script
+    type="module"
+    src="js/gerenciar-conta.js"
+  ></script>
+
+</body>
+</html>
