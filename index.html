@@ -262,7 +262,18 @@
 
       <div class="grade-planos">
 
-        <article class="plano-card">
+        <article
+          class="plano-card"
+          data-plan-id="gratis"
+        >
+          <span
+            class="selo-plano-atual"
+            data-selo-plano-atual
+            hidden
+          >
+            Plano atual
+          </span>
+
           <div class="plano-topo">
             <h3>Grátis</h3>
 
@@ -294,9 +305,20 @@
         </article>
 
 
-        <article class="plano-card plano-destaque">
+        <article
+          class="plano-card plano-destaque"
+          data-plan-id="pro"
+        >
           <span class="selo-plano">
             Mais escolhido
+          </span>
+
+          <span
+            class="selo-plano-atual"
+            data-selo-plano-atual
+            hidden
+          >
+            Plano atual
           </span>
 
           <div class="plano-topo">
@@ -330,7 +352,18 @@
         </article>
 
 
-        <article class="plano-card">
+        <article
+          class="plano-card"
+          data-plan-id="ultra"
+        >
+          <span
+            class="selo-plano-atual"
+            data-selo-plano-atual
+            hidden
+          >
+            Plano atual
+          </span>
+
           <div class="plano-topo">
             <h3>Ultra</h3>
 
@@ -469,43 +502,46 @@
 
 
   <div
-  id="erro-javascript"
-  style="
-    display: none;
-    position: fixed;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    z-index: 9999;
-    padding: 16px;
-    background: #fff1f1;
-    color: #8d2020;
-    border: 1px solid #e4a9a9;
-    border-radius: 10px;
-    font-family: Arial, sans-serif;
-  "
-></div>
+    id="erro-javascript"
+    role="alert"
+    style="
+      display: none;
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 9999;
+      padding: 16px;
+      background: #fff1f1;
+      color: #8d2020;
+      border: 1px solid #e4a9a9;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+    "
+  ></div>
 
-<script type="module">
-  const caixaErro =
-    document.querySelector(
-      "#erro-javascript"
-    );
 
-  import("./js/index.js?v=8")
-    .catch(erro => {
-      console.error(
-        "Erro ao carregar o sistema:",
-        erro
+  <script type="module">
+    const caixaErro =
+      document.querySelector(
+        "#erro-javascript"
       );
 
-      caixaErro.style.display = "block";
+    import("./js/index.js?v=9")
+      .catch(erro => {
+        console.error(
+          "Erro ao carregar o sistema:",
+          erro
+        );
 
-      caixaErro.textContent =
-        "Erro ao carregar o sistema da Atero: " +
-        erro.message;
-    });
-</script>
+        caixaErro.style.display =
+          "block";
+
+        caixaErro.textContent =
+          "Erro ao carregar o sistema da Atero: " +
+          erro.message;
+      });
+  </script>
 
 </body>
 </html>
