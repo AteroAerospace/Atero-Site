@@ -64,12 +64,10 @@ const mensagemPlanoPago =
     "#mensagem-plano-pago"
   );
 
-/*
-  Algumas consultas do Supabase podem retornar
-  uma relação como objeto ou como array.
 
-  Esta função garante que trabalharemos sempre
-  com um objeto.
+/*
+  Algumas relações do Supabase podem ser
+  retornadas como objeto ou como array.
 */
 function normalizarRelacao(relacao) {
   if (Array.isArray(relacao)) {
@@ -100,8 +98,8 @@ function obterInicial(nome) {
 
 
 /*
-  Converte o estado interno da assinatura
-  para uma informação amigável.
+  Converte o status interno da assinatura
+  em um texto amigável.
 */
 function obterStatusAssinatura(status) {
   const statusDisponiveis = {
@@ -126,7 +124,17 @@ function obterStatusAssinatura(status) {
     },
 
     incomplete: {
-      nome: "Incompleta",
+      nome: "Pagamento incompleto",
+      permiteAcesso: false
+    },
+
+    unpaid: {
+      nome: "Não paga",
+      permiteAcesso: false
+    },
+
+    paused: {
+      nome: "Pausada",
       permiteAcesso: false
     }
   };
@@ -144,7 +152,10 @@ function obterStatusAssinatura(status) {
   Produz a descrição do limite do plano.
 */
 function obterDescricaoLimite(limite) {
-  if (limite === null || limite === undefined) {
+  if (
+    limite === null ||
+    limite === undefined
+  ) {
     return "Todos os aplicativos";
   }
 
@@ -157,10 +168,16 @@ function obterDescricaoLimite(limite) {
 
 
 /*
-  Produz o texto principal da assinatura.
+  Produz a descrição principal do plano.
 */
-function obterDescricaoPlano(nome, limite) {
-  if (limite === null || limite === undefined) {
+function obterDescricaoPlano(
+  nome,
+  limite
+) {
+  if (
+    limite === null ||
+    limite === undefined
+  ) {
     return (
       `O Plano ${nome} oferece acesso a todos os ` +
       "aplicativos disponíveis no Ecossistema Atero."
@@ -180,8 +197,8 @@ function obterDescricaoPlano(nome, limite) {
 
 
 /*
-  Cria um card de aplicativo sem inserir
-  HTML recebido do banco diretamente na página.
+  Cria um card de aplicativo usando
+  os dados retornados pelo banco.
 */
 function criarCardAplicativo(aplicativo) {
   const card =
@@ -268,8 +285,9 @@ function criarCardAplicativo(aplicativo) {
       evento => {
         evento.preventDefault();
 
-        alert(
-          "Este aplicativo ainda não está disponível."
+        mostrarAvisoCheckout(
+          "Este aplicativo ainda não está disponível.",
+          "informacao"
         );
       }
     );
@@ -358,13 +376,19 @@ function atualizarResumoPlano({
     `Plano ${nome}`;
 
   descricaoPlano.textContent =
-    obterDescricaoPlano(nome, limite);
+    obterDescricaoPlano(
+      nome,
+      limite
+    );
 
   resumoStatusConta.textContent =
     statusFormatado.nome;
 
 
-  if (limite === null) {
+  if (
+    limite === null ||
+    limite === undefined
+  ) {
     resumoAplicativos.textContent =
       `${quantidadeAplicativos}`;
 
@@ -387,7 +411,9 @@ function atualizarResumoPlano({
     );
 
 
-  if (quantidadeAplicativos >= limite) {
+  if (
+    quantidadeAplicativos >= limite
+  ) {
     resumoAplicativosDetalhe.textContent =
       "Limite do plano atingido";
 
@@ -405,6 +431,90 @@ function atualizarResumoPlano({
 
   resumoAplicativosDetalhe.textContent =
     `Você ainda pode escolher ${restantes} aplicativos`;
+}
+
+
+/*
+  Controla os botões de pagamento de acordo
+  com o plano atual do usuário.
+*/
+function atualizarAcoesPagamento(
+  plano,
+  status
+) {
+  if (
+    !botaoAssinarPro ||
+    !botaoAssinarUltra ||
+    !mensagemPlanoPago
+  ) {
+    return;
+  }
+
+
+  const planoId =
+    plano?.id || "gratis";
+
+  const planoAtivo =
+    ["active", "trialing"].includes(
+      status
+    );
+
+
+  botaoAssinarPro.hidden = true;
+  botaoAssinarUltra.hidden = true;
+  mensagemPlanoPago.hidden = true;
+
+
+  /*
+    Somente usuários do plano gratuito
+    podem abrir um novo checkout.
+
+    Usuários já assinantes usarão o
+    portal de gerenciamento da Stripe.
+  */
+  if (
+    planoId === "gratis" &&
+    planoAtivo
+  ) {
+    botaoAssinarPro.hidden = false;
+    botaoAssinarUltra.hidden = false;
+
+    return;
+  }
+
+
+  mensagemPlanoPago.hidden = false;
+
+
+  if (status === "past_due") {
+    mensagemPlanoPago.textContent =
+      "Existe um pagamento pendente na sua assinatura.";
+
+    return;
+  }
+
+
+  if (status === "incomplete") {
+    mensagemPlanoPago.textContent =
+      "Seu pagamento ainda não foi concluído.";
+
+    return;
+  }
+
+
+  if (
+    planoId === "pro" ||
+    planoId === "ultra"
+  ) {
+    mensagemPlanoPago.textContent =
+      `Seu Plano ${plano?.name || planoId} está ativo.`;
+
+    return;
+  }
+
+
+  mensagemPlanoPago.textContent =
+    "A assinatura não está disponível no momento.";
 }
 
 
@@ -464,7 +574,11 @@ async function carregarDadosConta(usuario) {
       .from("subscriptions")
       .select(`
         status,
+        stripe_status,
         plan_id,
+        cancel_at_period_end,
+        current_period_end,
+
         plan:plans (
           id,
           name,
@@ -478,6 +592,7 @@ async function carregarDadosConta(usuario) {
       .from("user_apps")
       .select(`
         app_id,
+
         app:apps (
           id,
           name,
@@ -552,7 +667,8 @@ function preencherConta(
     obterInicial(nome);
 
   emailUsuario.textContent =
-    usuario.email || "E-mail indisponível";
+    usuario.email ||
+    "E-mail indisponível";
 
 
   const aplicativosOrdenados =
@@ -578,10 +694,17 @@ function preencherConta(
 
   atualizarResumoPlano({
     plano,
-    status: assinatura.status,
+    status:
+      assinatura.status,
     quantidadeAplicativos:
       aplicativosOrdenados.length
   });
+
+
+  atualizarAcoesPagamento(
+    plano,
+    assinatura.status
+  );
 
 
   renderizarAplicativos(
@@ -634,18 +757,237 @@ function mostrarErro(mensagem) {
   textoErro.textContent = mensagem;
 
   listaAplicativos.append(textoErro);
+
+
+  if (botaoAssinarPro) {
+    botaoAssinarPro.hidden = true;
+  }
+
+  if (botaoAssinarUltra) {
+    botaoAssinarUltra.hidden = true;
+  }
+
+  if (mensagemPlanoPago) {
+    mensagemPlanoPago.hidden = false;
+    mensagemPlanoPago.textContent =
+      "Não foi possível carregar sua assinatura.";
+  }
 }
 
 
 /*
-  Encerra a sessão.
+  Espera um determinado tempo.
+*/
+function esperar(tempo) {
+  return new Promise(
+    resolver => {
+      window.setTimeout(
+        resolver,
+        tempo
+      );
+    }
+  );
+}
+
+
+/*
+  Remove os parâmetros de checkout
+  sem recarregar a página.
+*/
+function limparParametrosCheckout() {
+  const url =
+    new URL(
+      window.location.href
+    );
+
+
+  url.searchParams.delete(
+    "checkout"
+  );
+
+  url.searchParams.delete(
+    "session_id"
+  );
+
+
+  const novoEndereco =
+    `${url.pathname}` +
+    `${url.search}` +
+    `${url.hash}`;
+
+
+  window.history.replaceState(
+    {},
+    document.title,
+    novoEndereco
+  );
+}
+
+
+/*
+  Trata o retorno do Stripe Checkout.
+
+  O usuário pode retornar antes de o webhook
+  terminar de atualizar o banco. Por isso,
+  consultamos a assinatura algumas vezes.
+*/
+async function tratarRetornoCheckout(
+  usuario,
+  assinaturaInicial
+) {
+  const parametros =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const resultado =
+    parametros.get("checkout");
+
+
+  if (!resultado) {
+    return;
+  }
+
+
+  limparParametrosCheckout();
+
+
+  if (resultado === "cancelado") {
+    mostrarAvisoCheckout(
+      "Pagamento cancelado. Nenhuma cobrança foi realizada.",
+      "informacao"
+    );
+
+    return;
+  }
+
+
+  if (resultado !== "sucesso") {
+    return;
+  }
+
+
+  const planoInicial =
+    assinaturaInicial?.plan_id;
+
+  const statusInicial =
+    assinaturaInicial?.status;
+
+
+  if (
+    ["pro", "ultra"].includes(
+      planoInicial
+    ) &&
+    ["active", "trialing"].includes(
+      statusInicial
+    )
+  ) {
+    mostrarAvisoCheckout(
+      "Pagamento confirmado e plano ativado.",
+      "sucesso"
+    );
+
+    return;
+  }
+
+
+  mostrarAvisoCheckout(
+    "Pagamento concluído. Confirmando sua assinatura...",
+    "informacao"
+  );
+
+
+  /*
+    Aguarda até aproximadamente 10 segundos
+    pela atualização do webhook.
+  */
+  for (
+    let tentativa = 0;
+    tentativa < 8;
+    tentativa += 1
+  ) {
+    await esperar(1250);
+
+
+    const {
+      data: assinatura,
+      error
+    } = await supabase
+      .from("subscriptions")
+      .select(`
+        plan_id,
+        status
+      `)
+      .eq(
+        "user_id",
+        usuario.id
+      )
+      .single();
+
+
+    if (error) {
+      console.error(
+        "Erro ao confirmar assinatura:",
+        error
+      );
+
+      continue;
+    }
+
+
+    const planoFoiAtivado =
+      ["pro", "ultra"].includes(
+        assinatura.plan_id
+      ) &&
+      ["active", "trialing"].includes(
+        assinatura.status
+      );
+
+
+    if (!planoFoiAtivado) {
+      continue;
+    }
+
+
+    const novosDados =
+      await carregarDadosConta(
+        usuario
+      );
+
+
+    preencherConta(
+      usuario,
+      novosDados
+    );
+
+
+    mostrarAvisoCheckout(
+      "Pagamento confirmado. Seu novo plano já está ativo.",
+      "sucesso"
+    );
+
+    return;
+  }
+
+
+  mostrarAvisoCheckout(
+    "O pagamento foi concluído, mas o plano ainda está sendo confirmado. Atualize a página em alguns segundos.",
+    "informacao"
+  );
+}
+
+
+/*
+  Encerra a sessão atual.
 */
 async function sairDaConta() {
   botaoSair.disabled = true;
   botaoSair.textContent = "Saindo...";
 
+
   const { error } =
     await supabase.auth.signOut();
+
 
   if (error) {
     console.error(
@@ -653,8 +995,9 @@ async function sairDaConta() {
       error
     );
 
-    alert(
-      "Não foi possível sair da conta. Tente novamente."
+    mostrarAvisoCheckout(
+      "Não foi possível sair da conta. Tente novamente.",
+      "erro"
     );
 
     botaoSair.disabled = false;
@@ -663,72 +1006,10 @@ async function sairDaConta() {
     return;
   }
 
+
   window.location.replace(
     "login.html"
   );
-}
-
-
-function atualizarAcoesPagamento(
-  plano,
-  status
-) {
-  const planoId =
-    plano?.id || "gratis";
-
-  const planoAtivo =
-    ["active", "trialing"].includes(
-      status
-    );
-
-
-  botaoAssinarPro.hidden = true;
-  botaoAssinarUltra.hidden = true;
-  mensagemPlanoPago.hidden = true;
-
-
-  /*
-    Somente uma conta gratuita pode abrir
-    um novo Checkout.
-
-    Usuários que já possuem assinatura serão
-    gerenciados posteriormente pelo portal Stripe.
-  */
-  if (
-    planoId === "gratis" &&
-    planoAtivo
-  ) {
-    botaoAssinarPro.hidden = false;
-    botaoAssinarUltra.hidden = false;
-
-    return;
-  }
-
-
-  mensagemPlanoPago.hidden = false;
-
-
-  if (status === "past_due") {
-    mensagemPlanoPago.textContent =
-      "Existe um pagamento pendente na sua assinatura.";
-
-    return;
-  }
-
-
-  if (
-    planoId === "pro" ||
-    planoId === "ultra"
-  ) {
-    mensagemPlanoPago.textContent =
-      `Seu Plano ${plano?.name || planoId} está ativo.`;
-
-    return;
-  }
-
-
-  mensagemPlanoPago.textContent =
-    "A assinatura não está disponível no momento.";
 }
 
 
@@ -740,10 +1021,12 @@ async function iniciarPaginaConta() {
     const usuario =
       await obterUsuarioAtual();
 
+
     if (!usuario) {
       redirecionarParaLogin();
       return;
     }
+
 
     const dados =
       await carregarDadosConta(
@@ -751,16 +1034,22 @@ async function iniciarPaginaConta() {
       );
 
 
-    
     preencherConta(
       usuario,
       dados
+    );
+
+
+    await tratarRetornoCheckout(
+      usuario,
+      dados.assinatura
     );
   } catch (erro) {
     console.error(
       "Erro ao carregar a conta:",
       erro
     );
+
 
     mostrarErro(
       erro.message ||
@@ -770,8 +1059,7 @@ async function iniciarPaginaConta() {
 }
 
 
-
-botaoSair.addEventListener(
+botaoSair?.addEventListener(
   "click",
   sairDaConta
 );
@@ -790,6 +1078,14 @@ supabase.auth.onAuthStateChange(
     }
   }
 );
+
+
+/*
+  Liga os botões que possuem:
+  data-checkout-plan="pro"
+  data-checkout-plan="ultra"
+*/
+configurarBotoesCheckout();
 
 
 iniciarPaginaConta();
