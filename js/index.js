@@ -1,5 +1,5 @@
 import { supabase } from "./supabase-client.js?v=10";
-import { configurarBotoesCheckout } from "./checkout.js?v=10";
+import { configurarBotoesCheckout } from "./checkout.js?v=12";
 
 console.log("Atero index.js carregado.");
 
