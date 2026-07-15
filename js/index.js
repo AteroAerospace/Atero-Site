@@ -1,20 +1,109 @@
-import { supabase } from "./supabase-client.js";
+import {
+  supabase
+} from "./supabase-client.js?v=8";
 
 import {
   configurarBotoesCheckout
-} from "./checkout.js";
+} from "./checkout.js?v=8";
+
+
+console.log(
+  "Atero index.js carregado."
+);
 
 
 const linkConta =
-  document.querySelector("#link-conta");
+  document.querySelector(
+    "#link-conta"
+  );
 
 const secaoConta =
-  document.querySelector("#conta");
+  document.querySelector(
+    "#conta"
+  );
 
 const botaoPlanoGratis =
   document.querySelector(
     "#botao-plano-gratis"
   );
+
+
+function mostrarEstadoDesconectado() {
+  if (secaoConta) {
+    secaoConta.hidden = false;
+  }
+
+  if (linkConta) {
+    linkConta.href = "#conta";
+    linkConta.textContent = "Conta";
+  }
+
+  if (botaoPlanoGratis) {
+    botaoPlanoGratis.href =
+      "cadastro.html?plano=gratis";
+
+    botaoPlanoGratis.textContent =
+      "Começar grátis";
+  }
+}
+
+
+async function mostrarEstadoConectado(
+  usuario
+) {
+  if (secaoConta) {
+    secaoConta.hidden = true;
+  }
+
+  if (linkConta) {
+    linkConta.href = "conta.html";
+    linkConta.textContent =
+      "Minha conta";
+  }
+
+  if (botaoPlanoGratis) {
+    botaoPlanoGratis.href =
+      "selecionar-apps.html";
+
+    botaoPlanoGratis.textContent =
+      "Gerenciar aplicativos";
+  }
+
+
+  const {
+    data: perfil,
+    error
+  } = await supabase
+    .from("profiles")
+    .select("display_name")
+    .eq("id", usuario.id)
+    .maybeSingle();
+
+
+  if (error) {
+    console.warn(
+      "Não foi possível carregar o nome:",
+      error
+    );
+
+    return;
+  }
+
+
+  const primeiroNome =
+    perfil?.display_name
+      ?.trim()
+      .split(/\s+/)[0];
+
+
+  if (
+    primeiroNome &&
+    linkConta
+  ) {
+    linkConta.textContent =
+      `Olá, ${primeiroNome}`;
+  }
+}
 
 
 async function verificarLogin() {
@@ -30,11 +119,10 @@ async function verificarLogin() {
   ) {
     if (error) {
       console.error(
-        "Erro ao verificar sessão:",
+        "Erro ao verificar usuário:",
         error
       );
     }
-
 
     mostrarEstadoDesconectado();
     return;
@@ -47,106 +135,22 @@ async function verificarLogin() {
 }
 
 
-async function mostrarEstadoConectado(
-  usuario
-) {
-  /*
-    Esconde os cards de entrar e criar conta.
-  */
-  if (secaoConta) {
-    secaoConta.hidden = true;
-  }
-
-
-  /*
-    O link Conta passa a abrir o painel.
-  */
-  if (linkConta) {
-    linkConta.href = "conta.html";
-    linkConta.textContent =
-      "Minha conta";
-  }
-
-
-  /*
-    Usuário conectado não precisa criar outra
-    conta para usar o plano gratuito.
-  */
-  if (botaoPlanoGratis) {
-    botaoPlanoGratis.href =
-      "selecionar-apps.html";
-
-    botaoPlanoGratis.textContent =
-      "Gerenciar aplicativos";
-  }
-
-
-  /*
-    Carrega o primeiro nome para o cabeçalho.
-  */
-  const {
-    data: perfil,
-    error
-  } = await supabase
-    .from("profiles")
-    .select("display_name")
-    .eq("id", usuario.id)
-    .maybeSingle();
-
-
-  if (
-    !error &&
-    perfil?.display_name &&
-    linkConta
-  ) {
-    const primeiroNome =
-      perfil.display_name
-        .trim()
-        .split(/\s+/)[0];
-
-
-    if (primeiroNome) {
-      linkConta.textContent =
-        `Olá, ${primeiroNome}`;
-    }
-  }
-}
-
-
-function mostrarEstadoDesconectado() {
-  if (secaoConta) {
-    secaoConta.hidden = false;
-  }
-
-
-  if (linkConta) {
-    linkConta.href = "#conta";
-    linkConta.textContent = "Conta";
-  }
-
-
-  if (botaoPlanoGratis) {
-    botaoPlanoGratis.href =
-      "cadastro.html?plano=gratis";
-
-    botaoPlanoGratis.textContent =
-      "Começar grátis";
-  }
-}
-
-
 /*
-  Liga os botões Pro e Ultra.
+  Esta linha é a que conecta os cliques
+  dos botões Pro e Ultra ao checkout.
 */
-configurarBotoesCheckout();
+const quantidadeBotoes =
+  configurarBotoesCheckout();
+
+
+console.log(
+  "Botões de checkout encontrados:",
+  quantidadeBotoes
+);
 
 
 supabase.auth.onAuthStateChange(
   (evento, sessao) => {
-    /*
-      Evita executar consultas assíncronas
-      diretamente dentro do callback.
-    */
     window.setTimeout(
       () => {
         if (
@@ -160,8 +164,9 @@ supabase.auth.onAuthStateChange(
           return;
         }
 
-
-        if (evento === "SIGNED_OUT") {
+        if (
+          evento === "SIGNED_OUT"
+        ) {
           mostrarEstadoDesconectado();
         }
       },
