@@ -1,5 +1,28 @@
 import { supabase } from "./supabase-client.js";
 
+const parametros =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const mensagemLogin =
+  document.querySelector(
+    "#mensagem-login"
+  );
+
+if (
+  parametros.get("senha") ===
+  "alterada"
+) {
+  mensagemLogin.hidden = false;
+
+  window.history.replaceState(
+    {},
+    document.title,
+    "login.html"
+  );
+}
+
 const formulario =
   document.querySelector("#form-login");
 
