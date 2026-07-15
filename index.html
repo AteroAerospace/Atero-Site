@@ -468,10 +468,44 @@
   </footer>
 
 
-  <script
-    type="module"
-    src="js/index.js"
-  ></script>
+  <div
+  id="erro-javascript"
+  style="
+    display: none;
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9999;
+    padding: 16px;
+    background: #fff1f1;
+    color: #8d2020;
+    border: 1px solid #e4a9a9;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+  "
+></div>
+
+<script type="module">
+  const caixaErro =
+    document.querySelector(
+      "#erro-javascript"
+    );
+
+  import("./js/index.js?v=8")
+    .catch(erro => {
+      console.error(
+        "Erro ao carregar o sistema:",
+        erro
+      );
+
+      caixaErro.style.display = "block";
+
+      caixaErro.textContent =
+        "Erro ao carregar o sistema da Atero: " +
+        erro.message;
+    });
+</script>
 
 </body>
 </html>
