@@ -265,37 +265,10 @@
   </footer>
 
 
-  <script>
-    const parametros = new URLSearchParams(window.location.search);
-    const planoSelecionado = parametros.get("plano");
-    const campoPlano = document.querySelector("#plano");
-
-    const planosValidos = ["gratis", "pro", "ultra"];
-
-    if (
-      campoPlano &&
-      planoSelecionado &&
-      planosValidos.includes(planoSelecionado)
-    ) {
-      campoPlano.value = planoSelecionado;
-    }
-
-    const formulario = document.querySelector("#form-cadastro");
-
-    formulario.addEventListener("submit", function (evento) {
-      const senha = document.querySelector("#senha").value;
-      const confirmacao =
-        document.querySelector("#confirmar-senha").value;
-
-      if (senha !== confirmacao) {
-        evento.preventDefault();
-
-        alert("As senhas digitadas não são iguais.");
-
-        document.querySelector("#confirmar-senha").focus();
-      }
-    });
-  </script>
+  <script
+    type="module"
+    src="js/cadastro.js"
+  ></script>
 
 </body>
 </html>
