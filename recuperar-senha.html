@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Recupere o acesso à sua Conta Atero."
+  >
+
+  <meta name="theme-color" content="#f5c518">
+
+  <title>Recuperar senha | Atero</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/logos/favicon.png"
+  >
+
+  <link rel="stylesheet" href="css/global.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <a
+        href="index.html"
+        aria-label="Voltar para a página inicial"
+      >
+        <img
+          src="assets/logos/main-logo2.svg"
+          alt="Logo da Atero"
+        >
+      </a>
+    </div>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#apps">Apps</a>
+      <a href="index.html#planos">Planos</a>
+      <a href="login.html">Entrar</a>
+    </nav>
+  </header>
+
+
+  <main class="auth-main">
+
+    <section class="auth-apresentacao">
+      <span class="auth-etiqueta">
+        Segurança
+      </span>
+
+      <h1>
+        Recupere seu acesso<span>.</span>
+      </h1>
+
+      <p>
+        Informe o e-mail associado à sua Conta Atero.
+        Enviaremos um link seguro para você definir uma nova senha.
+      </p>
+    </section>
+
+
+    <section class="auth-area">
+
+      <form
+        class="auth-formulario"
+        id="form-recuperar-senha"
+        novalidate
+      >
+
+        <div class="auth-campo">
+          <label for="email">
+            E-mail da conta
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="seuemail@exemplo.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+
+        <div
+          class="auth-mensagem"
+          id="mensagem-recuperacao"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+
+        <button
+          class="auth-botao"
+          id="botao-recuperar"
+          type="submit"
+        >
+          Enviar link de recuperação
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </form>
+
+
+      <div class="auth-divisor">
+        <span>ou</span>
+      </div>
+
+
+      <div class="auth-alternativas">
+        <p>Lembrou sua senha?</p>
+
+        <a
+          class="auth-botao-secundario"
+          href="login.html"
+        >
+          Voltar para o login
+        </a>
+      </div>
+
+
+      <p class="auth-termos">
+        Por segurança, a mensagem exibida será a mesma mesmo
+        quando o e-mail não estiver cadastrado.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>
+      © 2026 Atero. Todos os direitos reservados.
+    </p>
+
+    <nav aria-label="Links do rodapé">
+      <a href="termos.html">Termos</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+  </footer>
+
+
+  <script
+    type="module"
+    src="js/recuperar-senha.js"
+  ></script>
+
+</body>
+</html>
