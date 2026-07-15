@@ -27,6 +27,13 @@ const botaoPlanoGratis =
     "#botao-plano-gratis"
   );
 
+const cardsPlanos =
+  Array.from(
+    document.querySelectorAll(
+      ".plano-card[data-plan-id]"
+    )
+  );
+
 
 function mostrarEstadoDesconectado() {
   if (secaoConta) {
