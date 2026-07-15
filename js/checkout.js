@@ -416,19 +416,25 @@ export async function iniciarCheckout(
 
 
       if (
-        mensagem
-          .toLowerCase()
-          .includes(
-            "já possui uma assinatura"
-          )
-      ) {
-        mostrarAvisoCheckout(
-          "Você já possui uma assinatura. Gerencie seu plano pela página da conta.",
-          "informacao"
-        );
-
-        return;
-      }
+          mensagem
+            .toLowerCase()
+            .includes(
+              "já possui uma assinatura"
+            )
+        ) {
+          mostrarAvisoCheckout(
+            "Abrindo o gerenciamento da sua assinatura...",
+            "informacao"
+          );
+        
+        
+          await abrirPortalAssinatura(
+            elemento
+          );
+        
+        
+          return;
+        }
 
 
       throw new Error(
