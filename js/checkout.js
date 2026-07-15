@@ -188,7 +188,7 @@ function definirCarregamento(
 
   if (
     elemento instanceof
-    HTMLButtonElement
+      HTMLButtonElement
   ) {
     elemento.disabled = false;
   }
@@ -232,7 +232,7 @@ async function obterSessaoValida() {
   }
 
 
-  let {
+  const {
     data: dadosSessao,
     error: erroSessao
   } = await supabase.auth.getSession();
@@ -505,7 +505,7 @@ export function configurarBotoesCheckout(
   );
 
 
-  botoes.forEach(botao => {
+  botoes.forEach((botao) => {
     if (
       botao.dataset
         .checkoutConfigurado ===
@@ -522,7 +522,7 @@ export function configurarBotoesCheckout(
 
     botao.addEventListener(
       "click",
-      evento => {
+      (evento) => {
         evento.preventDefault();
         evento.stopPropagation();
 
@@ -544,4 +544,3 @@ export function configurarBotoesCheckout(
 
   return botoes.length;
 }
-
