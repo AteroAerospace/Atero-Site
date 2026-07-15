@@ -2999,6 +2999,43 @@ button.botao-plano:disabled {
   opacity: 0.7;
 }
 
+/* =========================================================
+   PLANO ATUAL
+   ========================================================= */
+
+.plano-card.plano-atual {
+  border-color: #f5c518;
+
+  box-shadow:
+    0 18px 50px
+    rgba(245, 197, 24, 0.2);
+}
+
+.selo-plano-atual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 7px 11px;
+
+  background-color: #f5c518;
+  color: #171717;
+
+  border: 1px solid #d8aa00;
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selo-plano-atual[hidden] {
+  display: none !important;
+}
+
 @media (max-width: 600px) {
   .aviso-checkout {
     top: 76px;
