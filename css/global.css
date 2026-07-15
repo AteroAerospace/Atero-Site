@@ -2314,6 +2314,344 @@ html {
   opacity: 0.65;
 }
 
+/* =========================================================
+   GERENCIAMENTO DA CONTA
+   ========================================================= */
+
+.gerenciar-conta-main {
+  width: min(1100px, 90%);
+  min-height: calc(100vh - 220px);
+  margin: 0 auto;
+  padding: 80px 0 120px;
+}
+
+.gerenciar-conta-cabecalho {
+  max-width: 780px;
+  margin-bottom: 52px;
+}
+
+.gerenciar-conta-etiqueta,
+.gerenciar-conta-subtitulo,
+.modal-conta-etiqueta {
+  display: inline-block;
+  margin-bottom: 12px;
+
+  color: var(--amarelo-escuro);
+
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gerenciar-conta-cabecalho h1 {
+  margin-bottom: 18px;
+
+  color: var(--cinza-escuro);
+
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.gerenciar-conta-cabecalho h1 span {
+  color: var(--amarelo);
+}
+
+.gerenciar-conta-cabecalho p {
+  max-width: 680px;
+
+  color: #6c6c6c;
+
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.gerenciar-conta-grade {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.gerenciar-conta-card {
+  padding: 30px;
+
+  background-color: var(--branco);
+
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+
+  box-shadow: var(--sombra);
+}
+
+.gerenciar-conta-card-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.gerenciar-conta-card h2 {
+  color: var(--cinza-escuro);
+  font-size: 1.55rem;
+}
+
+.gerenciar-conta-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+
+  background-color: var(--amarelo);
+  color: var(--cinza-escuro);
+
+  border-radius: 50%;
+
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.gerenciar-conta-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gerenciar-conta-texto {
+  margin-bottom: 24px;
+
+  color: #696969;
+
+  line-height: 1.7;
+}
+
+.gerenciar-conta-detalhes {
+  display: flex;
+  flex-direction: column;
+}
+
+.gerenciar-conta-detalhes > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 17px 0;
+
+  border-bottom: 1px solid var(--borda);
+}
+
+.gerenciar-conta-detalhes > div:first-child {
+  padding-top: 0;
+}
+
+.gerenciar-conta-detalhes > div:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.gerenciar-conta-detalhes dt {
+  color: #747474;
+  font-size: 0.9rem;
+}
+
+.gerenciar-conta-detalhes dd {
+  color: var(--cinza-escuro);
+
+  font-weight: 700;
+  text-align: right;
+}
+
+.gerenciar-conta-card-perigo {
+  border-color: #e9b7b7;
+}
+
+.gerenciar-conta-card-perigo
+.gerenciar-conta-subtitulo {
+  color: #a72f2f;
+}
+
+.gerenciar-conta-botao-perigo {
+  padding: 12px 18px;
+
+  background-color: #a72f2f;
+  color: #ffffff;
+
+  border: 2px solid #a72f2f;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
+}
+
+.gerenciar-conta-botao-perigo:hover:not(:disabled) {
+  background-color: transparent;
+  color: #a72f2f;
+
+  transform: translateY(-2px);
+}
+
+.gerenciar-conta-botao-perigo:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.gerenciar-conta-voltar {
+  margin-top: 36px;
+}
+
+.gerenciar-conta-voltar a {
+  color: var(--amarelo-escuro);
+
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gerenciar-conta-voltar a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   MODAL DE EXCLUSÃO
+   ========================================================= */
+
+.modal-aberto {
+  overflow: hidden;
+}
+
+.modal-conta[hidden] {
+  display: none;
+}
+
+.modal-conta {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+}
+
+.modal-conta-fundo {
+  position: absolute;
+  inset: 0;
+
+  background-color: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.modal-conta-conteudo {
+  position: relative;
+  z-index: 1;
+
+  width: min(520px, 100%);
+  padding: 32px;
+
+  background-color: var(--branco);
+
+  border-radius: var(--raio);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.modal-conta-conteudo h2 {
+  margin-bottom: 16px;
+
+  color: var(--cinza-escuro);
+
+  font-size: 1.8rem;
+}
+
+.modal-conta-conteudo > p {
+  margin-bottom: 18px;
+
+  color: #686868;
+
+  line-height: 1.65;
+}
+
+.modal-conta-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.modal-conta-cancelar {
+  padding: 12px 18px;
+
+  background-color: transparent;
+  color: var(--cinza-escuro);
+
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.modal-conta-cancelar:hover {
+  background-color: var(--cinza-claro);
+}
+
+
+@media (max-width: 800px) {
+  .gerenciar-conta-grade {
+    grid-template-columns: 1fr;
+  }
+
+  .gerenciar-conta-main {
+    padding-top: 55px;
+  }
+}
+
+
+@media (max-width: 560px) {
+  .gerenciar-conta-card,
+  .modal-conta-conteudo {
+    padding: 22px;
+  }
+
+  .gerenciar-conta-detalhes > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .gerenciar-conta-detalhes dd {
+    text-align: left;
+  }
+
+  .modal-conta-acoes {
+    flex-direction: column-reverse;
+  }
+
+  .modal-conta-acoes button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 650px) {
   .legal-dados-empresa {
     grid-template-columns: 1fr;
