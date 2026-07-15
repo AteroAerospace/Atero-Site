@@ -499,6 +499,12 @@ export function configurarBotoesCheckout(
     );
 
 
+  console.log(
+    "Configurando botões de checkout:",
+    botoes.length
+  );
+
+
   botoes.forEach(botao => {
     if (
       botao.dataset
@@ -521,12 +527,21 @@ export function configurarBotoesCheckout(
         evento.stopPropagation();
 
 
+        console.log(
+          "Clique no plano:",
+          botao.dataset.checkoutPlan
+        );
+
+
         iniciarCheckout(
-          botao.dataset
-            .checkoutPlan,
+          botao.dataset.checkoutPlan,
           botao
         );
       }
     );
   });
+
+
+  return botoes.length;
+}
 }
