@@ -2985,6 +2985,19 @@ button.painel-botao-principal {
   border-color: #ead685;
 }
 
+button.botao-plano {
+  width: 100%;
+
+  font-family: inherit;
+  font-size: inherit;
+
+  cursor: pointer;
+}
+
+button.botao-plano:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
 
 @media (max-width: 600px) {
   .aviso-checkout {
