@@ -1,6 +1,7 @@
 import {
-  supabase
-} from "./supabase-client.js?v=17";
+  supabase,
+  sairDaContaAtero
+} from "./supabase-client.js?v=18";
 
 
 let usuarioAtual = null;
@@ -1147,10 +1148,9 @@ async function excluirConta(
       neste navegador.
     */
     try {
-      await supabase.auth
-        .signOut({
-          scope: "local"
-        });
+      await sairDaContaAtero({
+        scope: "local"
+      });
     } catch (erroLogout) {
       console.warn(
         "A sessão local já estava inválida:",
@@ -1227,14 +1227,7 @@ async function sairDaConta(
   );
 
   try {
-    const {
-      error
-    } = await supabase.auth
-      .signOut();
-
-    if (error) {
-      throw error;
-    }
+    await sairDaContaAtero();
 
     window.location.replace(
       "login.html"

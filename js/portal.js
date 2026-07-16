@@ -1,6 +1,6 @@
 import {
   supabase
-} from "./supabase-client.js?v=14";
+} from "./supabase-client.js?v=18";
 
 
 let portalEmAndamento = false;

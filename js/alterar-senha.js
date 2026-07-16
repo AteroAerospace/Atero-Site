@@ -1,4 +1,7 @@
-import { supabase } from "./supabase-client.js";
+import {
+  supabase,
+  sairDaContaAtero
+} from "./supabase-client.js?v=18";
 
 
 const formulario =
@@ -402,7 +405,9 @@ formulario.addEventListener(
     window.setTimeout(
       async () => {
         if (modoRecuperacao) {
-          await supabase.auth.signOut();
+          await sairDaContaAtero({
+            scope: "local"
+          });
 
           window.location.replace(
             "login.html?senha=alterada"

@@ -1,13 +1,16 @@
-import { supabase } from "./supabase-client.js?v=15";
+import {
+  supabase,
+  sairDaContaAtero
+} from "./supabase-client.js?v=18";
 
 import {
   configurarBotoesCheckout,
   mostrarAvisoCheckout
-} from "./checkout.js?v=15";
+} from "./checkout.js?v=18";
 
 import {
   abrirPortalAssinatura
-} from "./portal.js?v=15";
+} from "./portal.js?v=18";
 
 
 const tituloUsuario =
@@ -1517,16 +1520,16 @@ async function sairDaConta(
   }
 
 
-  const {
-    error
-  } = await supabase.auth
-    .signOut();
+  try {
+    await sairDaContaAtero();
 
-
-  if (error) {
+    window.location.replace(
+      "login.html"
+    );
+  } catch (erro) {
     console.error(
       "Erro ao sair:",
-      error
+      erro
     );
 
 
@@ -1541,15 +1544,7 @@ async function sairDaConta(
         "aria-busy"
       );
     }
-
-
-    return;
   }
-
-
-  window.location.replace(
-    "login.html"
-  );
 }
 
 
