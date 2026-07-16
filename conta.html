@@ -2,42 +2,19 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Gerencie sua Conta Atero, plano e aplicativos."
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerencie sua Conta Atero, plano e aplicativos.">
   <meta name="theme-color" content="#f5c518">
-
   <title>Minha conta | Atero</title>
-
-  <link
-    rel="icon"
-    type="image/png"
-    href="assets/logos/favicon.png"
-  >
-
+  <link rel="icon" type="image/png" href="assets/logos/favicon.png">
   <link rel="stylesheet" href="css/global.css">
 </head>
 
 <body>
-
   <header>
     <div class="logo">
-      <a
-        href="index.html"
-        aria-label="Voltar para a página inicial"
-      >
-        <img
-          src="assets/logos/main-logo2.svg"
-          alt="Logo da Atero"
-        >
+      <a href="index.html" aria-label="Voltar para a página inicial">
+        <img src="assets/logos/main-logo2.svg" alt="Logo da Atero">
       </a>
     </div>
 
@@ -45,341 +22,156 @@
       <a href="index.html">Início</a>
       <a href="index.html#apps">Apps</a>
       <a href="index.html#planos">Planos</a>
+      <a href="https://write.atero.space/">Write</a>
       <a href="conta.html" aria-current="page">Conta</a>
     </nav>
   </header>
 
-
-  <main
-    class="painel-main"
-    id="painel-conta"
-    aria-busy="true"
-  >
-
+  <main class="painel-main" id="painel-conta" aria-busy="true">
     <section class="painel-cabecalho">
       <div>
-        <span class="painel-etiqueta">
-          Conta Atero
-        </span>
-
-        <h1>
-          Olá,
-          <span id="nome-usuario">Usuário</span><span>.</span>
-        </h1>
-
-        <p>
-          Gerencie seus aplicativos, assinatura e preferências
-          em um único lugar.
-        </p>
+        <span class="painel-etiqueta">Conta Atero</span>
+        <h1>Olá, <span id="nome-usuario">Usuário</span><span>.</span></h1>
+        <p>Gerencie seus aplicativos, assinatura e preferências em um único lugar.</p>
       </div>
-
-      <div
-        class="painel-avatar"
-        id="avatar-usuario"
-        aria-hidden="true"
-      >
-        U
-      </div>
+      <div class="painel-avatar" id="avatar-usuario" aria-hidden="true">U</div>
     </section>
 
-
-    <section
-      class="painel-resumo"
-      aria-label="Resumo da conta"
-    >
-
+    <section class="painel-resumo" aria-label="Resumo da conta">
       <article class="resumo-item">
-        <span class="resumo-label">
-          Plano atual
-        </span>
-
-        <strong
-          class="resumo-valor resumo-plano"
-          id="resumo-plano"
-        >
-          Carregando...
-        </strong>
-
-        <span
-          class="resumo-detalhe"
-          id="resumo-limite-plano"
-        >
-          Consultando assinatura
-        </span>
+        <span class="resumo-label">Plano atual</span>
+        <strong class="resumo-valor resumo-plano" id="resumo-plano">Carregando...</strong>
+        <span class="resumo-detalhe" id="resumo-limite-plano">Consultando assinatura</span>
       </article>
 
-
       <article class="resumo-item">
-        <span class="resumo-label">
-          Aplicativos ativos
-        </span>
-
-        <strong
-          class="resumo-valor"
-          id="resumo-aplicativos"
-        >
-          —
-        </strong>
-
-        <span
-          class="resumo-detalhe"
-          id="resumo-aplicativos-detalhe"
-        >
-          Carregando aplicativos
-        </span>
+        <span class="resumo-label">Aplicativos ativos</span>
+        <strong class="resumo-valor" id="resumo-aplicativos">—</strong>
+        <span class="resumo-detalhe" id="resumo-aplicativos-detalhe">Carregando aplicativos</span>
       </article>
 
-
       <article class="resumo-item">
-        <span class="resumo-label">
-          Conta
-        </span>
-
-        <strong
-          class="resumo-valor"
-          id="resumo-status-conta"
-        >
-          Carregando...
-        </strong>
-
-        <span
-          class="resumo-detalhe"
-          id="email-usuario"
-        >
-          —
-        </span>
+        <span class="resumo-label">Conta</span>
+        <strong class="resumo-valor" id="resumo-status-conta">Carregando...</strong>
+        <span class="resumo-detalhe" id="email-usuario">—</span>
       </article>
-
     </section>
-
 
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">
-            Aplicativos
-          </span>
-
+          <span class="painel-subtitulo">Aplicativos</span>
           <h2>Seus apps</h2>
         </div>
+        <a class="painel-link" href="selecionar-apps.html">Gerenciar aplicativos <span aria-hidden="true">→</span></a>
+      </div>
 
-        <a
-          class="painel-link"
-          href="selecionar-apps.html"
-        >
-          Gerenciar aplicativos
+      <div class="painel-apps" id="lista-aplicativos" aria-live="polite">
+        <p id="mensagem-aplicativos">Carregando seus aplicativos...</p>
+      </div>
+    </section>
+
+    <section class="painel-secao">
+      <div class="painel-secao-topo">
+        <div>
+          <span class="painel-subtitulo">Acesso rápido</span>
+          <h2>Aplicativos disponíveis</h2>
+        </div>
+      </div>
+
+      <div class="painel-configuracoes">
+        <a class="configuracao-item" href="https://write.atero.space/">
+          <div>
+            <strong>Atero Write</strong>
+            <span>Abrir o editor de textos da Atero</span>
+          </div>
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <a class="configuracao-item" href="index.html">
+          <div>
+            <strong>Atero Hub</strong>
+            <span>Voltar para a página principal do ecossistema</span>
+          </div>
           <span aria-hidden="true">→</span>
         </a>
       </div>
-
-
-      <div
-        class="painel-apps"
-        id="lista-aplicativos"
-        aria-live="polite"
-      >
-        <p id="mensagem-aplicativos">
-          Carregando seus aplicativos...
-        </p>
-      </div>
     </section>
-
 
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">
-            Assinatura
-          </span>
-
+          <span class="painel-subtitulo">Assinatura</span>
           <h2>Seu plano</h2>
         </div>
       </div>
 
       <div class="painel-plano">
         <div>
-          <span
-            class="painel-plano-nome"
-            id="nome-plano"
-          >
-            Carregando plano...
-          </span>
-
-          <p id="descricao-plano">
-            Consultando as informações da sua assinatura.
-          </p>
+          <span class="painel-plano-nome" id="nome-plano">Carregando plano...</span>
+          <p id="descricao-plano">Consultando as informações da sua assinatura.</p>
         </div>
 
-        <div
-          class="painel-plano-acoes"
-          id="acoes-plano"
-        >
-          <button
-            class="painel-botao-principal"
-            id="botao-assinar-pro"
-            data-checkout-plan="pro"
-            type="button"
-            hidden
-          >
-            Assinar Pro
-          </button>
-        
-          <button
-            class="painel-botao-principal"
-            id="botao-assinar-ultra"
-            data-checkout-plan="ultra"
-            type="button"
-            hidden
-          >
-            Assinar Ultra
-          </button>
-
-          <button
-            class="painel-botao-principal"
-            id="botao-gerenciar-assinatura"
-            type="button"
-            hidden
-          >
-            Gerenciar assinatura
-          </button>
-        
-          <span
-            class="painel-plano-status"
-            id="mensagem-plano-pago"
-            hidden
-          ></span>
-        
-          <a
-            class="painel-botao-secundario"
-            href="selecionar-apps.html"
-          >
-            Trocar aplicativos
-          </a>
+        <div class="painel-plano-acoes" id="acoes-plano">
+          <button class="painel-botao-principal" id="botao-assinar-pro" data-checkout-plan="pro" type="button" hidden>Assinar Pro</button>
+          <button class="painel-botao-principal" id="botao-assinar-ultra" data-checkout-plan="ultra" type="button" hidden>Assinar Ultra</button>
+          <button class="painel-botao-principal" id="botao-gerenciar-assinatura" type="button" hidden>Gerenciar assinatura</button>
+          <span class="painel-plano-status" id="mensagem-plano-pago" hidden></span>
+          <a class="painel-botao-secundario" href="selecionar-apps.html">Trocar aplicativos</a>
         </div>
       </div>
     </section>
 
-
     <section class="painel-secao">
       <div class="painel-secao-topo">
         <div>
-          <span class="painel-subtitulo">
-            Configurações
-          </span>
-
+          <span class="painel-subtitulo">Configurações</span>
           <h2>Conta e preferências</h2>
         </div>
       </div>
 
       <div class="painel-configuracoes">
-
-        <a
-          class="configuracao-item"
-          href="gerenciar-conta.html"
-        >
-          <div>
-            <strong>Dados pessoais</strong>
-
-            <span>
-              Nome, e-mail e informações da conta
-            </span>
-          </div>
-
+        <a class="configuracao-item" href="gerenciar-conta.html">
+          <div><strong>Dados pessoais</strong><span>Nome, e-mail e informações da conta</span></div>
           <span aria-hidden="true">→</span>
         </a>
 
-
-        <a
-          class="configuracao-item"
-          href="alterar-senha.html"
-        >
-          <div>
-            <strong>Senha e segurança</strong>
-        
-            <span>
-              Altere sua senha e proteja sua conta
-            </span>
-          </div>
-        
+        <a class="configuracao-item" href="alterar-senha.html">
+          <div><strong>Senha e segurança</strong><span>Altere sua senha e proteja sua conta</span></div>
           <span aria-hidden="true">→</span>
         </a>
 
-
-        <a
-          class="configuracao-item"
-          href="#"
-          aria-disabled="true"
-        >
-          <div>
-            <strong>Preferências</strong>
-
-            <span>
-              Tema, idioma e notificações
-            </span>
-          </div>
-
+        <a class="configuracao-item" href="#" aria-disabled="true">
+          <div><strong>Preferências</strong><span>Tema, idioma e notificações</span></div>
           <span aria-hidden="true">→</span>
         </a>
 
-
-        <a
-          class="configuracao-item"
-          href="contato.html"
-        >
-          <div>
-            <strong>Suporte</strong>
-
-            <span>
-              Entre em contato com a Atero
-            </span>
-          </div>
-
+        <a class="configuracao-item" href="contato.html">
+          <div><strong>Suporte</strong><span>Entre em contato com a Atero</span></div>
           <span aria-hidden="true">→</span>
         </a>
-
       </div>
     </section>
-
 
     <section class="painel-sessao">
       <div>
         <h2>Sair da conta</h2>
-
-        <p>
-          Você precisará entrar novamente para acessar seus
-          aplicativos.
-        </p>
+        <p>Você precisará entrar novamente para acessar seus aplicativos.</p>
       </div>
-
-      <button
-        class="painel-sair"
-        id="botao-sair"
-        type="button"
-      >
-        Sair
-      </button>
+      <button class="painel-sair" id="botao-sair" type="button">Sair</button>
     </section>
-
   </main>
 
-
   <footer>
-    <p>
-      © 2026 Atero. Todos os direitos reservados.
-    </p>
-
+    <p>© 2026 Atero. Todos os direitos reservados.</p>
     <nav aria-label="Links do rodapé">
       <a href="termos.html">Termos</a>
       <a href="privacidade.html">Privacidade</a>
       <a href="contato.html">Contato</a>
+      <a href="https://write.atero.space/">Atero Write</a>
     </nav>
   </footer>
 
-
-  <script
-    type="module"
-    src="js/conta.js?v=15"
-  ></script>
-
+  <script type="module" src="js/conta.js?v=18"></script>
 </body>
 </html>
