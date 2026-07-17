@@ -3,11 +3,15 @@ import {
 } from "./supabase-client.js?v=18";
 
 
-const cards = Array.from(
-  document.querySelectorAll(
-    ".selecao-app-card[data-app]"
-  )
-);
+const paginaSelecao =
+  document.querySelector(
+    "#pagina-selecao"
+  );
+
+const listaAplicativos =
+  document.querySelector(
+    "#lista-aplicativos"
+  );
 
 const nomePlano =
   document.querySelector(
@@ -44,10 +48,12 @@ let usuarioAtual = null;
 let assinaturaAtual = null;
 let planoAtual = null;
 
+let catalogoAplicativos = [];
 let aplicativosOriginais = [];
 let aplicativosSelecionados = [];
 
 let salvamentoEmAndamento = false;
+let edicaoPermitida = true;
 
 
 const PLANOS_PADRAO = {
@@ -72,27 +78,15 @@ const PLANOS_PADRAO = {
 
 
 /*
-  Normaliza relações retornadas
-  pelo Supabase.
+  Converte uma lista de IDs em uma lista
+  ordenada e sem itens repetidos.
 */
-function normalizarRelacao(valor) {
-  if (Array.isArray(valor)) {
-    return valor[0] || null;
-  }
-
-  return valor || null;
-}
-
-
-/*
-  Retorna os IDs ordenados e sem duplicação.
-*/
-function normalizarIds(ids) {
+function normalizarIds(ids = []) {
   return Array.from(
     new Set(
       ids
         .map((id) =>
-          String(id).trim()
+          String(id || "").trim()
         )
         .filter(Boolean)
     )
@@ -101,11 +95,17 @@ function normalizarIds(ids) {
 
 
 /*
-  Compara duas listas de IDs.
+  Compara duas seleções de aplicativos.
 */
-function listasIguais(listaA, listaB) {
-  const a = normalizarIds(listaA);
-  const b = normalizarIds(listaB);
+function listasIguais(
+  listaA,
+  listaB
+) {
+  const a =
+    normalizarIds(listaA);
+
+  const b =
+    normalizarIds(listaB);
 
   if (a.length !== b.length) {
     return false;
@@ -119,8 +119,8 @@ function listasIguais(listaA, listaB) {
 
 
 /*
-  Calcula quantos apps foram adicionados
-  e removidos.
+  Calcula quais aplicativos foram
+  adicionados e removidos.
 */
 function calcularDiferencas(
   original,
@@ -134,12 +134,14 @@ function calcularDiferencas(
 
   const adicionados =
     novaSelecao.filter(
-      (id) => !antigos.has(id)
+      (id) =>
+        !antigos.has(id)
     );
 
   const removidos =
     original.filter(
-      (id) => !novos.has(id)
+      (id) =>
+        !novos.has(id)
     );
 
   return {
@@ -154,7 +156,7 @@ function calcularDiferencas(
 
 
 /*
-  Formata uma data no horário brasileiro.
+  Formata datas para o padrão brasileiro.
 */
 function formatarData(data) {
   if (!data) {
@@ -183,11 +185,61 @@ function formatarData(data) {
 
 
 /*
-  Verifica se a regra armazenada pertence
-  ao plano atual.
+  Mostra uma mensagem na parte inferior
+  da página.
+*/
+function mostrarMensagem(
+  texto,
+  alerta = false
+) {
+  if (!mensagemSelecao) {
+    return;
+  }
 
-  Ao trocar de plano, o usuário recebe uma
-  nova configuração imediatamente.
+  mensagemSelecao.textContent =
+    texto;
+
+  mensagemSelecao.classList.toggle(
+    "selecao-mensagem-alerta",
+    alerta
+  );
+}
+
+
+/*
+  Mostra um erro dentro da área
+  dos aplicativos.
+*/
+function mostrarErroAplicativos(
+  mensagem
+) {
+  if (!listaAplicativos) {
+    return;
+  }
+
+  const elemento =
+    document.createElement("p");
+
+  elemento.className =
+    "selecao-erro-carregamento";
+
+  elemento.setAttribute(
+    "role",
+    "alert"
+  );
+
+  elemento.textContent =
+    mensagem;
+
+  listaAplicativos.replaceChildren(
+    elemento
+  );
+}
+
+
+/*
+  Verifica se esta é a primeira configuração
+  feita dentro do plano atual.
 */
 function possuiContextoNovoDePlano() {
   return (
@@ -201,7 +253,7 @@ function possuiContextoNovoDePlano() {
 
 
 /*
-  Verifica se ainda existe bloqueio de tempo.
+  Retorna o bloqueio temporal atual.
 */
 function obterBloqueioAtual() {
   if (
@@ -217,7 +269,7 @@ function obterBloqueioAtual() {
   if (
     assinaturaAtual
       .app_change_plan_id !==
-      planoAtual.id
+    planoAtual.id
   ) {
     return {
       bloqueado: false,
@@ -239,56 +291,37 @@ function obterBloqueioAtual() {
   const objetoData =
     new Date(data);
 
-  const bloqueado =
-    !Number.isNaN(
+  if (
+    Number.isNaN(
       objetoData.getTime()
-    ) &&
-    objetoData.getTime() >
-      Date.now();
+    )
+  ) {
+    return {
+      bloqueado: false,
+      data: null
+    };
+  }
 
   return {
-    bloqueado,
+    bloqueado:
+      objetoData.getTime() >
+      Date.now(),
+
     data: objetoData
   };
 }
 
 
 /*
-  Mostra uma mensagem na área de seleção.
-*/
-function mostrarMensagem(
-  texto,
-  alerta = false
-) {
-  if (!mensagemSelecao) {
-    return;
-  }
-
-  mensagemSelecao.textContent =
-    texto;
-
-  mensagemSelecao.classList.toggle(
-    "selecao-mensagem-alerta",
-    alerta
-  );
-}
-
-
-/*
-  Retorna o limite numérico usado
-  pela interface.
-
-  No Ultra, o limite visual é a quantidade
-  total de cards.
+  Retorna o limite visual usado
+  na barra de progresso.
 */
 function obterLimiteVisual() {
   if (
-    planoAtual?.app_limit ===
-      null ||
-    planoAtual?.app_limit ===
-      undefined
+    planoAtual?.app_limit === null ||
+    planoAtual?.app_limit === undefined
   ) {
-    return cards.length;
+    return catalogoAplicativos.length;
   }
 
   return Number(
@@ -298,7 +331,8 @@ function obterLimiteVisual() {
 
 
 /*
-  Retorna a descrição da regra do plano.
+  Retorna a descrição das regras
+  de cada plano.
 */
 function obterDescricaoRegra() {
   if (!planoAtual) {
@@ -327,9 +361,374 @@ function obterDescricaoRegra() {
 
 
 /*
-  Atualiza visualmente os cards.
+  Retorna a mensagem padrão da seleção.
+*/
+function obterMensagemPadrao(
+  possuiAlteracao = false
+) {
+  if (!planoAtual) {
+    return "";
+  }
+
+  if (!edicaoPermitida) {
+    return (
+      "Sua assinatura não permite alterar " +
+      "aplicativos neste momento."
+    );
+  }
+
+  const bloqueio =
+    obterBloqueioAtual();
+
+  if (bloqueio.bloqueado) {
+    const dataFormatada =
+      formatarData(
+        bloqueio.data
+      );
+
+    if (planoAtual.id === "gratis") {
+      return (
+        "Sua seleção está bloqueada até " +
+        `${dataFormatada}.`
+      );
+    }
+
+    if (planoAtual.id === "pro") {
+      return (
+        "Você poderá alterar outro aplicativo em " +
+        `${dataFormatada}.`
+      );
+    }
+  }
+
+  const primeiraConfiguracao =
+    possuiContextoNovoDePlano();
+
+  if (planoAtual.id === "gratis") {
+    if (primeiraConfiguracao) {
+      return (
+        "Escolha até dois aplicativos. " +
+        "Depois de salvar, você poderá trocar " +
+        "novamente em um mês."
+      );
+    }
+
+    return possuiAlteracao
+      ? (
+          "Ao salvar, sua próxima troca ficará " +
+          "disponível em um mês."
+        )
+      : (
+          "Você pode trocar os dois aplicativos " +
+          "nesta alteração mensal."
+        );
+  }
+
+  if (planoAtual.id === "pro") {
+    if (primeiraConfiguracao) {
+      return (
+        "Escolha até quatro aplicativos. " +
+        "Depois de salvar, a próxima alteração " +
+        "estará disponível em um dia."
+      );
+    }
+
+    return possuiAlteracao
+      ? (
+          "Ao salvar, a próxima alteração estará " +
+          "disponível em um dia."
+        )
+      : (
+          "Você pode adicionar, remover ou " +
+          "substituir um aplicativo."
+        );
+  }
+
+  return (
+    "O plano Ultra permite alterar seus " +
+    "aplicativos sem limite."
+  );
+}
+
+
+/*
+  Valida a seleção atual.
+*/
+function validarSelecao() {
+  if (
+    !planoAtual ||
+    !assinaturaAtual
+  ) {
+    return {
+      valida: false,
+      mudou: false,
+      mensagem:
+        "Carregando seu plano..."
+    };
+  }
+
+  if (!edicaoPermitida) {
+    return {
+      valida: false,
+      mudou: false,
+      mensagem:
+        "Sua assinatura não permite alterar " +
+        "aplicativos neste momento."
+    };
+  }
+
+  const quantidade =
+    aplicativosSelecionados.length;
+
+  const limite =
+    planoAtual.app_limit;
+
+  const mudou =
+    !listasIguais(
+      aplicativosOriginais,
+      aplicativosSelecionados
+    );
+
+  if (quantidade === 0) {
+    return {
+      valida: false,
+      mudou,
+      mensagem:
+        "Escolha pelo menos um aplicativo."
+    };
+  }
+
+  if (
+    limite !== null &&
+    limite !== undefined &&
+    quantidade > Number(limite)
+  ) {
+    return {
+      valida: false,
+      mudou,
+      mensagem:
+        `O plano ${planoAtual.name} permite ` +
+        `até ${limite} aplicativos.`
+    };
+  }
+
+  const bloqueio =
+    obterBloqueioAtual();
+
+  if (
+    mudou &&
+    bloqueio.bloqueado
+  ) {
+    return {
+      valida: false,
+      mudou,
+      mensagem:
+        obterMensagemPadrao()
+    };
+  }
+
+  if (
+    mudou &&
+    planoAtual.id === "pro" &&
+    !possuiContextoNovoDePlano()
+  ) {
+    const diferencas =
+      calcularDiferencas(
+        aplicativosOriginais,
+        aplicativosSelecionados
+      );
+
+    if (
+      Math.max(
+        diferencas.quantidadeAdicionada,
+        diferencas.quantidadeRemovida
+      ) > 1
+    ) {
+      return {
+        valida: false,
+        mudou,
+        mensagem:
+          "No plano Pro, você pode alterar " +
+          "apenas um aplicativo por dia."
+      };
+    }
+  }
+
+  if (!mudou) {
+    return {
+      valida: true,
+      mudou: false,
+      mensagem:
+        obterMensagemPadrao()
+    };
+  }
+
+  return {
+    valida: true,
+    mudou: true,
+    mensagem:
+      obterMensagemPadrao(true)
+  };
+}
+
+
+/*
+  Cria o card de um aplicativo.
+*/
+function criarCardAplicativo(
+  aplicativo
+) {
+  const card =
+    document.createElement("article");
+
+  card.className =
+    "selecao-app-card";
+
+  card.dataset.app =
+    aplicativo.id;
+
+  card.tabIndex = 0;
+
+  card.setAttribute(
+    "role",
+    "checkbox"
+  );
+
+  card.setAttribute(
+    "aria-checked",
+    "false"
+  );
+
+  card.setAttribute(
+    "aria-label",
+    `Selecionar ${aplicativo.name}`
+  );
+
+
+  const imagem =
+    document.createElement("img");
+
+  imagem.className =
+    "selecao-app-icone";
+
+  imagem.src =
+    aplicativo.icon_path ||
+    "assets/logos/favicon.png";
+
+  imagem.alt =
+    `Ícone do ${aplicativo.name}`;
+
+  imagem.loading = "lazy";
+
+
+  const informacoes =
+    document.createElement("div");
+
+  informacoes.className =
+    "selecao-app-info";
+
+
+  const titulo =
+    document.createElement("h2");
+
+  titulo.textContent =
+    aplicativo.name ||
+    "Aplicativo Atero";
+
+
+  const descricao =
+    document.createElement("p");
+
+  descricao.textContent =
+    aplicativo.description ||
+    "Aplicativo conectado ao Ecossistema Atero.";
+
+
+  const marcador =
+    document.createElement("span");
+
+  marcador.className =
+    "selecao-app-marcador";
+
+  marcador.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  marcador.textContent = "✓";
+
+
+  informacoes.append(
+    titulo,
+    descricao
+  );
+
+  card.append(
+    imagem,
+    informacoes,
+    marcador
+  );
+
+  return card;
+}
+
+
+/*
+  Renderiza o catálogo retornado
+  pela tabela public.apps.
+*/
+function renderizarAplicativos() {
+  if (!listaAplicativos) {
+    throw new Error(
+      "A área de aplicativos não foi encontrada."
+    );
+  }
+
+  listaAplicativos.replaceChildren();
+
+  if (!catalogoAplicativos.length) {
+    const mensagem =
+      document.createElement("p");
+
+    mensagem.textContent =
+      "Nenhum aplicativo está disponível no momento.";
+
+    listaAplicativos.append(
+      mensagem
+    );
+
+    return;
+  }
+
+  const fragmento =
+    document.createDocumentFragment();
+
+  catalogoAplicativos.forEach(
+    (aplicativo) => {
+      fragmento.append(
+        criarCardAplicativo(
+          aplicativo
+        )
+      );
+    }
+  );
+
+  listaAplicativos.append(
+    fragmento
+  );
+}
+
+
+/*
+  Atualiza o estado visual dos cards.
 */
 function atualizarCards() {
+  const cards =
+    listaAplicativos
+      ?.querySelectorAll(
+        ".selecao-app-card[data-app]"
+      ) || [];
+
   cards.forEach((card) => {
     const appId =
       card.dataset.app;
@@ -347,218 +746,23 @@ function atualizarCards() {
       "aria-checked",
       String(selecionado)
     );
+
+    card.classList.toggle(
+      "desabilitado",
+      !edicaoPermitida
+    );
+
+    card.setAttribute(
+      "aria-disabled",
+      String(!edicaoPermitida)
+    );
   });
 }
 
 
 /*
-  Valida a seleção atual.
-*/
-function validarSelecao() {
-  if (
-    !planoAtual ||
-    !assinaturaAtual
-  ) {
-    return {
-      valida: false,
-      mensagem:
-        "Carregando seu plano..."
-    };
-  }
-
-  const quantidade =
-    aplicativosSelecionados.length;
-
-  const limite =
-    planoAtual.app_limit;
-
-  const mudou =
-    !listasIguais(
-      aplicativosOriginais,
-      aplicativosSelecionados
-    );
-
-  const bloqueio =
-    obterBloqueioAtual();
-
-  const diferencas =
-    calcularDiferencas(
-      aplicativosOriginais,
-      aplicativosSelecionados
-    );
-
-
-  if (quantidade === 0) {
-    return {
-      valida: false,
-      mudou,
-      mensagem:
-        "Escolha pelo menos um aplicativo."
-    };
-  }
-
-
-  if (
-    limite !== null &&
-    limite !== undefined &&
-    quantidade > Number(limite)
-  ) {
-    return {
-      valida: false,
-      mudou,
-      mensagem:
-        `O plano ${planoAtual.name} permite até ${limite} aplicativos.`
-    };
-  }
-
-
-  if (
-    mudou &&
-    bloqueio.bloqueado
-  ) {
-    const dataFormatada =
-      formatarData(
-        bloqueio.data
-      );
-
-    return {
-      valida: false,
-      mudou,
-      mensagem:
-        planoAtual.id === "gratis"
-          ? (
-              "Sua próxima troca mensal estará disponível em " +
-              `${dataFormatada}.`
-            )
-          : (
-              "Você poderá alterar outro aplicativo em " +
-              `${dataFormatada}.`
-            )
-    };
-  }
-
-
-  if (
-    mudou &&
-    planoAtual.id === "pro" &&
-    !possuiContextoNovoDePlano() &&
-    Math.max(
-      diferencas.quantidadeAdicionada,
-      diferencas.quantidadeRemovida
-    ) > 1
-  ) {
-    return {
-      valida: false,
-      mudou,
-      mensagem:
-        "No plano Pro, você pode alterar apenas um aplicativo por dia."
-    };
-  }
-
-
-  if (!mudou) {
-    return {
-      valida: true,
-      mudou: false,
-      mensagem:
-        obterMensagemPadrao()
-    };
-  }
-
-
-  return {
-    valida: true,
-    mudou: true,
-    mensagem:
-      obterMensagemPadrao(true)
-  };
-}
-
-
-/*
-  Gera a mensagem principal da página.
-*/
-function obterMensagemPadrao(
-  possuiAlteracao = false
-) {
-  if (!planoAtual) {
-    return "";
-  }
-
-  const bloqueio =
-    obterBloqueioAtual();
-
-  const primeiraConfiguracao =
-    possuiContextoNovoDePlano();
-
-
-  if (bloqueio.bloqueado) {
-    const data =
-      formatarData(
-        bloqueio.data
-      );
-
-    if (planoAtual.id === "gratis") {
-      return (
-        "Sua seleção está bloqueada até " +
-        `${data}.`
-      );
-    }
-
-    if (planoAtual.id === "pro") {
-      return (
-        "Você poderá alterar outro aplicativo em " +
-        `${data}.`
-      );
-    }
-  }
-
-
-  if (planoAtual.id === "gratis") {
-    if (primeiraConfiguracao) {
-      return (
-        "Escolha até dois aplicativos. " +
-        "Depois de salvar, você poderá trocar novamente em um mês."
-      );
-    }
-
-    return possuiAlteracao
-      ? (
-          "Ao salvar, sua próxima troca ficará disponível em um mês."
-        )
-      : (
-          "Você pode trocar os dois aplicativos nesta alteração mensal."
-        );
-  }
-
-
-  if (planoAtual.id === "pro") {
-    if (primeiraConfiguracao) {
-      return (
-        "Escolha até quatro aplicativos. " +
-        "Depois de salvar, a próxima alteração estará disponível em um dia."
-      );
-    }
-
-    return possuiAlteracao
-      ? (
-          "Ao salvar, a próxima alteração estará disponível em um dia."
-        )
-      : (
-          "Você pode adicionar, remover ou substituir um aplicativo."
-        );
-  }
-
-
-  return (
-    "O plano Ultra permite alterar seus aplicativos sem limite."
-  );
-}
-
-
-/*
-  Atualiza contador, progresso,
-  mensagem e botão.
+  Atualiza todo o estado visual
+  da página.
 */
 function atualizarInterface() {
   if (
@@ -588,10 +792,12 @@ function atualizarInterface() {
     contadorApps.textContent =
       planoAtual.app_limit === null
         ? (
-            `${quantidade} de ${cards.length}`
+            `${quantidade} de ` +
+            `${catalogoAplicativos.length}`
           )
         : (
-            `${quantidade} de ${planoAtual.app_limit}`
+            `${quantidade} de ` +
+            `${planoAtual.app_limit}`
           );
   }
 
@@ -629,11 +835,21 @@ function atualizarInterface() {
 
 /*
   Verifica se uma nova seleção temporária
-  pode ser feita pela interface.
+  pode ser aplicada.
 */
 function podeAplicarSelecaoTemporaria(
   novaSelecao
 ) {
+  if (!edicaoPermitida) {
+    mostrarMensagem(
+      "Sua assinatura não permite alterar " +
+      "aplicativos neste momento.",
+      true
+    );
+
+    return false;
+  }
+
   const limite =
     planoAtual?.app_limit;
 
@@ -644,7 +860,8 @@ function podeAplicarSelecaoTemporaria(
       Number(limite)
   ) {
     mostrarMensagem(
-      `O plano ${planoAtual.name} permite até ${limite} aplicativos.`,
+      `O plano ${planoAtual.name} permite ` +
+      `até ${limite} aplicativos.`,
       true
     );
 
@@ -680,7 +897,8 @@ function podeAplicarSelecaoTemporaria(
       ) > 1
     ) {
       mostrarMensagem(
-        "No plano Pro, você pode alterar apenas um aplicativo por dia.",
+        "No plano Pro, você pode alterar " +
+        "apenas um aplicativo por dia.",
         true
       );
 
@@ -693,12 +911,14 @@ function podeAplicarSelecaoTemporaria(
 
 
 /*
-  Seleciona ou desseleciona um card.
+  Seleciona ou desseleciona
+  um aplicativo.
 */
 function alternarAplicativo(card) {
   if (
     salvamentoEmAndamento ||
-    !planoAtual
+    !planoAtual ||
+    !edicaoPermitida
   ) {
     return;
   }
@@ -745,7 +965,71 @@ function alternarAplicativo(card) {
 
 
 /*
-  Salva usando a RPC protegida.
+  Trata clique nos cards usando
+  delegação de eventos.
+*/
+listaAplicativos?.addEventListener(
+  "click",
+  (evento) => {
+    const card =
+      evento.target.closest(
+        ".selecao-app-card[data-app]"
+      );
+
+    if (!card) {
+      return;
+    }
+
+    alternarAplicativo(card);
+  }
+);
+
+
+/*
+  Permite selecionar usando Enter
+  ou barra de espaço.
+*/
+listaAplicativos?.addEventListener(
+  "keydown",
+  (evento) => {
+    if (
+      evento.key !== "Enter" &&
+      evento.key !== " "
+    ) {
+      return;
+    }
+
+    const card =
+      evento.target.closest(
+        ".selecao-app-card[data-app]"
+      );
+
+    if (!card) {
+      return;
+    }
+
+    evento.preventDefault();
+
+    alternarAplicativo(card);
+  }
+);
+
+
+/*
+  Lê o resultado retornado pela RPC,
+  independentemente de ser objeto ou array.
+*/
+function normalizarResultadoRpc(data) {
+  if (Array.isArray(data)) {
+    return data[0] || {};
+  }
+
+  return data || {};
+}
+
+
+/*
+  Salva a seleção usando a RPC protegida.
 */
 async function salvarAplicativos() {
   if (
@@ -773,6 +1057,7 @@ async function salvarAplicativos() {
   salvamentoEmAndamento = true;
 
   botaoSalvar.disabled = true;
+
   botaoSalvar.setAttribute(
     "aria-busy",
     "true"
@@ -800,6 +1085,9 @@ async function salvarAplicativos() {
       throw error;
     }
 
+    const resultado =
+      normalizarResultadoRpc(data);
+
     aplicativosOriginais =
       normalizarIds(
         aplicativosSelecionados
@@ -817,19 +1105,15 @@ async function salvarAplicativos() {
 
     assinaturaAtual
       .app_change_available_at =
-        data?.next_change_at ||
+        resultado.next_change_at ||
+        resultado.app_change_available_at ||
         null;
 
     mostrarMensagem(
-      planoAtual.id === "ultra"
-        ? (
-            "Aplicativos atualizados com sucesso."
-          )
-        : (
-            "Aplicativos atualizados. " +
-            obterMensagemPadrao()
-          )
+      "Aplicativos atualizados com sucesso."
     );
+
+    atualizarInterface();
 
     window.setTimeout(
       () => {
@@ -837,7 +1121,7 @@ async function salvarAplicativos() {
           "conta.html"
         );
       },
-      1200
+      1000
     );
   } catch (erro) {
     console.error(
@@ -867,7 +1151,7 @@ async function salvarAplicativos() {
 
 /*
   Carrega usuário, assinatura,
-  plano e seleção atual.
+  plano, seleção atual e catálogo.
 */
 async function carregarPagina() {
   try {
@@ -894,7 +1178,8 @@ async function carregarPagina() {
 
     const [
       resultadoAssinatura,
-      resultadoApps
+      resultadoAppsUsuario,
+      resultadoCatalogo
     ] = await Promise.all([
       supabase
         .from("subscriptions")
@@ -918,6 +1203,33 @@ async function carregarPagina() {
         .eq(
           "user_id",
           usuarioAtual.id
+        ),
+
+      supabase
+        .from("apps")
+        .select(`
+          id,
+          name,
+          description,
+          icon_path,
+          category,
+          sort_order
+        `)
+        .eq(
+          "active",
+          true
+        )
+        .order(
+          "sort_order",
+          {
+            ascending: true
+          }
+        )
+        .order(
+          "name",
+          {
+            ascending: true
+          }
         )
     ]);
 
@@ -929,36 +1241,42 @@ async function carregarPagina() {
       throw (
         resultadoAssinatura.error ||
         new Error(
-          "Assinatura não encontrada."
+          "Assinatura não encontrada para esta conta."
         )
       );
     }
 
+    if (resultadoAppsUsuario.error) {
+      throw resultadoAppsUsuario.error;
+    }
 
-    if (resultadoApps.error) {
-      throw resultadoApps.error;
+    if (resultadoCatalogo.error) {
+      throw resultadoCatalogo.error;
     }
 
 
     assinaturaAtual =
       resultadoAssinatura.data;
 
+    catalogoAplicativos =
+      resultadoCatalogo.data ||
+      [];
 
-    if (
-      ![
+
+    if (!catalogoAplicativos.length) {
+      throw new Error(
+        "Nenhum aplicativo ativo foi encontrado no banco."
+      );
+    }
+
+
+    edicaoPermitida =
+      [
         "active",
         "trialing"
       ].includes(
         assinaturaAtual.status
-      )
-    ) {
-      mostrarMensagem(
-        "Sua assinatura não permite alterar aplicativos neste momento.",
-        true
       );
-
-      return;
-    }
 
 
     const resultadoPlano =
@@ -976,7 +1294,8 @@ async function carregarPagina() {
 
     if (resultadoPlano.error) {
       console.warn(
-        "Plano não encontrado no banco:",
+        "Plano não encontrado no banco. " +
+        "Usando configuração padrão:",
         resultadoPlano.error
       );
     }
@@ -990,21 +1309,37 @@ async function carregarPagina() {
       PLANOS_PADRAO.gratis;
 
 
+    const idsDisponiveis =
+      new Set(
+        catalogoAplicativos.map(
+          (aplicativo) =>
+            aplicativo.id
+        )
+      );
+
+
     aplicativosOriginais =
       normalizarIds(
         (
-          resultadoApps.data ||
+          resultadoAppsUsuario.data ||
           []
-        ).map(
-          (item) =>
-            item.app_id
         )
+          .map(
+            (item) =>
+              item.app_id
+          )
+          .filter(
+            (appId) =>
+              idsDisponiveis.has(appId)
+          )
       );
 
 
     aplicativosSelecionados =
       [...aplicativosOriginais];
 
+
+    renderizarAplicativos();
 
     atualizarInterface();
   } catch (erro) {
@@ -1013,42 +1348,25 @@ async function carregarPagina() {
       erro
     );
 
-    mostrarMensagem(
+    const mensagem =
       erro?.message ||
-      "Não foi possível carregar seus aplicativos.",
+      "Não foi possível carregar seus aplicativos.";
+
+    mostrarMensagem(
+      mensagem,
       true
+    );
+
+    mostrarErroAplicativos(
+      mensagem
+    );
+  } finally {
+    paginaSelecao?.setAttribute(
+      "aria-busy",
+      "false"
     );
   }
 }
-
-
-/*
-  Eventos dos cards.
-*/
-cards.forEach((card) => {
-  card.addEventListener(
-    "click",
-    () => {
-      alternarAplicativo(card);
-    }
-  );
-
-  card.addEventListener(
-    "keydown",
-    (evento) => {
-      if (
-        evento.key === "Enter" ||
-        evento.key === " "
-      ) {
-        evento.preventDefault();
-
-        alternarAplicativo(
-          card
-        );
-      }
-    }
-  );
-});
 
 
 botaoSalvar?.addEventListener(
@@ -1059,9 +1377,7 @@ botaoSalvar?.addEventListener(
 
 supabase.auth.onAuthStateChange(
   (evento) => {
-    if (
-      evento === "SIGNED_OUT"
-    ) {
+    if (evento === "SIGNED_OUT") {
       window.location.replace(
         "login.html"
       );
