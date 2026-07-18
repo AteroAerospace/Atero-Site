@@ -19,6 +19,33 @@ const cardsPlanos = Array.from(
 );
 
 
+const ID_APLICATIVO_CALENDAR =
+  "calendar";
+
+
+/*
+  Confirma que o novo aplicativo está
+  identificado corretamente na vitrine.
+*/
+function validarCardCalendar() {
+  const cardCalendar =
+    document.querySelector(
+      `[data-app-id="${ID_APLICATIVO_CALENDAR}"]`
+    );
+
+  if (!cardCalendar) {
+    console.warn(
+      "Card do Atero Calendar não encontrado."
+    );
+
+    return;
+  }
+
+  cardCalendar.dataset.appId =
+    ID_APLICATIVO_CALENDAR;
+}
+
+
 /*
   Remove a indicação visual de plano atual.
 */
@@ -329,4 +356,5 @@ supabase.auth.onAuthStateChange(
 );
 
 
+validarCardCalendar();
 verificarLogin();
