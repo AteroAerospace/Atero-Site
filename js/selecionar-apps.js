@@ -56,16 +56,29 @@ let salvamentoEmAndamento = false;
 let edicaoPermitida = true;
 
 
-const APLICATIVO_CALENDAR_PADRAO = {
-  id: "calendar",
-  name: "Atero Calendar",
-  description:
-    "Calendário conectado para organizar eventos, " +
-    "compromissos, lembretes e rotinas.",
-  icon_path: "assets/logos/calendar.png",
-  category: "produtividade",
-  sort_order: 3
-};
+const APLICATIVOS_PADRAO = [
+  {
+    id: "calendar",
+    name: "Atero Calendar",
+    description:
+      "Calendário conectado para organizar eventos, " +
+      "compromissos, lembretes e rotinas.",
+    icon_path: "assets/logos/calendar.png",
+    category: "produtividade",
+    sort_order: 3
+  },
+
+  {
+    id: "floor",
+    name: "Atero Floor",
+    description:
+      "Crie, edite e organize plantas baixas " +
+      "diretamente no Ecossistema Atero.",
+    icon_path: "assets/logos/floor.png",
+    category: "design",
+    sort_order: 4
+  }
+];
 
 
 const PLANOS_PADRAO = {
@@ -90,28 +103,32 @@ const PLANOS_PADRAO = {
 
 
 /*
-  Mantém o Atero Calendar visível mesmo
+  Mantém os aplicativos padrão visíveis mesmo
   enquanto o catálogo remoto é atualizado.
 */
-function incluirCalendarNoCatalogo(
+function incluirAplicativosPadraoNoCatalogo(
   catalogo = []
 ) {
-  const possuiCalendar =
-    catalogo.some(
-      (aplicativo) =>
-        aplicativo.id ===
-        APLICATIVO_CALENDAR_PADRAO.id
+  const idsExistentes =
+    new Set(
+      catalogo.map(
+        (aplicativo) =>
+          aplicativo.id
+      )
     );
 
-  const catalogoCompleto =
-    possuiCalendar
-      ? [...catalogo]
-      : [
-          ...catalogo,
-          APLICATIVO_CALENDAR_PADRAO
-        ];
+  const aplicativosAusentes =
+    APLICATIVOS_PADRAO.filter(
+      (aplicativo) =>
+        !idsExistentes.has(
+          aplicativo.id
+        )
+    );
 
-  return catalogoCompleto.sort(
+  return [
+    ...catalogo,
+    ...aplicativosAusentes
+  ].sort(
     (aplicativoA, aplicativoB) => {
       const ordemA =
         Number(
@@ -1322,7 +1339,7 @@ async function carregarPagina() {
       resultadoAssinatura.data;
 
     catalogoAplicativos =
-      incluirCalendarNoCatalogo(
+      incluirAplicativosPadraoNoCatalogo(
         resultadoCatalogo.data ||
         []
       );
