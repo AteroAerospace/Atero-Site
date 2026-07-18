@@ -112,6 +112,40 @@ const PLANOS_PADRAO = {
 
 
 /*
+  URLs oficiais usadas quando o cadastro
+  do aplicativo ainda não possui launch_url.
+*/
+const URLS_APLICATIVOS = {
+  calc: "https://calc.atero.space/",
+  write: "https://write.atero.space/"
+};
+
+
+/*
+  Retorna a URL de abertura do aplicativo.
+*/
+function obterUrlAplicativo(aplicativo) {
+  const urlCadastrada =
+    String(
+      aplicativo?.launch_url || ""
+    ).trim();
+
+  if (urlCadastrada) {
+    return urlCadastrada;
+  }
+
+  const appId =
+    String(
+      aplicativo?.id || ""
+    )
+      .trim()
+      .toLowerCase();
+
+  return URLS_APLICATIVOS[appId] || "";
+}
+
+
+/*
   Cria um botão de ação do plano.
 */
 function criarBotaoPlano({
@@ -595,9 +629,15 @@ function criarCardAplicativo(
   );
 
 
+  const urlAplicativo =
+    obterUrlAplicativo(
+      aplicativo
+    );
+
+
   if (
     aplicativo.active === false ||
-    !aplicativo.launch_url
+    !urlAplicativo
   ) {
     link.href = "#";
 
@@ -615,7 +655,7 @@ function criarCardAplicativo(
     );
   } else {
     link.href =
-      aplicativo.launch_url;
+      urlAplicativo;
   }
 
 
