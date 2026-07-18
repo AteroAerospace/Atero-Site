@@ -56,6 +56,18 @@ let salvamentoEmAndamento = false;
 let edicaoPermitida = true;
 
 
+const APLICATIVO_CALENDAR_PADRAO = {
+  id: "calendar",
+  name: "Atero Calendar",
+  description:
+    "Calendário conectado para organizar eventos, " +
+    "compromissos, lembretes e rotinas.",
+  icon_path: "assets/logos/calendar.png",
+  category: "produtividade",
+  sort_order: 3
+};
+
+
 const PLANOS_PADRAO = {
   gratis: {
     id: "gratis",
@@ -75,6 +87,57 @@ const PLANOS_PADRAO = {
     app_limit: null
   }
 };
+
+
+/*
+  Mantém o Atero Calendar visível mesmo
+  enquanto o catálogo remoto é atualizado.
+*/
+function incluirCalendarNoCatalogo(
+  catalogo = []
+) {
+  const possuiCalendar =
+    catalogo.some(
+      (aplicativo) =>
+        aplicativo.id ===
+        APLICATIVO_CALENDAR_PADRAO.id
+    );
+
+  const catalogoCompleto =
+    possuiCalendar
+      ? [...catalogo]
+      : [
+          ...catalogo,
+          APLICATIVO_CALENDAR_PADRAO
+        ];
+
+  return catalogoCompleto.sort(
+    (aplicativoA, aplicativoB) => {
+      const ordemA =
+        Number(
+          aplicativoA.sort_order
+        ) || 0;
+
+      const ordemB =
+        Number(
+          aplicativoB.sort_order
+        ) || 0;
+
+      if (ordemA !== ordemB) {
+        return ordemA - ordemB;
+      }
+
+      return String(
+        aplicativoA.name || ""
+      ).localeCompare(
+        String(
+          aplicativoB.name || ""
+        ),
+        "pt-BR"
+      );
+    }
+  );
+}
 
 
 /*
@@ -1259,8 +1322,10 @@ async function carregarPagina() {
       resultadoAssinatura.data;
 
     catalogoAplicativos =
-      resultadoCatalogo.data ||
-      [];
+      incluirCalendarNoCatalogo(
+        resultadoCatalogo.data ||
+        []
+      );
 
 
     if (!catalogoAplicativos.length) {
