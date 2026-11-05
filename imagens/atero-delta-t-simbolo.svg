@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo Delta t da Atero Aerospace</title>
+  <desc id="desc">Símbolo amarelo formado por Delta e t minúsculo, com fundo transparente.</desc>
+
+  <!-- Mesma construção vetorial da identidade principal, centralizada em formato quadrado. -->
+  <g transform="translate(256 256) scale(1.625) translate(-384 -362)" fill="#f2b705">
+    <path d="M330.72 286.76L393.26 438H268.18Z" fill="none" stroke="#f2b705" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <path d="M507.60 450L461.40 450Q453.92 450 449.19 445.16Q444.46 440.32 444.46 432.84L444.46 367.28L412.12 367.28L412.12 340.88L444.46 340.88L444.46 296L472.18 296L472.18 340.88L511.56 340.88L511.56 367.28L472.18 367.28L472.18 417Q472.18 423.60 478.12 423.60L507.60 423.60Z"/>
+  </g>
+</svg>
