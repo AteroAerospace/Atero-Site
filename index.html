@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Atero Aerospace</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="imagens/atero-delta-t-simbolo.svg">
+  <script>document.documentElement.classList.add("js");</script>
+
+
+  <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <div class="logo">
+      <img src="imagens/atero-aerospace-logo-claro.svg" alt="Logo da Atero">
+    </div>
+
+    <nav class="menu">
+      <a href="#inicio">Início</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#projeto">Projeto</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <div class="idiomas">
+      <button type="button" data-lang="en" aria-label="English" aria-pressed="false">🇬🇧 EN</button>
+      <button type="button" data-lang="pt" aria-label="Português" aria-pressed="true">🇧🇷 PT</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="video" id="inicio">
+
+      <video class="video-fundo" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo.mp4" type="video/mp4">
+      </video>
+
+      <div class="textvideo">
+        <h2 class="reveal reveal--title">Atero Aerospace</h2>
+
+        <p class="reveal reveal-delay-1">
+          Levando a humanidade mais alto, mais longe e mais rápido.
+        </p>
+      </div>
+    </section>
+
+    <section class="secaonormal" id="sobre">
+
+      <video class="video-fundo2" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo2.mp4" type="video/mp4">
+      </video>
+
+      <div class="conteudo-sobre">
+
+        <div class="sobre">
+          <h2 class="reveal reveal--title">Sobre a Atero</h2>
+
+          <p class="reveal reveal-delay-1">
+            Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.
+          </p>
+
+          <p class="reveal reveal-delay-2">
+            Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.
+          </p>
+
+          <p class="reveal reveal-delay-3">
+            Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.
+          </p>
+        </div>
+
+        <div class="galeria" id="projeto">
+          <img id="imagem-principal" src="imagens/projeto1.jpg" alt="Imagem principal do projeto">
+
+          <div class="miniaturas">
+            <img class="ativo" src="imagens/projeto1.jpg" alt="Projeto 1" onclick="trocarImagem('imagens/projeto1.jpg')">
+            <img src="imagens/projeto2.jpg" alt="Projeto 2" onclick="trocarImagem('imagens/projeto2.jpg')">
+            <img src="imagens/projeto3.jpg" alt="Projeto 3" onclick="trocarImagem('imagens/projeto3.jpg')">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="contato" id="contato">
+      <div class="contato-conteudo">
+        <h2 class="reveal reveal--title">Contato</h2>
+
+        <div class="contato-lista">
+          <div class="contato-item">
+            <p class="reveal reveal-delay-1">Empresa</p>
+            <a class="reveal reveal-delay-2" href="mailto:contact@atero.space">contact@atero.space</a>
+          </div>
+
+          <div class="contato-item">
+            <p class="reveal reveal-delay-2">Fundador</p>
+            <a class="reveal reveal-delay-3" href="mailto:joao@atero.space">joao@atero.space</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="reveal">&copy; 2026 Atero Aerospace. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    function trocarImagem(caminho) {
+      document.getElementById("imagem-principal").src = caminho;
+      document.querySelectorAll(".miniaturas img").forEach(function (imagem) {
+        imagem.classList.toggle("ativo", imagem.getAttribute("src") === caminho);
+      });
+    }
+
+    const traducoes = {
+      pt: {
+        inicio: "Início",
+        sobre: "Sobre",
+        projeto: "Projeto",
+        contato: "Contato",
+        chamada: "Levando a humanidade mais alto, mais longe e mais rápido.",
+        tituloSobre: "Sobre a Atero",
+        sobre1: "Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.",
+        sobre2: "Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.",
+        sobre3: "Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.",
+        tituloContato: "Contato",
+        empresa: "Empresa",
+        fundador: "Fundador",
+        rodape: "© 2026 Atero Aerospace. Todos os direitos reservados.",
+        logoAlt: "Logo da Atero",
+        projetoAlt: "Imagem principal do projeto",
+        miniaturasAlt: ["Projeto 1", "Projeto 2", "Projeto 3"]
+      },
+      en: {
+        inicio: "Home",
+        sobre: "About",
+        projeto: "Projects",
+        contato: "Contact",
+        chamada: "Taking humanity higher, farther and faster.",
+        tituloSobre: "About Atero",
+        sobre1: "Born as an aerospace propulsion and upper-atmosphere technology company, Atero promises to push beyond the current limits of engineering.",
+        sobre2: "By creating simpler, more efficient and robust systems, we advance toward the market's next stage. Our goal is not merely to follow the aerospace sector's evolution, but to drive it by exploring new possibilities in flight, speed and altitude.",
+        sobre3: "Something being considered impossible does not mean it cannot be done; it means it has not been done yet.",
+        tituloContato: "Contact",
+        empresa: "Company",
+        fundador: "Founder",
+        rodape: "© 2026 Atero Aerospace. All rights reserved.",
+        logoAlt: "Atero logo",
+        projetoAlt: "Main project image",
+        miniaturasAlt: ["Project 1", "Project 2", "Project 3"]
+      }
+    };
+
+    const seletoresTraducao = {
+      inicio: '.menu a[href="#inicio"]',
+      sobre: '.menu a[href="#sobre"]',
+      projeto: '.menu a[href="#projeto"]',
+      contato: '.menu a[href="#contato"]',
+      chamada: ".textvideo p",
+      tituloSobre: ".sobre h2",
+      sobre1: ".sobre p:nth-of-type(1)",
+      sobre2: ".sobre p:nth-of-type(2)",
+      sobre3: ".sobre p:nth-of-type(3)",
+      tituloContato: ".contato h2",
+      empresa: ".contato-item:nth-child(1) p",
+      fundador: ".contato-item:nth-child(2) p",
+      rodape: "footer p"
+    };
+
+    function aplicarIdioma(idioma) {
+      const idiomaAtivo = traducoes[idioma] ? idioma : "pt";
+      const textos = traducoes[idiomaAtivo];
+
+      Object.entries(seletoresTraducao).forEach(function ([chave, seletor]) {
+        const elemento = document.querySelector(seletor);
+        if (elemento) elemento.textContent = textos[chave];
+      });
+
+      document.documentElement.lang = idiomaAtivo === "en" ? "en" : "pt-BR";
+      document.querySelector(".logo img").alt = textos.logoAlt;
+      document.getElementById("imagem-principal").alt = textos.projetoAlt;
+
+      document.querySelectorAll(".miniaturas img").forEach(function (imagem, indice) {
+        imagem.alt = textos.miniaturasAlt[indice];
+      });
+
+      document.querySelectorAll(".idiomas button").forEach(function (botao) {
+        botao.setAttribute("aria-pressed", String(botao.dataset.lang === idiomaAtivo));
+      });
+
+      try {
+        localStorage.setItem("atero-language", idiomaAtivo);
+      } catch (erro) {
+        // A troca continua funcionando quando o armazenamento não está disponível.
+      }
+    }
+
+    document.querySelectorAll(".idiomas button").forEach(function (botao) {
+      botao.addEventListener("click", function () {
+        aplicarIdioma(botao.dataset.lang);
+      });
+    });
+
+    let idiomaInicial = "pt";
+    try {
+      idiomaInicial = localStorage.getItem("atero-language") || "pt";
+    } catch (erro) {
+      idiomaInicial = "pt";
+    }
+    aplicarIdioma(idiomaInicial);
+
+    const elementosReveal = document.querySelectorAll(".reveal");
+    const movimentoReduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (movimentoReduzido || !("IntersectionObserver" in window)) {
+      elementosReveal.forEach(function (elemento) {
+        elemento.classList.add("is-visible");
+      });
+    } else {
+      const observadorReveal = new IntersectionObserver(function (entradas, observador) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("is-visible");
+            observador.unobserve(entrada.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: "0px 0px -4% 0px"
+      });
+
+      elementosReveal.forEach(function (elemento) {
+        observadorReveal.observe(elemento);
+      });
+    }
+  </script>
+
+</body>
+</html>
