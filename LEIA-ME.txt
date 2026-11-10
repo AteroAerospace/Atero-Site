@@ -1,0 +1,31 @@
+ATERO AEROSPACE — TEMA BRANCO COM LOGO CENTRALIZADA
+
+Esta versão parte de "Atero-Site-Tema-Branco.zip" (a versão anterior),
+não do redesign com novos cartões de projetos.
+
+O QUE MUDOU
+- Cabeçalho branco acima do vídeo, com a marca pequena à esquerda,
+  menu central e controles de idioma à direita.
+- Logo vetorial Atero Aerospace grande e centralizada no primeiro vídeo.
+- Slogan centralizado abaixo da logo.
+- Seção "Sobre a Atero" com texto à esquerda e vídeo original de fundo.
+- Galeria de projetos transferida para abaixo do texto na seção Sobre.
+- Área principal centralizada na página, como na referência.
+- Ajustes responsivos para celular e tablet.
+
+O QUE FOI PRESERVADO
+- Fontes e identidade visual da versão branca anterior.
+- Os arquivos MP4 video-fundo.mp4 e video-fundo2.mp4 (intactos).
+- As imagens JPG, logos SVG, galeria, contatos e alternância PT/EN.
+- CNAME para publicação em atero.space.
+
+COMO EDITAR
+- index.html: conteúdo, ordem das seções, logo central.
+  Localize o comentário "Logotipo central" para trocar o SVG da abertura.
+- estilos.css: seção final "LAYOUT CENTRALIZADO" para ajustar as
+  dimensões, margens e posicionamento sem alterar o restante do CSS.
+- imagens/: mídias originais do site.
+
+USO
+Abra index.html em seu navegador ou envie o conteúdo da pasta
+Atero-Site-main para o repositório que hospeda seu site (GitHub Pages).
