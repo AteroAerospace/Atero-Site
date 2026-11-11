@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Atero Aerospace — Propulsão avançada e alta atmosfera</title>
+  <meta name="description" content="Atero Aerospace: tecnologia de propulsão avançada, alta atmosfera e exploração de conceitos de voo hipersônico.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="96x96" href="imagens/favicon.png?v=2">
+  <script>document.documentElement.classList.add("js");</script>
+
+
+  <link rel="stylesheet" href="estilos.css?v=20261111-roadmap-overlap-4">
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <div class="logo">
+      <img src="imagens/atero-logo-sem-aerospace.svg" alt="Logo da Atero">
+    </div>
+
+    <nav class="menu">
+      <a href="#inicio">Início</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#projeto">Projetos</a>
+      <a href="#roadmap">Roteiro</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <div class="idiomas">
+      <button type="button" data-lang="en" aria-label="English" aria-pressed="false">🇬🇧 EN</button>
+      <button type="button" data-lang="pt" aria-label="Português" aria-pressed="true">🇧🇷 PT</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="video" id="inicio">
+
+      <video class="video-fundo" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo.mp4" type="video/mp4">
+      </video>
+
+      <div class="textvideo">
+        <h1 class="hero-marca reveal reveal--title">
+          <!-- Logotipo vetorial fiel à referência enviada (AEROSPACE fica logo abaixo de ERO). -->
+          <img src="imagens/atero-logo-central-referencia.svg" alt="Atero Aerospace">
+        </h1>
+        <p class="reveal reveal-delay-1">
+          Levando a humanidade mais alto, mais longe e mais rápido.
+        </p>
+      </div>
+    </section>
+
+    <section class="secaonormal" id="sobre">
+
+      <video class="video-fundo2" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo2.mp4" type="video/mp4">
+      </video>
+
+      <div class="conteudo-sobre">
+
+        <div class="sobre">
+          <h2 class="reveal reveal--title"><span class="about-word about-word--main">Sobre</span> <span class="about-word about-word--brand">Atero</span></h2>
+
+          <p class="reveal reveal-delay-1">
+            Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.
+          </p>
+
+          <p class="reveal reveal-delay-2">
+            Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.
+          </p>
+
+          <p class="reveal reveal-delay-3">
+            Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.
+          </p>
+        </div>
+
+
+
+      </div>
+    </section>
+
+    <!-- PROJETOS — cada article é um projeto independente. -->
+    <section class="secao-projetos" id="projeto" aria-labelledby="projetos-titulo">
+      <!-- MP4 (H.264) para compatibilidade; OGV é a alternativa enquanto o MP4 não estiver disponível. -->
+      <video class="projetos-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1">
+        <source src="imagens/video-fundo-3.mp4" type="video/mp4">
+        <source src="imagens/video-fundo-3.ogv" type="video/ogg">
+      </video>
+      <div class="secao-projetos__conteudo">
+        <h2 id="projetos-titulo" data-pt="Nossos próximos projetos" data-en="Our next projects">Nossos próximos projetos</h2>
+        <div class="secao-projetos__grade">
+          <!-- PROJETO 01: scramjet -->
+          <article class="projeto-destaque" id="scramjet" aria-labelledby="scramjet-titulo">
+            <h3 id="scramjet-titulo">SCRAM<span>JET</span></h3>
+            <p class="projeto-resumo" data-pt="Propulsão para voo hipersônico atmosférico." data-en="Propulsion for atmospheric hypersonic flight.">Propulsão para voo hipersônico atmosférico.</p>
+            <figure class="projeto-ilustracao">
+              
+              <img class="projeto-imagem-real projeto-imagem-real--scramjet" src="imagens/scramjet-x43.jpg" alt="Aeronave experimental hipersônica X-43 em voo" data-pt-alt="Aeronave experimental hipersônica X-43 em voo" data-en-alt="X-43 hypersonic experimental aircraft in flight" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            </figure>
+            <div class="projeto-abas" role="tablist" aria-label="Scramjet">
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-what" aria-controls="scramjet-panel-what" aria-selected="true" tabindex="0" data-pt="O que é" data-en="What it is">O que é</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-why" aria-controls="scramjet-panel-why" aria-selected="false" tabindex="-1" data-pt="Importância" data-en="Why it matters">Importância</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-how" aria-controls="scramjet-panel-how" aria-selected="false" tabindex="-1" data-pt="Funcionamento" data-en="How it works">Funcionamento</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-challenge" aria-controls="scramjet-panel-challenge" aria-selected="false" tabindex="-1" data-pt="Desafios" data-en="Challenges">Desafios</button>
+            </div>
+            <div class="projeto-paineis">
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-what" aria-labelledby="scramjet-tab-what" tabindex="0">
+                <p data-pt="O Scramjet (Supersonic Combustion Ramjet) é um sistema de propulsão que utiliza o oxigênio presente na atmosfera para realizar a combustão do combustível, mantendo o fluxo de ar em velocidades supersônicas dentro do motor. Diferentemente dos motores convencionais, ele não depende de compressores ou turbinas, aproveitando a própria velocidade do veículo para comprimir o ar. Essa arquitetura permite explorar regimes de voo hipersônico que estão além das capacidades da maioria dos sistemas de propulsão atmosférica." data-en="A scramjet (Supersonic Combustion Ramjet) is an air-breathing propulsion system that uses atmospheric oxygen to burn fuel while keeping the airflow inside the engine at supersonic speeds. Unlike conventional jet engines, it relies on the vehicle&#x27;s forward speed to compress the incoming air, without compressors or turbines. This architecture makes it possible to explore hypersonic flight regimes beyond the capabilities of most atmospheric propulsion systems.">O Scramjet (Supersonic Combustion Ramjet) é um sistema de propulsão que utiliza o oxigênio presente na atmosfera para realizar a combustão do combustível, mantendo o fluxo de ar em velocidades supersônicas dentro do motor. Diferentemente dos motores convencionais, ele não depende de compressores ou turbinas, aproveitando a própria velocidade do veículo para comprimir o ar. Essa arquitetura permite explorar regimes de voo hipersônico que estão além das capacidades da maioria dos sistemas de propulsão atmosférica.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-why" aria-labelledby="scramjet-tab-why" tabindex="0" hidden>
+                <p data-pt="A propulsão Scramjet representa uma das possibilidades mais promissoras para expandir os limites do voo hipersônico. Ao utilizar o oxigênio atmosférico, o sistema elimina a necessidade de transportar oxidante durante essa etapa do voo, oferecendo vantagens potenciais em massa e eficiência. Seu desenvolvimento pode contribuir para novas gerações de veículos de alta velocidade, plataformas de pesquisa atmosférica e sistemas avançados de acesso ao espaço." data-en="Scramjet propulsion is one of the most promising approaches to expanding the limits of hypersonic flight. By using oxygen from the atmosphere, it avoids the need to carry oxidizer during that phase of flight, potentially reducing mass and improving efficiency. Its development could contribute to new generations of high-speed vehicles, atmospheric research platforms and advanced space-access systems.">A propulsão Scramjet representa uma das possibilidades mais promissoras para expandir os limites do voo hipersônico. Ao utilizar o oxigênio atmosférico, o sistema elimina a necessidade de transportar oxidante durante essa etapa do voo, oferecendo vantagens potenciais em massa e eficiência. Seu desenvolvimento pode contribuir para novas gerações de veículos de alta velocidade, plataformas de pesquisa atmosférica e sistemas avançados de acesso ao espaço.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-how" aria-labelledby="scramjet-tab-how" tabindex="0" hidden>
+                <p data-pt="Durante o voo, o ar entra no motor em alta velocidade e é comprimido por meio da geometria da entrada e da formação de ondas de choque. O combustível é então injetado e misturado ao fluxo supersônico, produzindo uma combustão extremamente rápida. Os gases resultantes são acelerados e expandidos pelo bocal de saída, gerando empuxo. Como o motor depende de uma velocidade inicial elevada, sua operação exige que o veículo seja acelerado previamente por outro sistema de propulsão." data-en="During flight, air enters the engine at high speed and is compressed by the inlet geometry and the formation of shock waves. Fuel is then injected and mixed with the supersonic airflow, producing rapid combustion. The resulting gases expand through the exhaust nozzle, generating thrust. Because a scramjet requires a high initial flight speed, the vehicle must first be accelerated by another propulsion system.">Durante o voo, o ar entra no motor em alta velocidade e é comprimido por meio da geometria da entrada e da formação de ondas de choque. O combustível é então injetado e misturado ao fluxo supersônico, produzindo uma combustão extremamente rápida. Os gases resultantes são acelerados e expandidos pelo bocal de saída, gerando empuxo. Como o motor depende de uma velocidade inicial elevada, sua operação exige que o veículo seja acelerado previamente por outro sistema de propulsão.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-challenge" aria-labelledby="scramjet-tab-challenge" tabindex="0" hidden>
+                <p data-pt="O desenvolvimento de um Scramjet exige soluções para alguns dos problemas mais complexos da engenharia aeroespacial. A combustão precisa ocorrer em frações de segundo, enquanto o motor é submetido a temperaturas extremamente elevadas e intensas cargas aerodinâmicas. Manter a estabilidade do fluxo, controlar o aquecimento estrutural e garantir a eficiência da mistura entre ar e combustível são desafios fundamentais para tornar essa tecnologia viável em aplicações práticas." data-en="Developing a scramjet requires solutions to some of the most demanding problems in aerospace engineering. Combustion must take place in fractions of a second while the engine experiences extreme temperatures and intense aerodynamic loads. Maintaining stable airflow, managing structural heating and ensuring effective mixing of fuel and air are essential challenges in making this technology practical.">O desenvolvimento de um Scramjet exige soluções para alguns dos problemas mais complexos da engenharia aeroespacial. A combustão precisa ocorrer em frações de segundo, enquanto o motor é submetido a temperaturas extremamente elevadas e intensas cargas aerodinâmicas. Manter a estabilidade do fluxo, controlar o aquecimento estrutural e garantir a eficiência da mistura entre ar e combustível são desafios fundamentais para tornar essa tecnologia viável em aplicações práticas.</p>
+              </div>
+            </div>
+          </article>
+          <!-- PROJETO 02: PRIME (Precooled Rocket-Integrated Multimode Engine) -->
+          <article class="projeto-destaque" id="airrocket" aria-labelledby="airrocket-titulo">
+            <h3 id="airrocket-titulo"><span class="prime-label-pt">Motor </span><span>PRIME</span><span class="prime-label-en"> Engine</span></h3>
+            <p class="projeto-resumo" data-pt="PRIME: Motor Multimodo Integrado a Foguete com Pré-resfriamento. Um sistema que combina propulsão atmosférica e propulsão química de foguete." data-en="Precooled Rocket-Integrated Multimode Engine. A system combining air-breathing and chemical rocket propulsion.">PRIME: Motor Multimodo Integrado a Foguete com Pré-resfriamento. Um sistema que combina propulsão atmosférica e propulsão química de foguete.</p>
+            <figure class="projeto-ilustracao">
+              
+              <img class="projeto-imagem-real projeto-imagem-real--sabre-local" src="imagens/sabre-framed.png" alt="Modelo em corte de um sistema de propulsão mista ar-foguete" data-pt-alt="Modelo em corte de um sistema de propulsão mista ar-foguete" data-en-alt="Cutaway model of a mixed air-breathing and rocket propulsion system" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            </figure>
+            <div class="projeto-abas" role="tablist" aria-label="PRIME — Precooled Rocket-Integrated Multimode Engine">
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-what" aria-controls="airrocket-panel-what" aria-selected="true" tabindex="0" data-pt="O que é" data-en="What it is">O que é</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-why" aria-controls="airrocket-panel-why" aria-selected="false" tabindex="-1" data-pt="Importância" data-en="Why it matters">Importância</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-how" aria-controls="airrocket-panel-how" aria-selected="false" tabindex="-1" data-pt="Funcionamento" data-en="How it works">Funcionamento</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-challenge" aria-controls="airrocket-panel-challenge" aria-selected="false" tabindex="-1" data-pt="Desafios" data-en="Challenges">Desafios</button>
+            </div>
+            <div class="projeto-paineis">
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-what" aria-labelledby="airrocket-tab-what" tabindex="0">
+                <p data-pt="O PRIME explora uma arquitetura de propulsão de ciclo combinado, capaz de integrar características dos motores atmosféricos e dos motores químicos de foguete. Durante a operação na atmosfera, o sistema aproveita o oxigênio disponível no ar para sustentar a combustão. Em altitudes elevadas, onde a atmosfera se torna insuficiente, a propulsão passa a utilizar oxidante armazenado a bordo. Essa combinação busca permitir uma transição entre o voo atmosférico e a operação espacial." data-en="PRIME explores a combined-cycle propulsion architecture that integrates characteristics of air-breathing engines and chemical rocket engines. While operating in the atmosphere, the system uses oxygen from the surrounding air to sustain combustion. At higher altitudes, where atmospheric oxygen becomes insufficient, propulsion switches to oxidizer stored on board. This combination aims to support a transition between atmospheric flight and operation in space.">O PRIME explora uma arquitetura de propulsão de ciclo combinado, capaz de integrar características dos motores atmosféricos e dos motores químicos de foguete. Durante a operação na atmosfera, o sistema aproveita o oxigênio disponível no ar para sustentar a combustão. Em altitudes elevadas, onde a atmosfera se torna insuficiente, a propulsão passa a utilizar oxidante armazenado a bordo. Essa combinação busca permitir uma transição entre o voo atmosférico e a operação espacial.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-why" aria-labelledby="airrocket-tab-why" tabindex="0" hidden>
+                <p data-pt="Os sistemas de propulsão convencionais apresentam limitações distintas: motores atmosféricos dependem da presença de ar, enquanto foguetes precisam transportar combustível e oxidante desde o início do voo. A integração desses dois princípios oferece a possibilidade de reduzir a massa de oxidante necessária durante a subida e ampliar a flexibilidade operacional. Tecnologias dessa natureza podem desempenhar um papel importante no desenvolvimento de veículos aeroespaciais reutilizáveis e de novas arquiteturas de transporte orbital." data-en="Conventional propulsion systems face different limitations: air-breathing engines require atmospheric air, while rockets must carry both fuel and oxidizer from the start of flight. Combining these principles could reduce the amount of onboard oxidizer needed during ascent and provide greater operational flexibility. Such technologies may play an important role in developing reusable aerospace vehicles and new approaches to orbital transportation.">Os sistemas de propulsão convencionais apresentam limitações distintas: motores atmosféricos dependem da presença de ar, enquanto foguetes precisam transportar combustível e oxidante desde o início do voo. A integração desses dois princípios oferece a possibilidade de reduzir a massa de oxidante necessária durante a subida e ampliar a flexibilidade operacional. Tecnologias dessa natureza podem desempenhar um papel importante no desenvolvimento de veículos aeroespaciais reutilizáveis e de novas arquiteturas de transporte orbital.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-how" aria-labelledby="airrocket-tab-how" tabindex="0" hidden>
+                <p data-pt="O sistema opera por meio de dois regimes complementares. Na fase atmosférica, o ar é captado, condicionado e direcionado à região de combustão, onde reage com o combustível para produzir empuxo. À medida que o veículo ganha velocidade e altitude, o sistema realiza a transição para um regime de foguete, utilizando o oxidante transportado internamente. Dependendo da arquitetura adotada, essa operação pode envolver trocadores de calor, circuitos de resfriamento e mecanismos de controle capazes de coordenar os diferentes regimes de propulsão." data-en="The system operates in two complementary modes. During atmospheric flight, air is captured, conditioned and directed into the combustion region, where it reacts with fuel to produce thrust. As the vehicle gains speed and altitude, the system transitions to rocket operation using onboard oxidizer. Depending on the chosen architecture, this process may involve heat exchangers, cooling circuits and control mechanisms that coordinate the different propulsion modes.">O sistema opera por meio de dois regimes complementares. Na fase atmosférica, o ar é captado, condicionado e direcionado à região de combustão, onde reage com o combustível para produzir empuxo. À medida que o veículo ganha velocidade e altitude, o sistema realiza a transição para um regime de foguete, utilizando o oxidante transportado internamente. Dependendo da arquitetura adotada, essa operação pode envolver trocadores de calor, circuitos de resfriamento e mecanismos de controle capazes de coordenar os diferentes regimes de propulsão.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-challenge" aria-labelledby="airrocket-tab-challenge" tabindex="0" hidden>
+                <p data-pt="A principal dificuldade de um sistema de ciclo combinado está na integração de tecnologias que operam em condições muito diferentes. A transição entre os regimes precisa ocorrer sem comprometer a estabilidade da combustão ou o controle do veículo. Além disso, o gerenciamento térmico, a complexidade dos componentes e a massa adicional dos sistemas compartilhados representam obstáculos importantes. O objetivo da engenharia é alcançar uma arquitetura cuja eficiência compense a complexidade necessária para combinar os dois modos de operação." data-en="The main difficulty of a combined-cycle system lies in integrating technologies that operate under very different conditions. The transition between propulsion modes must occur without compromising combustion stability or vehicle control. Thermal management, component complexity and the added mass of shared systems are also significant challenges. The engineering goal is to develop an architecture whose performance gains justify the complexity of combining the two operating modes.">A principal dificuldade de um sistema de ciclo combinado está na integração de tecnologias que operam em condições muito diferentes. A transição entre os regimes precisa ocorrer sem comprometer a estabilidade da combustão ou o controle do veículo. Além disso, o gerenciamento térmico, a complexidade dos componentes e a massa adicional dos sistemas compartilhados representam obstáculos importantes. O objetivo da engenharia é alcançar uma arquitetura cuja eficiência compense a complexidade necessária para combinar os dois modos de operação.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+</div>
+    </section>
+
+
+    <!-- TECHNOLOGY ROADMAP — curva orbital, 12 marcos interativos. -->
+    <section class="secao-roadmap" id="roadmap" aria-labelledby="roadmap-titulo">
+      <div class="roadmap-conteudo">
+        <h2 id="roadmap-titulo"><span class="roadmap-titulo-base" data-pt="ROTEIRO" data-en="TECHNOLOGY">ROTEIRO</span> <span class="roadmap-titulo-destaque" data-pt="TECNOLÓGICO." data-en="ROADMAP.">TECNOLÓGICO.</span></h2>
+        <div class="roadmap-orbita-envoltoria">
+          <div class="roadmap-orbita" role="group" aria-label="Selecione um dos 12 marcos do roteiro tecnológico">
+            <svg class="roadmap-trajetoria" viewBox="0 0 1200 315" preserveAspectRatio="none" aria-hidden="true">
+              <path class="roadmap-curva" d="M64 258 Q600 -58 1136 258"></path>
+            </svg>
+            <div class="roadmap-pontos"></div>
+            <div class="roadmap-marcador roadmap-marcador--atual" id="roadmap-we-are-here" aria-label="Estamos aqui — marco 01">ESTAMOS AQUI</div>
+            <div class="roadmap-marcador roadmap-marcador--reaction" id="roadmap-reaction" title="Referência externa: Reaction Engines testou o precooler em condições térmicas equivalentes a Mach 5 em 2019; não demonstrou o motor SABRE completo.">REACTION ENGINES<small>Teste do pré-resfriador · 2019</small></div>
+          </div>
+        </div>
+        <div class="roadmap-detalhe" aria-live="polite" aria-atomic="true">
+          <div class="roadmap-detalhe-texto">
+            <p class="roadmap-fase" id="roadmap-fase">FASE I — PROPULSÃO DE FOGUETES</p>
+            <h3 id="roadmap-marco-titulo">Fundação da Atero</h3>
+            <p class="roadmap-descricao" id="roadmap-marco-descricao">Fundação das capacidades de engenharia, pesquisa e testes de propulsão da Atero.</p>
+          </div>
+          <div class="roadmap-controles">
+            <button type="button" id="roadmap-anterior" aria-label="Marco anterior">←</button>
+            <button type="button" id="roadmap-proximo" aria-label="Próximo marco">→</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contato" id="contato">
+      <div class="contato-conteudo">
+        <h2 class="reveal reveal--title">Contato</h2>
+
+        <div class="contato-lista">
+          <div class="contato-item">
+            <p class="reveal reveal-delay-1">Empresa</p>
+            <a class="reveal reveal-delay-2" href="mailto:contact@atero.space">contact@atero.space</a>
+          </div>
+
+          <div class="contato-item">
+            <p class="reveal reveal-delay-2">Fundador</p>
+            <a class="reveal reveal-delay-3" href="mailto:joao@atero.space">joao@atero.space</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="reveal">&copy; 2026 Atero Aerospace. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    const traducoes = {
+      pt: {
+        inicio: "Início",
+        sobre: "Sobre",
+        projeto: "Projetos",
+        roadmap: "Roteiro",
+        contato: "Contato",
+        chamada: "Levando a humanidade mais alto, mais longe e mais rápido.",
+        tituloSobreMain: "Sobre",
+        tituloSobreBrand: "Atero",
+        sobre1: "Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.",
+        sobre2: "Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.",
+        sobre3: "Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.",
+        tituloContato: "Contato",
+        empresa: "Empresa",
+        fundador: "Fundador",
+        rodape: "© 2026 Atero Aerospace. Todos os direitos reservados.",
+        logoAlt: "Logo da Atero",
+      },
+      en: {
+        inicio: "Home",
+        sobre: "About",
+        projeto: "Projects",
+        roadmap: "Roadmap",
+        contato: "Contact",
+        chamada: "Taking humanity higher, farther and faster.",
+        tituloSobreMain: "About",
+        tituloSobreBrand: "Atero",
+        sobre1: "Born as an aerospace propulsion and upper-atmosphere technology company, Atero promises to push beyond the current limits of engineering.",
+        sobre2: "By creating simpler, more efficient and robust systems, we advance toward the market's next stage. Our goal is not merely to follow the aerospace sector's evolution, but to drive it by exploring new possibilities in flight, speed and altitude.",
+        sobre3: "Something being considered impossible does not mean it cannot be done; it means it has not been done yet.",
+        tituloContato: "Contact",
+        empresa: "Company",
+        fundador: "Founder",
+        rodape: "© 2026 Atero Aerospace. All rights reserved.",
+        logoAlt: "Atero logo",
+      }
+    };
+
+    const seletoresTraducao = {
+      inicio: '.menu a[href="#inicio"]',
+      sobre: '.menu a[href="#sobre"]',
+      projeto: '.menu a[href="#projeto"]',
+      roadmap: '.menu a[href="#roadmap"]',
+      contato: '.menu a[href="#contato"]',
+      chamada: ".textvideo p",
+      tituloSobreMain: ".sobre .about-word--main",
+      tituloSobreBrand: ".sobre .about-word--brand",
+      sobre1: ".sobre p:nth-of-type(1)",
+      sobre2: ".sobre p:nth-of-type(2)",
+      sobre3: ".sobre p:nth-of-type(3)",
+      tituloContato: ".contato h2",
+      empresa: ".contato-item:nth-child(1) p",
+      fundador: ".contato-item:nth-child(2) p",
+      rodape: "footer p"
+    };
+
+    function aplicarIdioma(idioma) {
+      const idiomaAtivo = traducoes[idioma] ? idioma : "pt";
+      const textos = traducoes[idiomaAtivo];
+
+      Object.entries(seletoresTraducao).forEach(function ([chave, seletor]) {
+        const elemento = document.querySelector(seletor);
+        if (elemento) elemento.textContent = textos[chave];
+      });
+
+      document.documentElement.lang = idiomaAtivo === "en" ? "en" : "pt-BR";
+      const logoImg = document.querySelector(".logo img");
+      if (logoImg) logoImg.alt = textos.logoAlt;
+      const heroImg = document.querySelector(".hero-marca img");
+      if (heroImg) heroImg.alt = idiomaAtivo === "en" ? "Atero Aerospace" : "Atero Aeroespacial";
+      // Textos dos projetos editáveis em data-pt / data-en no próprio HTML.
+      document.querySelectorAll("[data-pt][data-en]").forEach(function (elemento) {
+        elemento.textContent = elemento.getAttribute("data-" + idiomaAtivo);
+      });
+      document.querySelectorAll("[data-pt-alt][data-en-alt]").forEach(function (elemento) {
+        elemento.alt = elemento.getAttribute("data-" + idiomaAtivo + "-alt");
+      });
+      document.querySelectorAll(".projeto-abas").forEach(function (tablist) {
+        tablist.setAttribute("aria-label", idiomaAtivo === "en" ? "Project information" : "Informações do projeto");
+      });
+
+      document.querySelectorAll(".idiomas button").forEach(function (botao) {
+        botao.setAttribute("aria-pressed", String(botao.dataset.lang === idiomaAtivo));
+      });
+      document.dispatchEvent(new CustomEvent("atero:languagechange", { detail: { idioma: idiomaAtivo } }));
+
+      try {
+        localStorage.setItem("atero-language", idiomaAtivo);
+      } catch (erro) {
+        // A troca continua funcionando quando o armazenamento não está disponível.
+      }
+    }
+
+    document.querySelectorAll(".idiomas button").forEach(function (botao) {
+      botao.addEventListener("click", function () {
+        aplicarIdioma(botao.dataset.lang);
+      });
+    });
+
+    let idiomaInicial = "pt";
+    try {
+      idiomaInicial = localStorage.getItem("atero-language") || "pt";
+    } catch (erro) {
+      idiomaInicial = "pt";
+    }
+    aplicarIdioma(idiomaInicial);
+
+    // Cada projeto tem abas independentes.
+    // Suporta clique, setas esquerda/direita, Home e End.
+    document.querySelectorAll(".projeto-destaque").forEach(function (cartao) {
+      const abas = Array.from(cartao.querySelectorAll(".projeto-aba"));
+      function ativarAba(aba, moverFoco = false) {
+        abas.forEach(function (atual) {
+          const ativa = atual === aba;
+          atual.setAttribute("aria-selected", String(ativa));
+          atual.tabIndex = ativa ? 0 : -1;
+          const painel = document.getElementById(atual.getAttribute("aria-controls"));
+          if (painel) painel.hidden = !ativa;
+        });
+        if (moverFoco) aba.focus();
+      }
+      abas.forEach(function (aba, index) {
+        aba.addEventListener("click", function () { ativarAba(aba); });
+        aba.addEventListener("keydown", function (evento) {
+          let novoIndice;
+          if (evento.key === "ArrowRight") novoIndice = (index + 1) % abas.length;
+          else if (evento.key === "ArrowLeft") novoIndice = (index - 1 + abas.length) % abas.length;
+          else if (evento.key === "Home") novoIndice = 0;
+          else if (evento.key === "End") novoIndice = abas.length - 1;
+          else return;
+          evento.preventDefault();
+          ativarAba(abas[novoIndice], true);
+        });
+      });
+    });
+
+    const elementosReveal = document.querySelectorAll(".reveal");
+    const movimentoReduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (movimentoReduzido || !("IntersectionObserver" in window)) {
+      elementosReveal.forEach(function (elemento) {
+        elemento.classList.add("is-visible");
+      });
+    } else {
+      const observadorReveal = new IntersectionObserver(function (entradas, observador) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("is-visible");
+            observador.unobserve(entrada.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: "0px 0px -4% 0px"
+      });
+
+      elementosReveal.forEach(function (elemento) {
+        observadorReveal.observe(elemento);
+      });
+    }
+
+    // O roadmap orbital usa as mesmas cores do site e mantém os dois idiomas.
+    (function () {
+      const secao = document.querySelector(".secao-roadmap");
+      if (!secao) return;
+
+      const marcos = [
+        ["Atero Foundations", "Rocket Propulsion", "Fundação das capacidades de engenharia, pesquisa e testes de propulsão da Atero.", "The foundations of Atero’s engineering, research and propulsion testing capabilities.", "Fundação da Atero"],
+        ["First Solid-Fuel Rocket Motor Demonstration", "Rocket Propulsion", "Primeira demonstração prática de um motor-foguete de propelente sólido.", "First practical demonstration of a solid-propellant rocket motor.", "Primeira demonstração de motor-foguete de propelente sólido"],
+        ["First Liquid-Fuel Rocket Engine Demonstration", "Rocket Propulsion", "Primeiro teste em solo de um motor-foguete com propelentes líquidos.", "First ground demonstration of a liquid-propellant rocket engine.", "Primeira demonstração de motor-foguete de propelente líquido"],
+        ["First Successful Flight With a Liquid-Fuel Rocket Engine", "Rocket Propulsion", "Primeiro voo bem-sucedido utilizando propulsão de propelentes líquidos.", "First successful flight using liquid-propellant rocket propulsion.", "Primeiro voo bem-sucedido com motor-foguete de propelente líquido"],
+        ["First Supersonic Rocket-Powered Flight", "Rocket Propulsion", "Demonstração de um voo propulsado por foguete acima da velocidade do som.", "A rocket-powered flight demonstration exceeding the speed of sound.", "Primeiro voo supersônico com propulsão por foguete"],
+        ["Scramjet Development Begins", "Hypersonic Propulsion", "Início do desenvolvimento de propulsão atmosférica com combustão supersônica.", "Beginning research and development of air-breathing propulsion with supersonic combustion.", "Início do desenvolvimento do Scramjet"],
+        ["First Scramjet Ground Demonstration", "Hypersonic Propulsion", "Primeira demonstração em solo da combustão em condições relevantes para um scramjet.", "First ground demonstration of scramjet combustion under relevant flow conditions.", "Primeira demonstração do Scramjet em solo"],
+        ["First Hypersonic Scramjet-Powered Flight", "Hypersonic Propulsion", "Voo hipersônico em que o scramjet produz empuxo durante o voo.", "A hypersonic flight in which the scramjet produces thrust in actual flight conditions.", "Primeiro voo hipersônico com propulsão por Scramjet"],
+        ["PRIME Development Begins", "PRIME Program", "Início da integração entre pré-resfriamento do ar, propulsão atmosférica e modo foguete.", "Beginning the integration of air precooling, air-breathing propulsion and rocket-mode operation.", "Início do desenvolvimento do PRIME"],
+        ["First PRIME Precooler Demonstration", "PRIME Program", "Primeira demonstração independente do sistema de pré-resfriamento de ar do PRIME.", "First standalone demonstration of PRIME’s air precooling system.", "Primeira demonstração do pré-resfriador do PRIME"],
+        ["First Integrated PRIME Ground Demonstration", "PRIME Program", "Primeiro teste em solo da arquitetura integrada do PRIME, incluindo seus modos de operação.", "First ground test of PRIME’s integrated architecture, including its operating modes.", "Primeira demonstração integrada do PRIME em solo"],
+        ["First Hypersonic Flight Powered by PRIME", "PRIME Program", "Demonstração de voo hipersônico com o PRIME como sistema de propulsão.", "Hypersonic flight demonstration powered by the Precooled Rocket-Integrated Multimode Engine.", "Primeiro voo hipersônico com propulsão pelo PRIME"]
+      ];
+      const fases = {
+        "Rocket Propulsion": { pt: "PROPULSÃO DE FOGUETES", en: "ROCKET PROPULSION" },
+        "Hypersonic Propulsion": { pt: "PROPULSÃO HIPERSÔNICA", en: "HYPERSONIC PROPULSION" },
+        "PRIME Program": { pt: "PROGRAMA PRIME", en: "PRIME PROGRAM" }
+      };
+      const orbita = secao.querySelector(".roadmap-orbita");
+      const pontos = secao.querySelector(".roadmap-pontos");
+      const caminho = secao.querySelector(".roadmap-curva");
+      const marcadorAtual = secao.querySelector("#roadmap-we-are-here");
+      const marcadorReaction = secao.querySelector("#roadmap-reaction");
+      const titulo = secao.querySelector("#roadmap-marco-titulo");
+      const fase = secao.querySelector("#roadmap-fase");
+      const descricao = secao.querySelector("#roadmap-marco-descricao");
+      const botaoAnterior = secao.querySelector("#roadmap-anterior");
+      const botaoProximo = secao.querySelector("#roadmap-proximo");
+      let escolhido = 0;
+      // Progresso real da Atero: somente o marco 01 fica amarelo de forma permanente.
+      // Altere para 2, 3 etc. apenas quando os marcos seguintes forem alcançados.
+      const marcosAlcancados = 1;
+      let idioma = document.documentElement.lang === "en" ? "en" : "pt";
+      let ultimoLayoutMobile = null;
+
+      function coordenada(indice, mobile) {
+        const t = indice / (marcos.length - 1);
+        if (mobile) return { x: 48 + 61 * Math.sin(Math.PI * t), y: 26 + 500 * t };
+        return { x: 64 + 1072 * t, y: 258 - 632 * t * (1 - t) };
+      }
+
+      function atualizarDetalhe() {
+        const marco = marcos[escolhido];
+        const numeroFase = escolhido < 5 ? "I" : escolhido < 8 ? "II" : "III";
+        fase.textContent = (idioma === "en" ? "PHASE " : "FASE ") + numeroFase + " — " + fases[marco[1]][idioma];
+        titulo.textContent = marco[idioma === "en" ? 0 : 4];
+        descricao.textContent = marco[idioma === "en" ? 3 : 2];
+        [...pontos.children].forEach(function (ponto, indice) {
+          ponto.setAttribute("aria-pressed", String(indice === escolhido));
+        });
+        botaoAnterior.setAttribute("aria-label", idioma === "en" ? "Previous milestone" : "Marco anterior");
+        botaoProximo.setAttribute("aria-label", idioma === "en" ? "Next milestone" : "Próximo marco");
+        orbita.setAttribute("aria-label", idioma === "en" ? "Select one of the 12 roadmap milestones" : "Selecione um dos 12 marcos do roteiro tecnológico");
+        marcadorAtual.textContent = idioma === "en" ? "WE ARE HERE" : "ESTAMOS AQUI";
+        marcadorAtual.setAttribute("aria-label", idioma === "en" ? "We are here — milestone 01" : "Estamos aqui — marco 01");
+        marcadorReaction.querySelector("small").textContent = idioma === "en" ? "Precooler test · 2019" : "Teste do pré-resfriador · 2019";
+        marcadorReaction.title = idioma === "en"
+          ? "External reference: Reaction Engines tested its precooler at thermal conditions equivalent to Mach 5 in 2019; it did not demonstrate a fully integrated SABRE engine."
+          : "Referência externa: a Reaction Engines testou seu pré-resfriador em condições térmicas equivalentes a Mach 5 em 2019; não demonstrou um motor SABRE completamente integrado.";
+        [...pontos.children].forEach(function (ponto, indice) {
+          ponto.title = marcos[indice][idioma === "en" ? 0 : 4];
+          ponto.setAttribute("aria-label", (idioma === "en" ? "Milestone " : "Marco ") + (indice + 1) + ": " + marcos[indice][idioma === "en" ? 0 : 4]);
+        });
+      }
+
+      function selecionar(indice, focar) {
+        escolhido = (indice + marcos.length) % marcos.length;
+        atualizarDetalhe();
+        if (focar && pontos.children[escolhido]) pontos.children[escolhido].focus();
+      }
+
+      function desenhar() {
+        const mobile = window.matchMedia("(max-width:680px)").matches;
+        if (mobile) {
+          const coordenadas = Array.from({ length: 121 }, function (_, indice) {
+            const t = indice / 120;
+            return { x: 48 + 61 * Math.sin(Math.PI * t), y: 26 + 500 * t };
+          });
+          caminho.setAttribute("d", coordenadas.map(function (p, indice) {
+            return (indice ? "L" : "M") + p.x.toFixed(2) + " " + p.y.toFixed(2);
+          }).join(" "));
+          caminho.parentElement.setAttribute("viewBox", "0 0 345 552");
+        } else {
+          caminho.setAttribute("d", "M64 258 Q600 -58 1136 258");
+          caminho.parentElement.setAttribute("viewBox", "0 0 1200 315");
+        }
+
+        // Escala do SVG; os rótulos são posicionados após a criação dos pontos.
+        const dimensoes = mobile ? { x: 345, y: 552 } : { x: 1200, y: 315 };
+
+        pontos.replaceChildren();
+        marcos.forEach(function (marco, indice) {
+          const posicao = coordenada(indice, mobile);
+          const botao = document.createElement("button");
+          botao.type = "button";
+          botao.className = "roadmap-ponto";
+          if (indice < marcosAlcancados) botao.classList.add("roadmap-ponto--alcançado");
+          botao.style.left = posicao.x / dimensoes.x * 100 + "%";
+          botao.style.top = posicao.y / dimensoes.y * 100 + "%";
+          botao.title = marco[idioma === "en" ? 0 : 4];
+          botao.setAttribute("aria-label", (idioma === "en" ? "Milestone " : "Marco ") + (indice + 1) + ": " + marco[idioma === "en" ? 0 : 4]);
+          botao.setAttribute("aria-pressed", String(indice === escolhido));
+          const circulo = document.createElement("span");
+          circulo.className = "roadmap-anel";
+          circulo.setAttribute("aria-hidden", "true");
+          const numero = document.createElement("span");
+          numero.className = "roadmap-numero";
+          numero.textContent = String(indice + 1).padStart(2, "0");
+          botao.append(circulo, numero);
+          botao.addEventListener("click", function () { selecionar(indice); });
+          botao.addEventListener("keydown", function (evento) {
+            if (evento.key === "ArrowRight" || evento.key === "ArrowDown") {
+              evento.preventDefault(); selecionar(Math.min(marcos.length - 1, indice + 1), true);
+            } else if (evento.key === "ArrowLeft" || evento.key === "ArrowUp") {
+              evento.preventDefault(); selecionar(Math.max(0, indice - 1), true);
+            } else if (evento.key === "Home") {
+              evento.preventDefault(); selecionar(0, true);
+            } else if (evento.key === "End") {
+              evento.preventDefault(); selecionar(marcos.length - 1, true);
+            }
+          });
+          pontos.appendChild(botao);
+        });
+        atualizarDetalhe();
+        posicionarMarcadores();
+      }
+
+      // Alinha os conectores aos marcos de fato (não apenas às coordenadas SVG),
+      // considerando larguras de tela, textos PT/EN e escala do arco.
+      function posicionarMarcadores() {
+        const primeiro = pontos.children[0];
+        const decimo = pontos.children[9];
+        if (!primeiro || !decimo) return;
+        const orb = orbita.getBoundingClientRect();
+        const anelPrimeiro = primeiro.querySelector('.roadmap-anel').getBoundingClientRect();
+        const anelDecimo = decimo.querySelector('.roadmap-anel').getBoundingClientRect();
+        const centro = (r) => ({ x: r.left + r.width/2 - orb.left, y: r.top + r.height/2 - orb.top });
+        const p1 = centro(anelPrimeiro);
+        const p10 = centro(anelDecimo);
+        const mobile = window.matchMedia('(max-width:680px)').matches;
+        if (mobile) {
+          // Rótulos à direita, conectados por traços horizontais curtos,
+          // sem atravessar os números 01 ou 10.
+          const xRotulo = orb.width * .55;
+          const larguraDisponivel = orb.width - xRotulo - 2;
+          marcadorAtual.style.left = xRotulo + 'px';
+          marcadorReaction.style.left = xRotulo + 'px';
+          marcadorAtual.style.maxWidth = larguraDisponivel + 'px';
+          marcadorReaction.style.maxWidth = larguraDisponivel + 'px';
+          marcadorAtual.style.top = (p1.y - 6) + 'px';
+          marcadorReaction.style.top = (p10.y - 7) + 'px';
+          const numero1 = primeiro.querySelector('.roadmap-numero').getBoundingClientRect();
+          const numero10 = decimo.querySelector('.roadmap-numero').getBoundingClientRect();
+          const criarLinha = (marcador, numero) => {
+            const inicio = Math.max(numero.right - orb.left + 11, 0);
+            const largura = Math.max(0, xRotulo - inicio - 6);
+            marcador.style.setProperty('--leader-length', largura + 'px');
+          };
+          criarLinha(marcadorAtual, numero1);
+          criarLinha(marcadorReaction, numero10);
+        } else {
+          // Rótulos acima dos pontos, evitando números e divisor inferior.
+          marcadorAtual.style.left = p1.x + 'px';
+          marcadorReaction.style.left = p10.x + 'px';
+          marcadorAtual.style.top = (anelPrimeiro.top - orb.top - 75) + 'px';
+          marcadorReaction.style.top = (anelDecimo.top - orb.top - 78) + 'px';
+          marcadorAtual.style.maxWidth = '';
+          marcadorReaction.style.maxWidth = '';
+          marcadorAtual.style.removeProperty('--leader-length');
+          marcadorReaction.style.removeProperty('--leader-length');
+        }
+      }
+
+      botaoAnterior.addEventListener("click", function () { selecionar(escolhido - 1); });
+      botaoProximo.addEventListener("click", function () { selecionar(escolhido + 1); });
+      document.addEventListener("atero:languagechange", function (evento) {
+        idioma = evento.detail.idioma === "en" ? "en" : "pt";
+        atualizarDetalhe();
+        posicionarMarcadores();
+      });
+      window.addEventListener("resize", function () {
+        const mobile = window.matchMedia("(max-width:680px)").matches;
+        if (mobile !== ultimoLayoutMobile) { ultimoLayoutMobile = mobile; desenhar(); }
+        else posicionarMarcadores();
+      });
+      ultimoLayoutMobile = window.matchMedia("(max-width:680px)").matches;
+      desenhar();
+    })();
+  </script>
+
+</body>
+</html>
