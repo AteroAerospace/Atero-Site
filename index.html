@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Atero Aerospace — Propulsão avançada e alta atmosfera</title>
+  <meta name="description" content="Atero Aerospace: tecnologia de propulsão avançada, alta atmosfera e exploração de conceitos de voo hipersônico.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="imagens/atero-delta-t-simbolo.svg">
+  <script>document.documentElement.classList.add("js");</script>
+
+
+  <link rel="stylesheet" href="estilos.css?v=20261111-1">
+</head>
+
+<body>
+
+  <header class="cabecalho">
+    <div class="logo">
+      <img src="imagens/atero-logo-sem-aerospace.svg" alt="Logo da Atero">
+    </div>
+
+    <nav class="menu">
+      <a href="#inicio">Início</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#projeto">Projetos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <div class="idiomas">
+      <button type="button" data-lang="en" aria-label="English" aria-pressed="false">🇬🇧 EN</button>
+      <button type="button" data-lang="pt" aria-label="Português" aria-pressed="true">🇧🇷 PT</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="video" id="inicio">
+
+      <video class="video-fundo" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo.mp4" type="video/mp4">
+      </video>
+
+      <div class="textvideo">
+        <h1 class="hero-marca reveal reveal--title">
+          <!-- Logotipo vetorial fiel à referência enviada (AEROSPACE fica logo abaixo de ERO). -->
+          <img src="imagens/atero-logo-central-referencia.svg" alt="Atero Aerospace">
+        </h1>
+        <p class="reveal reveal-delay-1">
+          Levando a humanidade mais alto, mais longe e mais rápido.
+        </p>
+      </div>
+    </section>
+
+    <section class="secaonormal" id="sobre">
+
+      <video class="video-fundo2" autoplay muted loop playsinline>
+        <source src="imagens/video-fundo2.mp4" type="video/mp4">
+      </video>
+
+      <div class="conteudo-sobre">
+
+        <div class="sobre">
+          <h2 class="reveal reveal--title"><span class="about-word about-word--main">Sobre</span> <span class="about-word about-word--brand">Atero</span></h2>
+
+          <p class="reveal reveal-delay-1">
+            Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.
+          </p>
+
+          <p class="reveal reveal-delay-2">
+            Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.
+          </p>
+
+          <p class="reveal reveal-delay-3">
+            Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.
+          </p>
+        </div>
+
+
+
+      </div>
+    </section>
+
+    <!-- PROJETOS — cada article é um projeto independente. -->
+    <section class="secao-projetos" id="projeto" aria-labelledby="projetos-titulo">
+      <!-- MP4 (H.264) para compatibilidade; OGV é a alternativa enquanto o MP4 não estiver disponível. -->
+      <video class="projetos-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1">
+        <source src="imagens/video-fundo-3.mp4" type="video/mp4">
+        <source src="imagens/video-fundo-3.ogv" type="video/ogg">
+      </video>
+      <div class="secao-projetos__conteudo">
+        <h2 id="projetos-titulo" data-pt="Nossos projetos" data-en="Our projects">Nossos projetos</h2>
+        <div class="secao-projetos__grade">
+          <!-- PROJETO 01: scramjet -->
+          <article class="projeto-destaque" id="scramjet" aria-labelledby="scramjet-titulo">
+            <h3 id="scramjet-titulo">SCRAM<span>JET</span></h3>
+            <p class="projeto-resumo" data-pt="Propulsão para voo hipersônico atmosférico." data-en="Propulsion for atmospheric hypersonic flight.">Propulsão para voo hipersônico atmosférico.</p>
+            <figure class="projeto-ilustracao">
+              
+              <img class="projeto-imagem-real projeto-imagem-real--scramjet" src="imagens/scramjet-x43.jpg" alt="Aeronave experimental hipersônica X-43 em voo" data-pt-alt="Aeronave experimental hipersônica X-43 em voo" data-en-alt="X-43 hypersonic experimental aircraft in flight" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            </figure>
+            <div class="projeto-abas" role="tablist" aria-label="Scramjet">
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-what" aria-controls="scramjet-panel-what" aria-selected="true" tabindex="0" data-pt="O que é" data-en="What it is">O que é</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-why" aria-controls="scramjet-panel-why" aria-selected="false" tabindex="-1" data-pt="Importância" data-en="Why it matters">Importância</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-how" aria-controls="scramjet-panel-how" aria-selected="false" tabindex="-1" data-pt="Funcionamento" data-en="How it works">Funcionamento</button>
+              <button class="projeto-aba" type="button" role="tab" id="scramjet-tab-challenge" aria-controls="scramjet-panel-challenge" aria-selected="false" tabindex="-1" data-pt="Desafios" data-en="Challenges">Desafios</button>
+            </div>
+            <div class="projeto-paineis">
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-what" aria-labelledby="scramjet-tab-what" tabindex="0">
+                <p data-pt="Motor a reação que utiliza oxigênio do ar e mantém o escoamento supersônico durante a combustão." data-en="An air-breathing jet engine that keeps airflow supersonic during combustion.">Motor a reação que utiliza oxigênio do ar e mantém o escoamento supersônico durante a combustão.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-why" aria-labelledby="scramjet-tab-why" tabindex="0" hidden>
+                <p data-pt="Pode ampliar as possibilidades de voo hipersônico sem carregar oxidante para a fase atmosférica." data-en="It could expand hypersonic flight capabilities without carrying oxidizer for the atmospheric phase.">Pode ampliar as possibilidades de voo hipersônico sem carregar oxidante para a fase atmosférica.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-how" aria-labelledby="scramjet-tab-how" tabindex="0" hidden>
+                <p data-pt="A velocidade de voo comprime o ar; o combustível é injetado, queimado e expelido para produzir empuxo." data-en="Forward speed compresses incoming air; fuel is injected, burned and expelled to generate thrust.">A velocidade de voo comprime o ar; o combustível é injetado, queimado e expelido para produzir empuxo.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="scramjet-panel-challenge" aria-labelledby="scramjet-tab-challenge" tabindex="0" hidden>
+                <p data-pt="Estabilidade da combustão, aquecimento extremo e mistura de combustível em velocidades muito elevadas." data-en="Stable combustion, extreme heating and fuel mixing at very high speeds.">Estabilidade da combustão, aquecimento extremo e mistura de combustível em velocidades muito elevadas.</p>
+              </div>
+            </div>
+          </article>
+          <!-- PROJETO 02: propulsão ar + foguete -->
+          <article class="projeto-destaque" id="airrocket" aria-labelledby="airrocket-titulo">
+            <h3 id="airrocket-titulo">AIR <span>+</span> ROCKET</h3>
+            <p class="projeto-resumo" data-pt="Um sistema que combina respiração atmosférica e propulsão química de foguete." data-en="A system combining air-breathing and chemical rocket propulsion.">Um sistema que combina respiração atmosférica e propulsão química de foguete.</p>
+            <figure class="projeto-ilustracao">
+              
+              <img class="projeto-imagem-real projeto-imagem-real--sabre-local" src="imagens/sabre-framed.png" alt="Modelo em corte de um sistema de propulsão mista ar-foguete" data-pt-alt="Modelo em corte de um sistema de propulsão mista ar-foguete" data-en-alt="Cutaway model of a mixed air-breathing and rocket propulsion system" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            </figure>
+            <div class="projeto-abas" role="tablist" aria-label="Air + Rocket">
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-what" aria-controls="airrocket-panel-what" aria-selected="true" tabindex="0" data-pt="O que é" data-en="What it is">O que é</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-why" aria-controls="airrocket-panel-why" aria-selected="false" tabindex="-1" data-pt="Importância" data-en="Why it matters">Importância</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-how" aria-controls="airrocket-panel-how" aria-selected="false" tabindex="-1" data-pt="Funcionamento" data-en="How it works">Funcionamento</button>
+              <button class="projeto-aba" type="button" role="tab" id="airrocket-tab-challenge" aria-controls="airrocket-panel-challenge" aria-selected="false" tabindex="-1" data-pt="Desafios" data-en="Challenges">Desafios</button>
+            </div>
+            <div class="projeto-paineis">
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-what" aria-labelledby="airrocket-tab-what" tabindex="0">
+                <p data-pt="Conceito de propulsão com dois modos: utiliza o oxigênio do ar na atmosfera e oxidante armazenado fora dela." data-en="A two-mode propulsion concept: atmospheric oxygen in air-breathing mode and stored oxidizer beyond the atmosphere.">Conceito de propulsão com dois modos: utiliza o oxigênio do ar na atmosfera e oxidante armazenado fora dela.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-why" aria-labelledby="airrocket-tab-why" tabindex="0" hidden>
+                <p data-pt="A operação atmosférica poderia reduzir a quantidade de oxidante transportado durante a primeira parte do voo." data-en="Air-breathing operation could reduce the amount of onboard oxidizer required for the initial flight phase.">A operação atmosférica poderia reduzir a quantidade de oxidante transportado durante a primeira parte do voo.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-how" aria-labelledby="airrocket-tab-how" tabindex="0" hidden>
+                <p data-pt="O motor muda do uso de oxigênio atmosférico para o oxidante embarcado, podendo funcionar como foguete onde não há ar suficiente." data-en="The engine switches from atmospheric oxygen to onboard oxidizer, operating as a rocket when air is insufficient.">O motor muda do uso de oxigênio atmosférico para o oxidante embarcado, podendo funcionar como foguete onde não há ar suficiente.</p>
+              </div>
+              <div class="projeto-painel" role="tabpanel" id="airrocket-panel-challenge" aria-labelledby="airrocket-tab-challenge" tabindex="0" hidden>
+                <p data-pt="Transição entre modos, controle térmico e integração dos sistemas sem excesso de massa." data-en="Mode switching, thermal management and system integration without excessive mass.">Transição entre modos, controle térmico e integração dos sistemas sem excesso de massa.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+</div>
+    </section>
+
+    <section class="contato" id="contato">
+      <div class="contato-conteudo">
+        <h2 class="reveal reveal--title">Contato</h2>
+
+        <div class="contato-lista">
+          <div class="contato-item">
+            <p class="reveal reveal-delay-1">Empresa</p>
+            <a class="reveal reveal-delay-2" href="mailto:contact@atero.space">contact@atero.space</a>
+          </div>
+
+          <div class="contato-item">
+            <p class="reveal reveal-delay-2">Fundador</p>
+            <a class="reveal reveal-delay-3" href="mailto:joao@atero.space">joao@atero.space</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="reveal">&copy; 2026 Atero Aerospace. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    const traducoes = {
+      pt: {
+        inicio: "Início",
+        sobre: "Sobre",
+        projeto: "Projetos",
+        contato: "Contato",
+        chamada: "Levando a humanidade mais alto, mais longe e mais rápido.",
+        tituloSobreMain: "Sobre",
+        tituloSobreBrand: "Atero",
+        sobre1: "Nascendo como uma empresa de tecnologia de propulsão aeroespacial e de alta atmosfera, a Atero promete levar além os limites atuais da engenharia.",
+        sobre2: "Criando sistemas mais simples, mais eficientes e robustos, avançamos para a próxima etapa do mercado. Nosso objetivo não é apenas acompanhar a evolução do setor aeroespacial, mas impulsioná-la, explorando novas possibilidades de voo, velocidade e altitude.",
+        sobre3: "Algo considerado impossível não significa que não seja possível fazer; significa que ainda não foi feito.",
+        tituloContato: "Contato",
+        empresa: "Empresa",
+        fundador: "Fundador",
+        rodape: "© 2026 Atero Aerospace. Todos os direitos reservados.",
+        logoAlt: "Logo da Atero",
+      },
+      en: {
+        inicio: "Home",
+        sobre: "About",
+        projeto: "Projects",
+        contato: "Contact",
+        chamada: "Taking humanity higher, farther and faster.",
+        tituloSobreMain: "About",
+        tituloSobreBrand: "Atero",
+        sobre1: "Born as an aerospace propulsion and upper-atmosphere technology company, Atero promises to push beyond the current limits of engineering.",
+        sobre2: "By creating simpler, more efficient and robust systems, we advance toward the market's next stage. Our goal is not merely to follow the aerospace sector's evolution, but to drive it by exploring new possibilities in flight, speed and altitude.",
+        sobre3: "Something being considered impossible does not mean it cannot be done; it means it has not been done yet.",
+        tituloContato: "Contact",
+        empresa: "Company",
+        fundador: "Founder",
+        rodape: "© 2026 Atero Aerospace. All rights reserved.",
+        logoAlt: "Atero logo",
+      }
+    };
+
+    const seletoresTraducao = {
+      inicio: '.menu a[href="#inicio"]',
+      sobre: '.menu a[href="#sobre"]',
+      projeto: '.menu a[href="#projeto"]',
+      contato: '.menu a[href="#contato"]',
+      chamada: ".textvideo p",
+      tituloSobreMain: ".sobre .about-word--main",
+      tituloSobreBrand: ".sobre .about-word--brand",
+      sobre1: ".sobre p:nth-of-type(1)",
+      sobre2: ".sobre p:nth-of-type(2)",
+      sobre3: ".sobre p:nth-of-type(3)",
+      tituloContato: ".contato h2",
+      empresa: ".contato-item:nth-child(1) p",
+      fundador: ".contato-item:nth-child(2) p",
+      rodape: "footer p"
+    };
+
+    function aplicarIdioma(idioma) {
+      const idiomaAtivo = traducoes[idioma] ? idioma : "pt";
+      const textos = traducoes[idiomaAtivo];
+
+      Object.entries(seletoresTraducao).forEach(function ([chave, seletor]) {
+        const elemento = document.querySelector(seletor);
+        if (elemento) elemento.textContent = textos[chave];
+      });
+
+      document.documentElement.lang = idiomaAtivo === "en" ? "en" : "pt-BR";
+      const logoImg = document.querySelector(".logo img");
+      if (logoImg) logoImg.alt = textos.logoAlt;
+      const heroImg = document.querySelector(".hero-marca img");
+      if (heroImg) heroImg.alt = idiomaAtivo === "en" ? "Atero Aerospace" : "Atero Aeroespacial";
+      // Textos dos projetos editáveis em data-pt / data-en no próprio HTML.
+      document.querySelectorAll("[data-pt][data-en]").forEach(function (elemento) {
+        elemento.textContent = elemento.getAttribute("data-" + idiomaAtivo);
+      });
+      document.querySelectorAll("[data-pt-alt][data-en-alt]").forEach(function (elemento) {
+        elemento.alt = elemento.getAttribute("data-" + idiomaAtivo + "-alt");
+      });
+      document.querySelectorAll(".projeto-abas").forEach(function (tablist) {
+        tablist.setAttribute("aria-label", idiomaAtivo === "en" ? "Project information" : "Informações do projeto");
+      });
+
+      document.querySelectorAll(".idiomas button").forEach(function (botao) {
+        botao.setAttribute("aria-pressed", String(botao.dataset.lang === idiomaAtivo));
+      });
+
+      try {
+        localStorage.setItem("atero-language", idiomaAtivo);
+      } catch (erro) {
+        // A troca continua funcionando quando o armazenamento não está disponível.
+      }
+    }
+
+    document.querySelectorAll(".idiomas button").forEach(function (botao) {
+      botao.addEventListener("click", function () {
+        aplicarIdioma(botao.dataset.lang);
+      });
+    });
+
+    let idiomaInicial = "pt";
+    try {
+      idiomaInicial = localStorage.getItem("atero-language") || "pt";
+    } catch (erro) {
+      idiomaInicial = "pt";
+    }
+    aplicarIdioma(idiomaInicial);
+
+    // Cada projeto tem abas independentes.
+    // Suporta clique, setas esquerda/direita, Home e End.
+    document.querySelectorAll(".projeto-destaque").forEach(function (cartao) {
+      const abas = Array.from(cartao.querySelectorAll(".projeto-aba"));
+      function ativarAba(aba, moverFoco = false) {
+        abas.forEach(function (atual) {
+          const ativa = atual === aba;
+          atual.setAttribute("aria-selected", String(ativa));
+          atual.tabIndex = ativa ? 0 : -1;
+          const painel = document.getElementById(atual.getAttribute("aria-controls"));
+          if (painel) painel.hidden = !ativa;
+        });
+        if (moverFoco) aba.focus();
+      }
+      abas.forEach(function (aba, index) {
+        aba.addEventListener("click", function () { ativarAba(aba); });
+        aba.addEventListener("keydown", function (evento) {
+          let novoIndice;
+          if (evento.key === "ArrowRight") novoIndice = (index + 1) % abas.length;
+          else if (evento.key === "ArrowLeft") novoIndice = (index - 1 + abas.length) % abas.length;
+          else if (evento.key === "Home") novoIndice = 0;
+          else if (evento.key === "End") novoIndice = abas.length - 1;
+          else return;
+          evento.preventDefault();
+          ativarAba(abas[novoIndice], true);
+        });
+      });
+    });
+
+    const elementosReveal = document.querySelectorAll(".reveal");
+    const movimentoReduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (movimentoReduzido || !("IntersectionObserver" in window)) {
+      elementosReveal.forEach(function (elemento) {
+        elemento.classList.add("is-visible");
+      });
+    } else {
+      const observadorReveal = new IntersectionObserver(function (entradas, observador) {
+        entradas.forEach(function (entrada) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("is-visible");
+            observador.unobserve(entrada.target);
+          }
+        });
+      }, {
+        threshold: 0.05,
+        rootMargin: "0px 0px -4% 0px"
+      });
+
+      elementosReveal.forEach(function (elemento) {
+        observadorReveal.observe(elemento);
+      });
+    }
+  </script>
+
+</body>
+</html>
